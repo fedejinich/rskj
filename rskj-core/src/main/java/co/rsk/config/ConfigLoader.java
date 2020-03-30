@@ -18,12 +18,12 @@
 package co.rsk.config;
 
 import co.rsk.cli.CliArgs;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.*;
 import org.ethereum.config.SystemProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Map;
 import java.util.Objects;
@@ -46,6 +46,7 @@ public class ConfigLoader {
     private static final String TESTNET_RESOURCE_PATH = "config/testnet";
     private static final String REGTEST_RESOURCE_PATH = "config/regtest";
     private static final String DEVNET_RESOURCE_PATH = "config/devnet";
+    private static final String REFERENCE_RESOURCE_PATH = "reference";
     private static final String YES = "yes";
     private static final String NO = "no";
 
@@ -56,13 +57,34 @@ public class ConfigLoader {
     }
 
     public Config getConfig() {
-        Config userConfig = getConfigFromCliArgs()
-                .withFallback(ConfigFactory.systemProperties())
-                .withFallback(ConfigFactory.systemEnvironment())
-                .withFallback(getUserCustomConfig())
-                .withFallback(getInstallerConfig());
+        Config cliConfig = getConfigFromCliArgs();
+        Config systemPropsConfig = ConfigFactory.systemProperties();
+        Config systemEnvConfig = ConfigFactory.systemEnvironment();
+        Config userCustomConfig = getUserCustomConfig();
+        Config installerConfig = getInstallerConfig();
+
+        Config userConfig = ConfigFactory.empty()
+                .withFallback(cliConfig)
+                .withFallback(systemPropsConfig)
+                .withFallback(systemEnvConfig)
+                .withFallback(userCustomConfig)
+                .withFallback(installerConfig);
         Config networkBaseConfig = getNetworkDefaultConfig(userConfig);
-        return userConfig.withFallback(networkBaseConfig);
+        Config unifiedConfig = userConfig.withFallback(networkBaseConfig);
+
+        if (unifiedConfig.getBoolean(SystemProperties.PROPERTY_BC_VERIFY)) {
+            Config referenceConfig = ConfigFactory.load(REFERENCE_RESOURCE_PATH);
+            ConfigObject expectedValue = referenceConfig.root();
+            ConfigObject actualValue = ConfigFactory.empty()
+                    .withFallback(cliConfig)
+                    .withFallback(userCustomConfig)
+                    .withFallback(installerConfig)
+                    .withFallback(networkBaseConfig)
+                    .root();
+            verify("", expectedValue, actualValue);
+        }
+
+        return unifiedConfig;
     }
 
     private Config getConfigFromCliArgs() {
@@ -127,5 +149,53 @@ public class ConfigLoader {
 
         logger.info("Network not set, using mainnet by default");
         return ConfigFactory.load(MAINNET_RESOURCE_PATH);
+    }
+
+    private static void verify(String key, @Nullable ConfigValue expectedValue, ConfigValue actualValue) {
+        if (expectedValue == null) {
+            throw unexpectedKeyException(key, actualValue);
+        }
+
+        switch (actualValue.valueType()) {
+            case OBJECT:
+                if (!expectedValue.valueType().equals(ConfigValueType.OBJECT)) {
+                    throw typeMismatchException(key, expectedValue, actualValue);
+                }
+                for (Map.Entry<String, ConfigValue> actualEntry : ((ConfigObject) actualValue).entrySet()) {
+                    ConfigValue expectedEntryValue = ((ConfigObject) expectedValue).get(actualEntry.getKey());
+                    verify((key.isEmpty() ? "" : key + ".") + actualEntry.getKey(), expectedEntryValue, actualEntry.getValue());
+                }
+                break;
+            case LIST:
+                if (!expectedValue.valueType().equals(ConfigValueType.LIST)) {
+                    throw typeMismatchException(key, expectedValue, actualValue);
+                }
+                ConfigList actualList = (ConfigList) actualValue;
+                ConfigList expectedList = (ConfigList) expectedValue;
+                if (!actualList.isEmpty() && !expectedList.isEmpty()) {
+                    // Assuming that all items in a list should have the same configuration structure.
+                    ConfigValue expectedItem = expectedList.get(0);
+                    int index = 0;
+                    for (ConfigValue actualItem : actualList) {
+                        verify(key + "[" + index + "]", expectedItem, actualItem);
+                        index++;
+                    }
+                }
+                break;
+            default:
+                if (expectedValue.valueType().equals(ConfigValueType.OBJECT) || expectedValue.valueType().equals(ConfigValueType.LIST)) {
+                    throw typeMismatchException(key, expectedValue, actualValue);
+                }
+                break;
+        }
+    }
+
+    private static IllegalArgumentException unexpectedKeyException(String key, ConfigValue actualValue) {
+        return new IllegalArgumentException("Unexpected config value " + actualValue + " for key " + key);
+    }
+
+    private static IllegalArgumentException typeMismatchException(String key, ConfigValue expectedValue, ConfigValue actualValue) {
+        return new IllegalArgumentException("Config value type mismatch. " + key + " has type " + actualValue.valueType()
+                + ", but should have : " + expectedValue.valueType());
     }
 }
