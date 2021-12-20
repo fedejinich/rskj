@@ -28,6 +28,7 @@ import co.rsk.metrics.profilers.Metric;
 import co.rsk.metrics.profilers.Profiler;
 import co.rsk.metrics.profilers.ProfilerFactory;
 import co.rsk.util.NodeStopper;
+import com.google.common.annotations.VisibleForTesting;
 import org.ethereum.crypto.Keccak256Helper;
 import org.ethereum.db.ByteArrayWrapper;
 import org.ethereum.db.TrieKeyMapper;
@@ -36,7 +37,6 @@ import org.ethereum.util.RLP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -74,6 +74,9 @@ public class Trie {
 
     // all zeroed, default hash for empty nodes
     private static final Keccak256 EMPTY_HASH = makeEmptyHash();
+
+    // to represent a non-initialized rent timestamp
+    private static final long NO_RENT_TIMESTAMP = -1;
 
     // this node associated value, if any
     private byte[] value;
@@ -120,6 +123,7 @@ public class Trie {
     // shared Path
     private final TrieKeySlice sharedPath;
 
+    private final long lastRentPaidTimestamp;
 
     // default constructor, no secure
     public Trie() {
@@ -128,16 +132,16 @@ public class Trie {
 
     // root node
     public Trie(TrieStore store) {
-        this(store, TrieKeySlice.empty(), null);
+        this(store, TrieKeySlice.empty(), null, NO_RENT_TIMESTAMP);
     }
 
     // leaf node
-    private Trie(TrieStore store, TrieKeySlice sharedPath, byte[] value) {
-        this(store, sharedPath, value, NodeReference.empty(), NodeReference.empty(), getDataLength(value), null, new VarInt(0));
+    private Trie(TrieStore store, TrieKeySlice sharedPath, byte[] value, long lastRentPaidTimestamp) {
+        this(store, sharedPath, value, NodeReference.empty(), NodeReference.empty(), getDataLength(value), null, new VarInt(0), lastRentPaidTimestamp);
     }
 
     // full constructor
-    private Trie(TrieStore store, TrieKeySlice sharedPath, byte[] value, NodeReference left, NodeReference right, Uint24 valueLength, Keccak256 valueHash, VarInt childrenSize) {
+    private Trie(TrieStore store, TrieKeySlice sharedPath, byte[] value, NodeReference left, NodeReference right, Uint24 valueLength, Keccak256 valueHash, VarInt childrenSize, long lastRentPaidTimestamp) {
         this.value = value;
         this.left = left;
         this.right = right;
@@ -146,7 +150,7 @@ public class Trie {
         this.valueLength = valueLength;
         this.valueHash = valueHash;
         this.childrenSize = childrenSize;
-        // todo(techdebt) this is always 'exitStatus -> System.exit(exitStatus)'
+        this.lastRentPaidTimestamp = lastRentPaidTimestamp;
         this.nodeStopper = exitStatus -> System.exit(exitStatus);
         checkValueLength();
     }
@@ -164,6 +168,7 @@ public class Trie {
         } else {
             trie = fromMessageRskip107(ByteBuffer.wrap(message), store);
         }
+        // todo(fedejinich) add fromMessageRskip240
 
         profiler.stop(metric);
 
@@ -247,7 +252,8 @@ public class Trie {
         }
 
         // it doesn't need to clone value since it's retrieved from store or created from message
-        return new Trie(store, sharedPath, value, left, right, lvalue, valueHash, null);
+        // todo(fedejinich) an orchid message should never contain a rent timestamp
+        return new Trie(store, sharedPath, value, left, right, lvalue, valueHash, null, NO_RENT_TIMESTAMP);
     }
 
     private static Trie fromMessageRskip107(ByteBuffer message, TrieStore store) {
@@ -335,7 +341,106 @@ public class Trie {
             throw new IllegalArgumentException("The message had more data than expected");
         }
 
-        Trie trie = new Trie(store, sharedPath, value, left, right, lvalue, valueHash, childrenSize);
+        // todo(fedejinich) an rskip107 message should never contain a rent timestamp
+        Trie trie = new Trie(store, sharedPath, value, left, right, lvalue, valueHash, childrenSize, NO_RENT_TIMESTAMP);
+
+        return trie;
+    }
+
+    // todo(fedejinich) it'll be inclued in production in the last storage rent stage
+    @VisibleForTesting
+    private static Trie fromMessageRskip240(ByteBuffer message, TrieStore store) {
+        byte flags = message.get();
+        // if we reached here, we don't need to check the version flag
+        boolean hasLongVal = (flags & 0b00100000) == 0b00100000;
+        boolean sharedPrefixPresent = (flags & 0b00010000) == 0b00010000;
+        boolean leftNodePresent = (flags & 0b00001000) == 0b00001000;
+        boolean rightNodePresent = (flags & 0b00000100) == 0b00000100;
+        boolean leftNodeEmbedded = (flags & 0b00000010) == 0b00000010;
+        boolean rightNodeEmbedded = (flags & 0b00000001) == 0b00000001;
+
+//        byte[] lastRentPaidTimestampByteArray = new byte[Long.BYTES];
+//        message.get(lastRentPaidTimestampByteArray); // todo(fedejinich) should get 8 bytes (it's a long)
+//        long lastRentPaidTimestamp = ByteBuffer.wrap(lastRentPaidTimestampByteArray).getLong();
+        long lastRentPaidTimestamp = message.get(new byte[Long.BYTES]).getLong();
+
+        TrieKeySlice sharedPath = SharedPathSerializer.deserialize(message, sharedPrefixPresent);
+
+        NodeReference left = NodeReference.empty();
+        NodeReference right = NodeReference.empty();
+        if (leftNodePresent) {
+            if (leftNodeEmbedded) {
+                byte[] lengthBytes = new byte[Uint8.BYTES];
+                message.get(lengthBytes);
+                Uint8 length = Uint8.decode(lengthBytes, 0);
+
+                byte[] serializedNode = new byte[length.intValue()];
+                message.get(serializedNode);
+                Trie node = fromMessageRskip107(ByteBuffer.wrap(serializedNode), store);
+                left = new NodeReference(store, node, null);
+            } else {
+                byte[] valueHash = new byte[Keccak256Helper.DEFAULT_SIZE_BYTES];
+                message.get(valueHash);
+                Keccak256 nodeHash = new Keccak256(valueHash);
+                left = new NodeReference(store, null, nodeHash);
+            }
+        }
+
+        if (rightNodePresent) {
+            if (rightNodeEmbedded) {
+                byte[] lengthBytes = new byte[Uint8.BYTES];
+                message.get(lengthBytes);
+                Uint8 length = Uint8.decode(lengthBytes, 0);
+
+                byte[] serializedNode = new byte[length.intValue()];
+                message.get(serializedNode);
+                Trie node = fromMessageRskip107(ByteBuffer.wrap(serializedNode), store);
+                right = new NodeReference(store, node, null);
+            } else {
+                byte[] valueHash = new byte[Keccak256Helper.DEFAULT_SIZE_BYTES];
+                message.get(valueHash);
+                Keccak256 nodeHash = new Keccak256(valueHash);
+                right = new NodeReference(store, null, nodeHash);
+            }
+        }
+
+        VarInt childrenSize = new VarInt(0);
+        if (leftNodePresent || rightNodePresent) {
+            childrenSize = readVarInt(message);
+        }
+
+        byte[] value;
+        Uint24 lvalue;
+        Keccak256 valueHash;
+
+        if (hasLongVal) {
+            value = null;
+            byte[] valueHashBytes = new byte[Keccak256Helper.DEFAULT_SIZE_BYTES];
+            message.get(valueHashBytes);
+            valueHash = new Keccak256(valueHashBytes);
+            byte[] lvalueBytes = new byte[Uint24.BYTES];
+            message.get(lvalueBytes);
+            lvalue = Uint24.decode(lvalueBytes, 0);
+        } else {
+            int remaining = message.remaining();
+            if (remaining != 0) {
+                value = new byte[remaining];
+                message.get(value);
+                valueHash = new Keccak256(Keccak256Helper.keccak256(value));
+                lvalue = new Uint24(remaining);
+            } else {
+                value = null;
+                valueHash = null;
+                lvalue = Uint24.ZERO;
+            }
+        }
+
+        if (message.hasRemaining()) {
+            throw new IllegalArgumentException("The message had more data than expected");
+        }
+
+        // todo(fedejinich) an rskip107 message should never contain a rent timestamp
+        Trie trie = new Trie(store, sharedPath, value, left, right, lvalue, valueHash, childrenSize, lastRentPaidTimestamp);
 
         return trie;
     }
@@ -732,6 +837,72 @@ public class Trie {
         encoded = buffer.array();
     }
 
+    public void internalToMessageRSKIP240() {
+        Uint24 lvalue = this.valueLength;
+        boolean hasLongVal = this.hasLongValue();
+
+        SharedPathSerializer sharedPathSerializer = new SharedPathSerializer(this.sharedPath);
+        VarInt childrenSize = getChildrenSize();
+
+        ByteBuffer buffer = ByteBuffer.allocate(
+                1 + // flags
+                        sharedPathSerializer.serializedLength() +
+                        this.left.serializedLength() +
+                        this.right.serializedLength() +
+                        (this.isTerminal() ? 0 : childrenSize.getSizeInBytes()) +
+                        (hasLongVal ? Keccak256Helper.DEFAULT_SIZE_BYTES + Uint24.BYTES : lvalue.intValue())
+        );
+
+        // current serialization version: 10
+        byte flags = (byte) 0b10000000;
+        if (hasLongVal) {
+            flags = (byte) (flags | 0b00100000);
+        }
+
+        if (sharedPathSerializer.isPresent()) {
+            flags = (byte) (flags | 0b00010000);
+        }
+
+        if (!this.left.isEmpty()) {
+            flags = (byte) (flags | 0b00001000);
+        }
+
+        if (!this.right.isEmpty()) {
+            flags = (byte) (flags | 0b00000100);
+        }
+
+        if (this.left.isEmbeddable()) {
+            flags = (byte) (flags | 0b00000010);
+        }
+
+        if (this.right.isEmbeddable()) {
+            flags = (byte) (flags | 0b00000001);
+        }
+
+        buffer.put(flags);
+
+        buffer.putLong(this.lastRentPaidTimestamp);
+
+        sharedPathSerializer.serializeInto(buffer);
+
+        this.left.serializeInto(buffer);
+
+        this.right.serializeInto(buffer);
+
+        if (!this.isTerminal()) {
+            buffer.put(childrenSize.encode());
+        }
+
+        if (hasLongVal) {
+            buffer.put(this.getValueHash().getBytes());
+            buffer.put(lvalue.encode());
+        } else if (lvalue.compareTo(Uint24.ZERO) > 0) {
+            buffer.put(this.getValue());
+        }
+
+        encoded = buffer.array();
+    }
+
     private Trie retrieveNode(byte implicitByte) {
         return getNodeReference(implicitByte).getNode().orElse(null);
     }
@@ -755,7 +926,6 @@ public class Trie {
      * @param value     associated value
      *
      * @return the new NewTrie containing the tree with the new key value association
-     *
      */
     private Trie put(TrieKeySlice key, byte[] value, boolean isRecursiveDelete) {
         // First of all, setting the value as an empty byte array is equivalent
@@ -774,6 +944,7 @@ public class Trie {
             return trie;
         }
 
+        // todo(techdebt) this doesn't make sense: internalPut returns null for empty tries
         if (trie.isEmptyTrie()) {
             return null;
         }
@@ -807,7 +978,8 @@ public class Trie {
 
         TrieKeySlice newSharedPath = trie.sharedPath.rebuildSharedPath(childImplicitByte, child.sharedPath);
 
-        return new Trie(child.store, newSharedPath, child.value, child.left, child.right, child.valueLength, child.valueHash, child.childrenSize);
+        return new Trie(child.store, newSharedPath, child.value, child.left, child.right, child.valueLength,
+                child.valueHash, child.childrenSize, child.lastRentPaidTimestamp); // todo(fedejinich) is this ok?
     }
 
     private static Uint24 getDataLength(byte[] value) {
@@ -839,7 +1011,8 @@ public class Trie {
             }
 
             if (isRecursiveDelete) {
-                return new Trie(this.store, this.sharedPath, null);
+                // todo(fedejinich) a recursive delete will also clear the rent timestamp
+                return new Trie(this.store, this.sharedPath, null, NO_RENT_TIMESTAMP);
             }
 
             if (isEmptyTrie(getDataLength(value), this.left, this.right)) {
@@ -854,12 +1027,14 @@ public class Trie {
                     this.right,
                     getDataLength(value),
                     null,
-                    this.childrenSize
-            );
+                    this.childrenSize,
+                    this.lastRentPaidTimestamp); // todo(fedejinich) is this ok?
         }
 
         if (isEmptyTrie()) {
-            return new Trie(this.store, key, cloneArray(value));
+            // todo(fedejinich) an empty trie should not have an initialized
+            //  timestamp (since it's initialized at the end of the tx execution)
+            return new Trie(this.store, key, cloneArray(value), NO_RENT_TIMESTAMP);
         }
 
         // this bit will be implicit and not present in a shared path
@@ -903,13 +1078,14 @@ public class Trie {
             return null;
         }
 
-        return new Trie(this.store, this.sharedPath, this.value, newLeft, newRight, this.valueLength, this.valueHash, childrenSize);
+        return new Trie(this.store, this.sharedPath, this.value, newLeft, newRight, this.valueLength,
+                this.valueHash, childrenSize, this.lastRentPaidTimestamp); // todo(fedejinich) is this ok?
     }
 
     private Trie split(TrieKeySlice commonPath) {
         int commonPathLength = commonPath.length();
         TrieKeySlice newChildSharedPath = sharedPath.slice(commonPathLength + 1, sharedPath.length());
-        Trie newChildTrie = new Trie(this.store, newChildSharedPath, this.value, this.left, this.right, this.valueLength, this.valueHash, this.childrenSize);
+        Trie newChildTrie = new Trie(this.store, newChildSharedPath, this.value, this.left, this.right, this.valueLength, this.valueHash, this.childrenSize, this.lastRentPaidTimestamp); // todo(fedejinich) is this ok?
         NodeReference newChildReference = new NodeReference(this.store, newChildTrie, null);
 
         // this bit will be implicit and not present in a shared path
@@ -926,7 +1102,7 @@ public class Trie {
             newRight = newChildReference;
         }
 
-        return new Trie(this.store, commonPath, null, newLeft, newRight, Uint24.ZERO, null, childrenSize);
+        return new Trie(this.store, commonPath, null, newLeft, newRight, Uint24.ZERO, null, childrenSize, this.lastRentPaidTimestamp); // todo(fedejinich) is this ok?
     }
 
     public boolean isTerminal() {
