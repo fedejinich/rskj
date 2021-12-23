@@ -75,8 +75,19 @@ public class Trie {
     // all zeroed, default hash for empty nodes
     private static final Keccak256 EMPTY_HASH = makeEmptyHash();
 
+    // a long value exceeds 32 bytes
+    public static final int LONG_VALUE = 32 + 1;
+    public static final int TIMESTAMP_SIZE = Long.BYTES;
+    public static final int FLAGS_SIZE = Byte.BYTES;
+    public static final int EMBEDDED_CHILD_LENGTH_SIZE = Uint8.BYTES;
+    public static final int CHILD_HASH_SIZE = 32;
+
     // to represent a non-initialized rent timestamp
     private static final long NO_RENT_TIMESTAMP = -1;
+
+    public static final int HOP_TRIE_VERSION = 0b10000000; // todo(fedejinich) this is actually 128 and -128 (casted to byte)
+    public static final int RSKIP107_TRIE_VERSION = 0b01000000;
+    public static final int FLAGS_SIZE = 1;
 
     // this node associated value, if any
     private byte[] value;
@@ -123,6 +134,7 @@ public class Trie {
     // shared Path
     private final TrieKeySlice sharedPath;
 
+    // rent timestamp (checkout rskip240)
     private final long lastRentPaidTimestamp;
 
     // default constructor, no secure
@@ -141,7 +153,8 @@ public class Trie {
     }
 
     // full constructor
-    private Trie(TrieStore store, TrieKeySlice sharedPath, byte[] value, NodeReference left, NodeReference right, Uint24 valueLength, Keccak256 valueHash, VarInt childrenSize, long lastRentPaidTimestamp) {
+    private Trie(TrieStore store, TrieKeySlice sharedPath, byte[] value, NodeReference left, NodeReference right,
+                 Uint24 valueLength, Keccak256 valueHash, VarInt childrenSize, long lastRentPaidTimestamp) {
         this.value = value;
         this.left = left;
         this.right = right;
@@ -166,13 +179,22 @@ public class Trie {
         if (message[0] == ARITY) {
             trie = fromMessageOrchid(message, store);
         } else {
-            trie = fromMessageRskip107(ByteBuffer.wrap(message), store);
+            trie = deserializeUnitrieNode(message, store);
         }
         // todo(fedejinich) add fromMessageRskip240
 
         profiler.stop(metric);
 
         return trie;
+    }
+
+    private static Trie deserializeUnitrieNode(byte[] message, TrieStore store) {
+        ByteBuffer wrap = ByteBuffer.wrap(message);
+        if(message[0] == RSKIP107_TRIE_VERSION) {
+            return fromMessageRskip107(wrap, store);
+        }
+
+        return fromMessageRskip240(wrap, store);
     }
 
     private static Trie fromMessageOrchid(byte[] message, TrieStore store) {
@@ -347,7 +369,9 @@ public class Trie {
         return trie;
     }
 
-    // todo(fedejinich) it'll be inclued in production in the last storage rent stage
+    // todo(fedejinich) it'll be inclued in production in the last storage rent stage.
+    //  this is duplicated code, but the truth is that the old de/serialization method won't be changed because
+    //  it impacts directly in consensus rules (same aplies to further de/serialization methods)
     @VisibleForTesting
     private static Trie fromMessageRskip240(ByteBuffer message, TrieStore store) {
         byte flags = message.get();
@@ -359,10 +383,7 @@ public class Trie {
         boolean leftNodeEmbedded = (flags & 0b00000010) == 0b00000010;
         boolean rightNodeEmbedded = (flags & 0b00000001) == 0b00000001;
 
-//        byte[] lastRentPaidTimestampByteArray = new byte[Long.BYTES];
-//        message.get(lastRentPaidTimestampByteArray); // todo(fedejinich) should get 8 bytes (it's a long)
-//        long lastRentPaidTimestamp = ByteBuffer.wrap(lastRentPaidTimestampByteArray).getLong();
-        long lastRentPaidTimestamp = message.get(new byte[Long.BYTES]).getLong();
+        long lastRentPaidTimestamp = message.getLong();
 
         TrieKeySlice sharedPath = SharedPathSerializer.deserialize(message, sharedPrefixPresent);
 
@@ -376,7 +397,7 @@ public class Trie {
 
                 byte[] serializedNode = new byte[length.intValue()];
                 message.get(serializedNode);
-                Trie node = fromMessageRskip107(ByteBuffer.wrap(serializedNode), store);
+                Trie node = fromMessageRskip240(ByteBuffer.wrap(serializedNode), store);
                 left = new NodeReference(store, node, null);
             } else {
                 byte[] valueHash = new byte[Keccak256Helper.DEFAULT_SIZE_BYTES];
@@ -394,7 +415,7 @@ public class Trie {
 
                 byte[] serializedNode = new byte[length.intValue()];
                 message.get(serializedNode);
-                Trie node = fromMessageRskip107(ByteBuffer.wrap(serializedNode), store);
+                Trie node = fromMessageRskip240(ByteBuffer.wrap(serializedNode), store);
                 right = new NodeReference(store, node, null);
             } else {
                 byte[] valueHash = new byte[Keccak256Helper.DEFAULT_SIZE_BYTES];
@@ -439,10 +460,8 @@ public class Trie {
             throw new IllegalArgumentException("The message had more data than expected");
         }
 
-        // todo(fedejinich) an rskip107 message should never contain a rent timestamp
-        Trie trie = new Trie(store, sharedPath, value, left, right, lvalue, valueHash, childrenSize, lastRentPaidTimestamp);
-
-        return trie;
+        return new Trie(store, sharedPath, value, left, right,
+                lvalue, valueHash, childrenSize, lastRentPaidTimestamp);
     }
 
     /**
@@ -789,28 +808,35 @@ public class Trie {
                         (hasLongVal ? Keccak256Helper.DEFAULT_SIZE_BYTES + Uint24.BYTES : lvalue.intValue())
         );
 
-        // current serialization version: 01
+        // nodeVersion: 2 bits indicate serialization version (bits 6,7). Currently 01 (bit 6=1).
         byte flags = 0b01000000;
+
+        // hasLongValue: 1 bit indicate if value length > 32 bytes (bit 5)
         if (hasLongVal) {
             flags = (byte) (flags | 0b00100000);
         }
 
+        // sharedPrefixPresent: 1 bit indicates if there is any prefix (bit 4)
         if (sharedPathSerializer.isPresent()) {
             flags = (byte) (flags | 0b00010000);
         }
 
+        // nodePresent: 2 bits indicate left/right embedded node (bit 2 = left, bit 3 = right)
         if (!this.left.isEmpty()) {
             flags = (byte) (flags | 0b00001000);
         }
 
+        // nodePresent: 2 bits indicate left/right embedded node (bit 2 = left, bit 3 = right)
         if (!this.right.isEmpty()) {
             flags = (byte) (flags | 0b00000100);
         }
 
+        // nodeIsEmbedded: 2 bits indicate left/right node presence (bit 0 = left, bit 1=right)
         if (this.left.isEmbeddable()) {
             flags = (byte) (flags | 0b00000010);
         }
 
+        // nodeIsEmbedded: 2 bits indicate left/right node presence (bit 0 = left, bit 1=right)
         if (this.right.isEmbeddable()) {
             flags = (byte) (flags | 0b00000001);
         }
@@ -837,7 +863,7 @@ public class Trie {
         encoded = buffer.array();
     }
 
-    public void internalToMessageRSKIP240() {
+    public byte[] internalToMessageRSKIP240() {
         Uint24 lvalue = this.valueLength;
         boolean hasLongVal = this.hasLongValue();
 
@@ -845,7 +871,8 @@ public class Trie {
         VarInt childrenSize = getChildrenSize();
 
         ByteBuffer buffer = ByteBuffer.allocate(
-                1 + // flags
+                FLAGS_SIZE + // flags
+                TIMESTAMP_SIZE +
                         sharedPathSerializer.serializedLength() +
                         this.left.serializedLength() +
                         this.right.serializedLength() +
@@ -853,8 +880,7 @@ public class Trie {
                         (hasLongVal ? Keccak256Helper.DEFAULT_SIZE_BYTES + Uint24.BYTES : lvalue.intValue())
         );
 
-        // current serialization version: 10
-        byte flags = (byte) 0b10000000;
+        byte flags = (byte) HOP_TRIE_VERSION;
         if (hasLongVal) {
             flags = (byte) (flags | 0b00100000);
         }
@@ -900,7 +926,8 @@ public class Trie {
             buffer.put(this.getValue());
         }
 
-        encoded = buffer.array();
+        return buffer.array();
+//        encoded = buffer.array(); todo(fedejinich) this will be changed before going into production
     }
 
     private Trie retrieveNode(byte implicitByte) {
@@ -1316,6 +1343,17 @@ public class Trie {
 
         message.get(bytes);
         return new VarInt(bytes, 0);
+    }
+
+    @VisibleForTesting // todo(fedejinich) remove test code from production
+    public long getLastRentPaidTimestamp() {
+        return lastRentPaidTimestamp;
+    }
+
+    public Trie setLastRentPaidTimestamp(long testTimestamp) {
+        // todo(fedejinich) ideally it should timestamp this node and all the nodes up to the root
+        return new Trie(store, sharedPath, value, left, right, valueLength,
+                valueHash, childrenSize, testTimestamp);
     }
 
     /**

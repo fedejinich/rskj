@@ -2,13 +2,13 @@ package co.rsk.trie.message;
 
 import co.rsk.core.types.ints.Uint24;
 import co.rsk.core.types.ints.Uint8;
-import co.rsk.trie.Trie;
-import co.rsk.trie.TrieValueTest;
+import co.rsk.trie.*;
 import org.apache.commons.lang3.NotImplementedException;
 import org.junit.Test;
 
 import java.nio.ByteBuffer;
 import java.util.Date;
+import java.util.List;
 
 import static co.rsk.trie.Trie.*;
 import static org.bouncycastle.util.encoders.Hex.decode;
@@ -283,5 +283,58 @@ public class TrieHopMessageTest {
 
     private void assertLastPaidRentTimestamp(byte[] message) {
         throw new NotImplementedException("not impl");
+    }
+
+    @Test
+    public void testHopSerialization() {
+        // in this test we will generate all the possible trie combinations (with fixed node version 2),
+        // then for each combination we'll generate a valid serialized trie, deserialize and serialize it and check against the generated one.
+        // for more detailed information checkout rskip107
+
+        // since the node version it's always 10 (two in binary),
+        // we'll generate ?? combinations:
+        //   all the possible flags (6) +
+        //   timestamp/noTimestamp
+        //   childrenSize +
+        //   value/noValue/longValue +
+
+        List<Byte> possibleFlags = generateFlags();
+        possibleFlags.stream()
+                .map(flags -> buildSerializedTriesByFlags(flags))
+                .forEach(message -> serializationOk(message));
+    }
+
+    private void serializationOk(byte[] message) {
+        // then for each combination we'll generate a valid serialized trie,
+        // deserialize and serialize it and check against the generated one.
+    }
+
+    private byte[] buildSerializedTriesByFlags(Byte flags) {
+        boolean hasLongVal = (flags & 0b00100000) == 0b00100000;
+        boolean sharedPrefixPresent = (flags & 0b00010000) == 0b00010000;
+        boolean leftNodePresent = (flags & 0b00001000) == 0b00001000;
+        boolean rightNodePresent = (flags & 0b00000100) == 0b00000100;
+        boolean leftNodeEmbedded = (flags & 0b00000010) == 0b00000010;
+        boolean rightNodeEmbedded = (flags & 0b00000001) == 0b00000001;
+
+        ByteBuffer buffer = ByteBuffer.allocate(
+                FLAGS_SIZE +
+                lastPaidRentTimestampSize(TIMESTAMP_SIZE) + // todo(fedejinich) what happens with nodes with no timestamp
+                sharedPathSize(sharedPrefixPresent) +
+                childSize(leftNodePresent, leftNodeEmbedded) +
+                childSize(rightNodePresent, rightNodeEmbedded) +
+                childrenSize(leftNodePresent || rightNodePresent) +
+                valueSize(hasLongVal) // todo(fedejinich) what happens when the trie has no value
+        );
+
+        buffer.put(generateFlags(flags));
+        buffer.put(generateTimestamp(flags));
+        buffer.put(generateSharedPath(sharedPrefixPresent));
+        buffer.put(generateChildNode(leftNodePresent, leftNodeEmbedded));
+        buffer.put(generateChildNode(rightNodePresent, rightNodeEmbedded));
+        buffer.put(generateChildrenSize(leftNodePresent, rightNodePresent));
+        buffer.put(generateValue(hasLongVal)); // todo(fedejinich) what happens when the trie has no value
+
+        return buffer.array();
     }
 }
