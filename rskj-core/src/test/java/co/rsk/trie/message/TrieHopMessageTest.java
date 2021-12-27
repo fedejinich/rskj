@@ -86,6 +86,7 @@ public class TrieHopMessageTest {
         byte[] embeddedLeftChild = new byte[embeddedLeftChildLength.intValue()];
         messageBuffer.get(embeddedLeftChild);
         assertEquals(7, embeddedLeftChild.length);
+        // todo(fedejinich) deserialize and check value
         assertArrayEquals(new byte[]{7}, Trie.fromMessage(embeddedLeftChild, null)
                 .getLeft().getNode().get().getValue()); // todo(fedejinich) is this ok ?
 

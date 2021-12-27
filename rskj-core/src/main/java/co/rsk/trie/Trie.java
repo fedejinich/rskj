@@ -1000,7 +1000,7 @@ public class Trie {
         // the following code coalesces nodes if needed for delete operation
 
         // it's null or it is not a delete operation
-        if (trie == null || value != null) {
+        if (trie == null || value != null) { // todo(fedejinich) in most cases it ends up here
             return trie;
         }
 
@@ -1052,13 +1052,13 @@ public class Trie {
 
     private Trie internalPut(TrieKeySlice key, byte[] value, boolean isRecursiveDelete) {
         TrieKeySlice commonPath = key.commonPath(sharedPath);
-        if (commonPath.length() < sharedPath.length()) {
+        if (commonPath.length() < sharedPath.length()) { // todo(fedejinich) checks if key is contained in the current sharedPath
             // when we are removing a key we know splitting is not necessary. the key wasn't found at this point.
             if (value == null) {
                 return this;
             }
 
-            return this.split(commonPath).put(key, value, isRecursiveDelete);
+            return this.split(commonPath).put(key, value, isRecursiveDelete); // todo(fedejinich) recursive
         }
 
         if (sharedPath.length() >= key.length()) {
@@ -1091,7 +1091,7 @@ public class Trie {
                     this.lastRentPaidTimestamp); // todo(fedejinich) is this ok?
         }
 
-        if (isEmptyTrie()) {
+        if (isEmptyTrie()) { // todo(fedejinich) put in an empty trie, since it's a recursive operation it mostly ends up here
             // todo(fedejinich) an empty trie should not have an initialized
             //  timestamp (since it's initialized at the end of the tx execution)
             return new Trie(this.store, key, cloneArray(value), NO_RENT_TIMESTAMP);
@@ -1106,7 +1106,7 @@ public class Trie {
         }
 
         TrieKeySlice subKey = key.slice(sharedPath.length() + 1, key.length());
-        Trie newNode = node.put(subKey, value, isRecursiveDelete);
+        Trie newNode = node.put(subKey, value, isRecursiveDelete); // todo(fedejinich) recursive
 
         // reference equality
         if (newNode == node) {
@@ -1142,10 +1142,12 @@ public class Trie {
                 this.valueHash, childrenSize, this.lastRentPaidTimestamp); // todo(fedejinich) is this ok?
     }
 
+    // todo(fedejinich) useful for puts/gets, splits the current trie by commonPath, returns the right or the left node
     private Trie split(TrieKeySlice commonPath) {
         int commonPathLength = commonPath.length();
         TrieKeySlice newChildSharedPath = sharedPath.slice(commonPathLength + 1, sharedPath.length());
-        Trie newChildTrie = new Trie(this.store, newChildSharedPath, this.value, this.left, this.right, this.valueLength, this.valueHash, this.childrenSize, this.lastRentPaidTimestamp); // todo(fedejinich) is this ok?
+        Trie newChildTrie = new Trie(this.store, newChildSharedPath, this.value, this.left, this.right,
+                this.valueLength, this.valueHash, this.childrenSize, this.lastRentPaidTimestamp); // todo(fedejinich) is this ok?
         NodeReference newChildReference = new NodeReference(this.store, newChildTrie, null);
 
         // this bit will be implicit and not present in a shared path
@@ -1162,7 +1164,8 @@ public class Trie {
             newRight = newChildReference;
         }
 
-        return new Trie(this.store, commonPath, null, newLeft, newRight, Uint24.ZERO, null, childrenSize, this.lastRentPaidTimestamp); // todo(fedejinich) is this ok?
+        return new Trie(this.store, commonPath, null, newLeft, newRight,
+                Uint24.ZERO, null, childrenSize, this.lastRentPaidTimestamp); // todo(fedejinich) is this ok?
     }
 
     public boolean isTerminal() {
@@ -1382,6 +1385,156 @@ public class Trie {
     public Trie setLastRentPaidTimestamp(long lastPaidRentTimestamp) {
         return new Trie(this.store, this.sharedPath, this.value, this.left, this.right,
                 this.valueLength, this.valueHash, this.childrenSize, lastPaidRentTimestamp);
+    }
+
+    private Trie putWithRent(TrieKeySlice key, byte[] value, boolean isRecursiveDelete, long newLastRentPaidTimestamp) {
+        // First of all, setting the value as an empty byte array is equivalent
+        // to removing the key/value. This is because other parts of the trie make
+        // this equivalent. Use always null to mark a node for deletion.
+        if (value != null && value.length == 0) {
+            value = null;
+        }
+
+        Trie trie = this.internalputWithRent(key, value, isRecursiveDelete, newLastRentPaidTimestamp);
+
+        // the following code coalesces nodes if needed for delete operation
+
+        // it's null or it is not a delete operation
+        if (trie == null || value != null) {
+            return trie;
+        }
+
+        if (trie.isEmptyTrie()) {
+            return null;
+        }
+
+        // only coalesce if node has only one child and no value
+        // suppose there is a value
+        if (trie.valueLength.compareTo(Uint24.ZERO) > 0) {
+            return trie;
+        }
+        // no value.. still need to ensure only one child.
+        Optional<Trie> leftOpt = trie.left.getNode();
+        Optional<Trie> rightOpt = trie.right.getNode();
+        // if both present, return
+        if (leftOpt.isPresent() && rightOpt.isPresent()) {
+            return trie;
+        }
+        // if both absent, return.
+        if (!leftOpt.isPresent() && !rightOpt.isPresent()) {
+            return trie;
+        }
+        // now we have a node with a value and exactly one child, proceed with combining/coalescing.
+        Trie child;
+        byte childImplicitByte;
+
+        // leftOpt/rightOpt are optional lists of tries, so get() below is just usual list method
+        if (leftOpt.isPresent()) {
+            child = leftOpt.get();
+            childImplicitByte = (byte) 0;
+        } else { // has right node
+            child = rightOpt.get();
+            childImplicitByte = (byte) 1;
+        }
+        // reconstruct the shared path
+        TrieKeySlice newSharedPath = trie.sharedPath.rebuildSharedPath(childImplicitByte, child.sharedPath);
+        return new Trie(child.store, newSharedPath, child.value, child.left, child.right, child.valueLength,
+                child.valueHash, child.childrenSize, child.lastRentPaidTimestamp);
+    }
+
+    // #mish: duplicated and extended internalPut to update a node's rent timestamp and explicit nodeVersion
+    private Trie internalputWithRent(TrieKeySlice key, byte[] value, boolean isRecursiveDelete, long newLastRentPaidTimestamp)  {
+        // #mish find the common path between the given key and the current node's (top of the trie) sharedpath
+        TrieKeySlice commonPath = key.commonPath(sharedPath);
+
+        if (commonPath.length() < sharedPath.length()) {
+            // when we are removing a key we know splitting is not necessary. the key wasn't found at this point.
+            if (value == null) {
+                return this;
+            }
+            // #mish Add rent paid timestamp for internal nodes
+            // first split the trie
+            Trie splitTrie = this.split(commonPath);
+            // then mark the timestamp of the node whose creation (put) is causing the split
+            splitTrie = splitTrie.setLastRentPaidTimestamp(newLastRentPaidTimestamp);
+
+            // then carry on with the put
+            return splitTrie.putWithRent(key, value, isRecursiveDelete, newLastRentPaidTimestamp);
+        }
+
+        if (sharedPath.length() >= key.length()) {
+            // To compare values we need to retrieve the previous value
+            // if not already done so. We could also compare by hash, to avoid retrieval
+            // We do a small optimization here: if sizes are not equal, then values
+            // obviously are not.
+            if (this.valueLength.equals(getDataLength(value)) && Arrays.equals(this.getValue(), value)) {
+                //values are equal..  if rent paid time is also unchanged, then return
+                if (this.lastRentPaidTimestamp == newLastRentPaidTimestamp){
+                    return this;
+                }
+            }
+
+            if (isRecursiveDelete) {
+                return new Trie(this.store, this.sharedPath, null, NO_RENT_TIMESTAMP);
+            }
+
+            if (isEmptyTrie(getDataLength(value), this.left, this.right)) {
+                return null;
+            }
+
+            return new Trie(
+                    this.store,
+                    this.sharedPath,
+                    cloneArray(value),
+                    this.left,
+                    this.right,
+                    getDataLength(value),
+                    null,
+                    null,
+                    newLastRentPaidTimestamp
+//                    nodeVer todo(fedejinich) no need to reuse this part
+            );
+        }
+
+        if (isEmptyTrie()) {
+            return new Trie(this.store, key, cloneArray(value), NodeReference.empty(), NodeReference.empty(),
+//                    getDataLength(value), null, null, newLastRentPaidTimestamp, nodeVer); todo(fedejinich) no need to reuse this part
+                    getDataLength(value), null, null, newLastRentPaidTimestamp);
+        }
+
+        // this bit will be implicit and not present in a shared path
+        byte pos = key.get(sharedPath.length());
+
+        Trie node = retrieveNode(pos);
+        if (node == null) {
+            node = new Trie(this.store);
+        }
+
+        TrieKeySlice subKey = key.slice(sharedPath.length() + 1, key.length());
+        Trie newNode = node.putWithRent(subKey, value, isRecursiveDelete, newLastRentPaidTimestamp);
+
+        // reference equality
+        if (newNode == node) {
+            return this;
+        }
+
+        NodeReference newNodeReference = new NodeReference(this.store, newNode, null);
+        NodeReference newLeft;
+        NodeReference newRight;
+        if (pos == 0) {
+            newLeft = newNodeReference;
+            newRight = this.right;
+        } else {
+            newLeft = this.left;
+            newRight = newNodeReference;
+        }
+
+        if (isEmptyTrie(this.valueLength, newLeft, newRight)) {
+            return null;
+        }
+        return new Trie(this.store, this.sharedPath, this.value, newLeft, newRight, this.valueLength, this.valueHash, null,
+//                this.lastRentPaidTimestamp, this.nodeVersion); // todo(fedejinich) no need to resue this part
+                this.lastRentPaidTimestamp);
     }
 
     public long getLastRentPaidTimestamp() {
