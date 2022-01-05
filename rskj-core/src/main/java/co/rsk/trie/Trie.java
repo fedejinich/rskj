@@ -87,9 +87,9 @@ public class Trie {
 
     // to represent a non-initialized rent timestamp
     public static final long NO_RENT_TIMESTAMP = -1;
-
-    public static final int HOP_TRIE_VERSION = 0b10000000; // todo(fedejinich) this is actually 128 and -128 (casted to byte)
-    public static final int RSKIP107_TRIE_VERSION = 0b01000000;
+    
+    public static final int HOP_TRIE_VERSION =  0b10000000; // todo(fedejinich) this is actually 128 and -128 (casted to byte)
+    public static final int RSKIP107_TRIE_VERSION = 0b01000000; // comment(shree) casting as (byte) does not change value remains at 64
 
     // this node associated value, if any
     private byte[] value;
@@ -1092,7 +1092,7 @@ public class Trie {
                     getDataLength(value),
                     null,
                     this.childrenSize,
-                    this.lastRentPaidTimestamp); // todo(fedejinich) is this ok?
+                    this.lastRentPaidTimestamp); // todo(fedejinich) is this ok? todo(shree): yes, it's fine
         }
 
         if (isEmptyTrie()) {
@@ -1394,7 +1394,8 @@ public class Trie {
 
 //     todo(fedejinich) we don't need any 'value', it will be removed and replaced by the already existing 'this.value'
     public Trie updateLastRentPaidTimestamp(TrieKeySlice key, long lastRentPaidTimestamp) {
-//        todo(fedejinich) i'm not sure about this part yet, why would we split the trie for updates?
+//        todo(fedejinich) i'm not sure about this part yet, why would we split the trie for updates? 
+//        todo(shree) -> I agree.. there's no need to split .. the node should already be there (How do we ensure it).. doesn't matter if it has a value or not
 //        TrieKeySlice commonPath = key.commonPath(sharedPath);
 //        if (commonPath.length() < sharedPath.length()) {
 //            // when we are removing a key we know splitting is not necessary. the key wasn't found at this point.
@@ -1454,9 +1455,12 @@ public class Trie {
 
         Trie node = retrieveNode(pos);
         // todo(fedejinich) this should never happen, it will update timestamp from an already existing trie
-//        if (node == null) {
-//            node = new Trie(this.store);
-//        }
+        // todo(shree): yes it should not happen.. but if we try to update timestamp for a node that does not exist, 
+        //              we should log the error and return the trie unchanged. Otherwise we have unhandled exception. 
+        if (node == null) {
+            logger.debug("Attempt to update rent timestamp for non existent node");
+            return this;
+        }
 
         TrieKeySlice subKey = key.slice(sharedPath.length() + 1, key.length());
         Trie newNode = node.updateLastRentPaidTimestamp(subKey, lastRentPaidTimestamp);
@@ -1500,8 +1504,9 @@ public class Trie {
 
         // goes up to the trie root with new updated left/right
         // todo(fedejinich) here we can update also the intermediate nodes by passing newNode.lastRentTimestamp instead of this.lastPaidRentTimestamp
+        // todo(shree) yes.. I also think this should use newNode.lastRPT
         return new Trie(this.store, this.sharedPath, this.value, newLeft, newRight,
-                this.valueLength, this.valueHash, childrenSize, this.lastRentPaidTimestamp); // todo(fedejinich) use the already existing timestamp
+                this.valueLength, this.valueHash, childrenSize, newNode.lastRentPaidTimestamp); // todo(fedejinich) use the already existing timestamp
     }
 
     public long getLastRentPaidTimestamp() {
