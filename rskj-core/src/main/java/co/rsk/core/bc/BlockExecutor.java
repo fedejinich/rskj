@@ -265,9 +265,9 @@ public class BlockExecutor {
         // the state prior execution again.
         Metric metric = profiler.start(Profiler.PROFILING_TYPE.BLOCK_EXECUTE);
 
-        Repository track = repositoryLocator.startTrackingAt(parent);
+        Repository blockTrack = repositoryLocator.startTrackingAt(parent);
 
-        maintainPrecompiledContractStorageRoots(track, activationConfig.forBlock(block.getNumber()));
+        maintainPrecompiledContractStorageRoots(blockTrack, activationConfig.forBlock(block.getNumber()));
 
         int i = 1;
         long totalGasUsed = 0;
@@ -281,17 +281,22 @@ public class BlockExecutor {
         for (Transaction tx : block.getTransactionsList()) {
             logger.trace("apply block: [{}] tx: [{}] ", block.getNumber(), i);
 
+            // this should be treated as HF
+            Repository transactionTrack = blockTrack.startTracking();
+
             TransactionExecutor txExecutor = transactionExecutorFactory.newInstance(
                     tx,
                     txindex++,
                     block.getCoinbase(),
-                    track,
+                    transactionTrack,
                     block,
                     totalGasUsed,
                     vmTrace,
                     vmTraceOptions,
                     deletedAccounts);
             boolean transactionExecuted = txExecutor.executeTransaction();
+
+            transactionTrack.commit(); // it commits at least the nonce and the balance
 
             if (!acceptInvalidTransactions && !transactionExecuted) {
                 if (discardInvalidTxs) {
@@ -317,9 +322,9 @@ public class BlockExecutor {
 
             logger.trace("tx executed");
 
-            // No need to commit the changes here. track.commit();
+            // No need to commit the changes here. blockTrack.commit();
 
-            logger.trace("track commit");
+            logger.trace("blockTrack commit");
 
             long gasUsed = txExecutor.getGasUsed();
             totalGasUsed += gasUsed;
@@ -352,9 +357,9 @@ public class BlockExecutor {
 
         logger.trace("End txs executions.");
         if (!vmTrace) {
-            logger.trace("Saving track.");
-            track.save();
-            logger.trace("End saving track.");
+            logger.trace("Saving blockTrack.");
+            blockTrack.save();
+            logger.trace("End saving blockTrack.");
         }
 
         logger.trace("Building execution results.");
@@ -364,7 +369,7 @@ public class BlockExecutor {
                 receipts,
                 totalGasUsed,
                 totalPaidFees,
-                vmTrace ? null : track.getTrie()
+                vmTrace ? null : blockTrack.getTrie()
         );
         profiler.stop(metric);
         logger.trace("End executeInternal.");

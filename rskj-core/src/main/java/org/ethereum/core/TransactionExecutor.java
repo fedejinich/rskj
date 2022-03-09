@@ -68,8 +68,8 @@ public class TransactionExecutor {
     private final ActivationConfig.ForBlock activations;
     private final Transaction tx;
     private final int txindex;
-    private final Repository track;
-    private final Repository cacheTrack;
+    private final Repository transactionTrack;
+    private final Repository executionTrack;
     private final BlockStore blockStore;
     private final ReceiptStore receiptStore;
     private final BlockFactory blockFactory;
@@ -103,7 +103,7 @@ public class TransactionExecutor {
 
     public TransactionExecutor(
             Constants constants, ActivationConfig activationConfig, Transaction tx, int txindex, RskAddress coinbase,
-            Repository track, BlockStore blockStore, ReceiptStore receiptStore, BlockFactory blockFactory,
+            Repository transactionTrack, BlockStore blockStore, ReceiptStore receiptStore, BlockFactory blockFactory,
             ProgramInvokeFactory programInvokeFactory, Block executionBlock, long gasUsedInTheBlock, VmConfig vmConfig,
             boolean remascEnabled, PrecompiledContracts precompiledContracts, Set<DataWord> deletedAccounts,
             SignatureCache signatureCache) {
@@ -113,8 +113,8 @@ public class TransactionExecutor {
         this.tx = tx;
         this.txindex = txindex;
         this.coinbase = coinbase;
-        this.track = track;
-        this.cacheTrack = track.startTracking();
+        this.transactionTrack = transactionTrack;
+        this.executionTrack = transactionTrack.startTracking();
         this.blockStore = blockStore;
         this.receiptStore = receiptStore;
         this.blockFactory = blockFactory;
@@ -176,7 +176,7 @@ public class TransactionExecutor {
             totalCost = totalCost.add(txGasCost);
         }
 
-        Coin senderBalance = track.getBalance(tx.getSender());
+        Coin senderBalance = transactionTrack.getBalance(tx.getSender());
 
         if (!isCovers(senderBalance, totalCost)) {
 
@@ -224,7 +224,7 @@ public class TransactionExecutor {
     }
 
     private boolean nonceIsValid() {
-        BigInteger reqNonce = track.getNonce(tx.getSender(signatureCache));
+        BigInteger reqNonce = transactionTrack.getNonce(tx.getSender(signatureCache));
         BigInteger txNonce = toBI(tx.getNonce());
 
         if (isNotEqual(reqNonce, txNonce)) {
@@ -270,11 +270,11 @@ public class TransactionExecutor {
 
         if (!localCall) {
 
-            track.increaseNonce(tx.getSender());
+            transactionTrack.increaseNonce(tx.getSender());
 
             long txGasLimit = GasCost.toGas(tx.getGasLimit());
             Coin txGasCost = tx.getGasPrice().multiply(BigInteger.valueOf(txGasLimit));
-            track.addBalance(tx.getSender(), txGasCost.negate());
+            transactionTrack.addBalance(tx.getSender(), txGasCost.negate());
 
             logger.trace("Paying: txGasCost: [{}], gasPrice: [{}], gasLimit: [{}]", txGasCost, tx.getGasPrice(), txGasLimit);
         }
@@ -308,7 +308,7 @@ public class TransactionExecutor {
 
         if (precompiledContract != null) {
             Metric metric = profiler.start(Profiler.PROFILING_TYPE.PRECOMPILED_CONTRACT_INIT);
-            precompiledContract.init(tx, executionBlock, track, blockStore, receiptStore, result.getLogInfoList());
+            precompiledContract.init(tx, executionBlock, transactionTrack, blockStore, receiptStore, result.getLogInfoList());
             profiler.stop(metric);
             metric = profiler.start(Profiler.PROFILING_TYPE.PRECOMPILED_CONTRACT_EXECUTE);
 
@@ -334,11 +334,11 @@ public class TransactionExecutor {
                 byte[] out = precompiledContract.execute(tx.getData());
                 this.subtraces = precompiledContract.getSubtraces();
                 result.setHReturn(out);
-                if (!track.isExist(targetAddress)) {
-                    track.createAccount(targetAddress);
-                    track.setupContract(targetAddress);
-                } else if (!track.isContract(targetAddress)) {
-                    track.setupContract(targetAddress);
+                if (!transactionTrack.isExist(targetAddress)) {
+                    transactionTrack.createAccount(targetAddress);
+                    transactionTrack.setupContract(targetAddress);
+                } else if (!transactionTrack.isContract(targetAddress)) {
+                    transactionTrack.setupContract(targetAddress);
                 }
             } catch (VMException | RuntimeException e) {
                 result.setException(e);
@@ -346,14 +346,14 @@ public class TransactionExecutor {
             result.spendGas(gasUsed);
             profiler.stop(metric);
         } else {
-            byte[] code = track.getCode(targetAddress);
+            byte[] code = transactionTrack.getCode(targetAddress);
             // Code can be null
             if (isEmpty(code)) {
                 gasLeftover = GasCost.subtract(GasCost.toGas(tx.getGasLimit()), basicTxCost);
                 result.spendGas(basicTxCost);
             } else {
                 ProgramInvoke programInvoke =
-                        programInvokeFactory.createProgramInvoke(tx, txindex, executionBlock, cacheTrack, blockStore);
+                        programInvokeFactory.createProgramInvoke(tx, txindex, executionBlock, executionTrack, blockStore);
 
                 this.vm = new VM(vmConfig, precompiledContracts);
                 this.program = new Program(vmConfig, precompiledContracts, blockFactory, activations, code, programInvoke, tx, deletedAccounts);
@@ -362,21 +362,21 @@ public class TransactionExecutor {
 
         if (result.getException() == null) {
             Coin endowment = tx.getValue();
-            cacheTrack.transfer(tx.getSender(), targetAddress, endowment);
+            executionTrack.transfer(tx.getSender(), targetAddress, endowment);
         }
     }
 
     private void create() {
         RskAddress newContractAddress = tx.getContractAddress();
-        cacheTrack.createAccount(newContractAddress, activations.isActive(RSKIP174) && cacheTrack.isExist(newContractAddress));
+        executionTrack.createAccount(newContractAddress, activations.isActive(RSKIP174) && executionTrack.isExist(newContractAddress));
 
         if (isEmpty(tx.getData())) {
             gasLeftover = GasCost.subtract(GasCost.toGas(tx.getGasLimit()), basicTxCost);
             // If there is no data, then the account is created, but without code nor
             // storage. It doesn't even call setupContract() to setup a storage root
         } else {
-            cacheTrack.setupContract(newContractAddress);
-            ProgramInvoke programInvoke = programInvokeFactory.createProgramInvoke(tx, txindex, executionBlock, cacheTrack, blockStore);
+            executionTrack.setupContract(newContractAddress);
+            ProgramInvoke programInvoke = programInvokeFactory.createProgramInvoke(tx, txindex, executionBlock, executionTrack, blockStore);
 
             this.vm = new VM(vmConfig, precompiledContracts);
             this.program = new Program(vmConfig, precompiledContracts, blockFactory, activations, tx.getData(), programInvoke, tx, deletedAccounts);
@@ -392,7 +392,7 @@ public class TransactionExecutor {
         }
 
         Coin endowment = tx.getValue();
-        cacheTrack.transfer(tx.getSender(), newContractAddress, endowment);
+        executionTrack.transfer(tx.getSender(), newContractAddress, endowment);
     }
 
     private void execError(Throwable err) {
@@ -408,7 +408,7 @@ public class TransactionExecutor {
     private void go() {
         // TODO: transaction call for pre-compiled  contracts
         if (vm == null) {
-            cacheTrack.commit();
+            executionTrack.commit();
             return;
         }
 
@@ -433,7 +433,7 @@ public class TransactionExecutor {
 
             if (result.getException() != null || result.isRevert()) {
                 result.clearFieldsOnException();
-                cacheTrack.rollback();
+                executionTrack.rollback();
 
                 if (result.getException() != null) {
                     throw result.getException();
@@ -442,14 +442,14 @@ public class TransactionExecutor {
                 }
             }
         } catch (Exception e) {
-            cacheTrack.rollback();
+            executionTrack.rollback();
             gasLeftover = 0;
             execError(e);
             result.setException(e);
             profiler.stop(metric);
             return;
         }
-        cacheTrack.commit();
+        executionTrack.commit();
         profiler.stop(metric);
     }
 
@@ -475,7 +475,7 @@ public class TransactionExecutor {
         } else {
             gasLeftover = GasCost.subtract(gasLeftover,  returnDataGasValue);
             program.spendGas(returnDataGasValue, "CONTRACT DATA COST");
-            cacheTrack.saveCode(tx.getContractAddress(), result.getHReturn());
+            executionTrack.saveCode(tx.getContractAddress(), result.getHReturn());
         }
     }
 
@@ -502,7 +502,7 @@ public class TransactionExecutor {
 
         logger.trace("Finalize transaction {} {}", toBI(tx.getNonce()), tx.getHash());
 
-        cacheTrack.commit();
+        executionTrack.commit();
 
         //Transaction sender is stored in cache
         signatureCache.storeSender(tx);
@@ -520,7 +520,7 @@ public class TransactionExecutor {
         TransactionExecutionSummary summary = buildTransactionExecutionSummary(summaryBuilder, gasRefund);
 
         // Refund for gas leftover
-        track.addBalance(tx.getSender(), summary.getLeftover().add(summary.getRefund()));
+        transactionTrack.addBalance(tx.getSender(), summary.getLeftover().add(summary.getRefund()));
         logger.trace("Pay total refund to sender: [{}], refund val: [{}]", tx.getSender(), summary.getRefund());
 
         // Transfer fees to miner
@@ -529,9 +529,9 @@ public class TransactionExecutor {
         //TODO: REMOVE THIS WHEN THE LocalBLockTests starts working with REMASC
         if (enableRemasc) {
             logger.trace("Adding fee to remasc contract account");
-            track.addBalance(PrecompiledContracts.REMASC_ADDR, summaryFee);
+            transactionTrack.addBalance(PrecompiledContracts.REMASC_ADDR, summaryFee);
         } else {
-            track.addBalance(coinbase, summaryFee);
+            transactionTrack.addBalance(coinbase, summaryFee);
         }
 
         this.paidFees = summaryFee;
@@ -539,9 +539,9 @@ public class TransactionExecutor {
         logger.trace("Processing result");
         logs = logsFromNonRejectedTransactions;
 
-        result.getCodeChanges().forEach((key, value) -> track.saveCode(new RskAddress(key), value));
+        result.getCodeChanges().forEach((key, value) -> transactionTrack.saveCode(new RskAddress(key), value));
         // Traverse list of suicides
-        result.getDeleteAccounts().forEach(address -> track.delete(new RskAddress(address)));
+        result.getDeleteAccounts().forEach(address -> transactionTrack.delete(new RskAddress(address)));
 
         logger.trace("tx listener done");
 
