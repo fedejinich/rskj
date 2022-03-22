@@ -200,50 +200,45 @@ public class EthModule
 
     public String getCode(String address, String blockId) {
         if (blockId == null) {
-            throw new NullPointerException();
+            throw new RuntimeException("provide a blockId");
         }
 
-        String s = null;
-        try {
-            RskAddress addr = new RskAddress(address);
+        RskAddress addr = new RskAddress(address);
 
-            AccountInformationProvider accountInformationProvider = getAccountInformationProvider(blockId);
+        String code = getAccountInformationProvider(blockId).map(accountInformationProvider -> {
+            byte[] codeBytes = accountInformationProvider.getCode(addr);
 
-            if(accountInformationProvider != null) {
-                byte[] code = accountInformationProvider.getCode(addr);
-
-                // Code can be null, if there is no account.
-                if (code == null) {
-                    code = new byte[0];
-                }
-
-                s = toUnformattedJsonHex(code);
+            // Code can be null, if there is no account.
+            if (codeBytes == null) {
+                codeBytes = new byte[0];
             }
 
-            return s;
-        } finally {
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("eth_getCode({}, {}): {}", address, blockId, s);
-            }
+            return toUnformattedJsonHex(codeBytes);
+        }).orElseThrow(() -> new RuntimeException("'code' always exists, shouldn't reach here"));
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("eth_getCode({}, {}): {}", address, blockId, code);
         }
+
+        return code;
     }
 
-    private AccountInformationProvider getAccountInformationProvider(String id) {
+    private Optional<AccountInformationProvider> getAccountInformationProvider(String id) {
         switch (id.toLowerCase()) {
             case "pending":
-                return transactionPool.getPendingState();
+                return Optional.ofNullable(transactionPool.getPendingState());
             case "earliest":
-                return repositoryLocator.snapshotAt(blockchain.getBlockByNumber(0).getHeader());
+                return Optional.ofNullable(repositoryLocator.snapshotAt(blockchain.getBlockByNumber(0).getHeader()));
             case "latest":
-                return repositoryLocator.snapshotAt(blockchain.getBestBlock().getHeader());
+                return Optional.ofNullable(repositoryLocator.snapshotAt(blockchain.getBestBlock().getHeader()));
             default:
                 try {
                     long blockNumber = stringHexToBigInteger(id).longValue();
                     Block requestedBlock = blockchain.getBlockByNumber(blockNumber);
                     if (requestedBlock != null) {
-                        return repositoryLocator.snapshotAt(requestedBlock.getHeader());
+                        return Optional.ofNullable(repositoryLocator.snapshotAt(requestedBlock.getHeader()));
                     }
-                    return null;
+                    return Optional.empty();
                 } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
                     throw invalidParamError("invalid blocknumber " + id);
                 }
