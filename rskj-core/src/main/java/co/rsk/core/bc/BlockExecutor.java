@@ -291,7 +291,7 @@ public class BlockExecutor {
                     vmTrace,
                     vmTraceOptions,
                     deletedAccounts);
-            boolean transactionExecuted = txExecutor.executeTransaction();
+            boolean transactionExecuted = executeTransaction(txExecutor);
 
             if (!acceptInvalidTransactions && !transactionExecuted) {
                 if (discardInvalidTxs) {
@@ -369,6 +369,13 @@ public class BlockExecutor {
         profiler.stop(metric);
         logger.trace("End executeInternal.");
         return result;
+    }
+
+    /**
+     * This method is then overridden for testing purposes at BlockExecutorDSL
+     * */
+    protected boolean executeTransaction(TransactionExecutor txExecutor) {
+        return txExecutor.executeTransaction();
     }
 
     /**
