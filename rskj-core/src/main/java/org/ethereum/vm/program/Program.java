@@ -531,15 +531,6 @@ public class Program {
                             programResult.getException());
                 }
 
-                // The programResult is empty and internalTx was not created so we skip this part
-                /*if (internalTx == null) {
-                    throw new NullPointerException();
-                }
-
-                internalTx.reject();
-                programResult.rejectInternalTransactions();
-                programResult.rejectLogInfos();*/
-
                 track.rollback();
                 stackPushZero();
 
@@ -1339,6 +1330,7 @@ public class Program {
             return;
         }
 
+        // todo(fedejinich) should i add the storage rent manager here also?
         Repository track = getStorage().startTracking();
 
         RskAddress senderAddress = getOwnerRskAddress();
