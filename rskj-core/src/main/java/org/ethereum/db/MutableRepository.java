@@ -306,14 +306,7 @@ public class MutableRepository implements Repository {
         if (value == null) {
             return null;
         }
-
-        DataWord dataWord = DataWord.valueOf(value);
-
-        String s = new ByteArrayWrapper(triekey).toString();
-        String arg2 = dataWord.toString();
-        LOGGER_FEDE.error("getStorageValue(key: {}), value: {}", s.substring(s.length() - 5), arg2.substring(arg2.length() - 5));
-
-        return dataWord;
+        return DataWord.valueOf(value);
     }
 
     @Override
@@ -486,7 +479,7 @@ public class MutableRepository implements Repository {
 
             this.mutableTrie.putRentTimestamp(node.getKey().getData(), updatedRentTimestamp);
 
-            LOGGER_FEDE.error("updated timestamp - node: {}, oldTimestamp: {}, updatedRentTimestamp: {}", printableKey(node), oldTimestamp, updatedRentTimestamp);
+            // LOGGER_FEDE.error("updated timestamp - node: {}, oldTimestamp: {}, updatedRentTimestamp: {}", printableKey(node), oldTimestamp, updatedRentTimestamp);
         });
     }
 
@@ -502,22 +495,18 @@ public class MutableRepository implements Repository {
     // Internal methods contains node tracking
 
     protected void internalPut(byte[] key, byte[] value) {
-        LOGGER_FEDE.error("internalPut");
-
         mutableTrie.put(key, value);
         // todo(fedejinich) should track delete operation (value == null)
         trackNodeWriteOperation(key, value == null);
     }
 
     protected void internalDeleteRecursive(byte[] key) {
-        LOGGER_FEDE.error("internalDeleteRecursive");
         // todo(fedejinich) what happens for non existing keys? should track with false result?
         mutableTrie.deleteRecursive(key);
         trackNodeWriteOperation(key, true);
     }
 
     protected byte[] internalGet(byte[] key) {
-        LOGGER_FEDE.error("internalGet");
         byte[] value = mutableTrie.get(key);
 
         // todo(fedejinich) should track get() success with a bool (value != null)
@@ -527,7 +516,6 @@ public class MutableRepository implements Repository {
     }
 
     protected Optional<Keccak256> internalGetValueHash(byte[] key) {
-        LOGGER_FEDE.error("internalGetValueHash");
         Optional<Keccak256> valueHash = mutableTrie.getValueHash(key);
 
         trackNodeReadOperation(key, valueHash.isPresent());
@@ -536,7 +524,6 @@ public class MutableRepository implements Repository {
     }
 
     protected Uint24 internalGetValueLength(byte[] key) {
-        LOGGER_FEDE.error("internalGetValueLength");
         Uint24 valueLength = mutableTrie.getValueLength(key);
 
         trackNodeReadOperation(key, valueLength != Uint24.ZERO);
@@ -545,7 +532,6 @@ public class MutableRepository implements Repository {
     }
 
     protected Iterator<DataWord> internalGetStorageKeys(RskAddress addr) {
-        LOGGER_FEDE.error("internalGetStorageKeys");
         Iterator<DataWord> storageKeys = mutableTrie.getStorageKeys(addr);
 
         // todo(fedejinich) how should I track the right key/s?
@@ -576,12 +562,12 @@ public class MutableRepository implements Repository {
                 isDelete
             );
             if(this.trackedNodes.add(trackedNode)) {
-                LOGGER_FEDE.error("tracked node {}", trackedNode);
+                // LOGGER_FEDE.error("tracked node {}", trackedNode);
             } else {
-                LOGGER_FEDE.error("node already tracked {}", trackedNode);
+                // LOGGER_FEDE.error("node already tracked {}", trackedNode);
             }
         } else {
-            LOGGER_FEDE.error("node tracking is disabled on this repository");
+            // LOGGER_FEDE.error("node tracking is disabled on this repository");
         }
     }
 
