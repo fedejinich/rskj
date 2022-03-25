@@ -56,7 +56,7 @@ public class TrackedNode {
     @Override
     public String toString() { // todo(fedejinich) this was used for debugging purposes, might be removed before production
         String s = this.key.toString();
-        String key = s.substring(s.length() - 5);
+        String key = s;//s.substring(s.length() - 5);
         String transactionHash = this.transactionHash.substring(this.transactionHash.length() - 5);
         String operationType = "";
 
@@ -67,7 +67,7 @@ public class TrackedNode {
         }
 
         return "TrackedNode[key: " + key + ", operationType: " + operationType +
-                ", transactionHash: " + transactionHash +"]";
+                ", result:" + result + ", isDelete: " + isDelete + ", transactionHash: " + transactionHash +"]";
     }
 
     @Override
@@ -88,5 +88,9 @@ public class TrackedNode {
         result = 31 * result + operationType.hashCode();
         result = 31 * result + transactionHash.hashCode();
         return result;
+    }
+
+    public boolean useForStorageRent() {
+        return this.result && !this.isDelete; // to filter storage rent nodes, excluding mismatches and deletes
     }
 }

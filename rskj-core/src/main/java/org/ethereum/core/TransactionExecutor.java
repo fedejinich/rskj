@@ -27,11 +27,16 @@ import co.rsk.metrics.profilers.Profiler;
 import co.rsk.metrics.profilers.ProfilerFactory;
 import co.rsk.panic.PanicProcessor;
 import co.rsk.rpc.modules.trace.ProgramSubtrace;
+import co.rsk.storagerent.RentedNode;
+import co.rsk.storagerent.StorageRentManager;
+import co.rsk.util.HexUtils;
+import com.google.common.annotations.VisibleForTesting;
 import org.ethereum.config.Constants;
 import org.ethereum.config.blockchain.upgrades.ActivationConfig;
 import org.ethereum.config.blockchain.upgrades.ConsensusRule;
 import org.ethereum.db.BlockStore;
 import org.ethereum.db.ReceiptStore;
+import org.ethereum.db.TrackedNode;
 import org.ethereum.vm.*;
 import org.ethereum.vm.exception.VMException;
 import org.ethereum.vm.program.Program;
@@ -47,10 +52,12 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static co.rsk.util.ListArrayUtil.getLength;
 import static co.rsk.util.ListArrayUtil.isEmpty;
 import static org.ethereum.config.blockchain.upgrades.ConsensusRule.RSKIP174;
+import static org.ethereum.config.blockchain.upgrades.ConsensusRule.RSKIP240;
 import static org.ethereum.util.BIUtil.*;
 import static org.ethereum.util.ByteUtil.EMPTY_BYTE_ARRAY;
 
@@ -59,6 +66,7 @@ import static org.ethereum.util.ByteUtil.EMPTY_BYTE_ARRAY;
  * @since 19.12.2014
  */
 public class TransactionExecutor {
+    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
 
     private static final Logger logger = LoggerFactory.getLogger("execute");
     private static final Profiler profiler = ProfilerFactory.getInstance();
@@ -89,6 +97,7 @@ public class TransactionExecutor {
 
     private TransactionReceipt receipt;
     private ProgramResult result = new ProgramResult();
+    private StorageRentManager storageRentManager;
     private final Block executionBlock;
 
     private VM vm;
@@ -130,6 +139,7 @@ public class TransactionExecutor {
 
         this.blockTrack = blockTrack;
         this.transactionTrack = this.blockTrack.startTracking();
+        this.storageRentManager = new StorageRentManager();
     }
 
     /**
@@ -138,6 +148,10 @@ public class TransactionExecutor {
      * @return true if the transaction is valid and executed, false if the transaction is invalid
      */
     public boolean executeTransaction() {
+//        String arg = HexUtils.toJsonHex(tx.getHash().getBytes());
+        // LOGGER_FEDE.error("-------------- EXECUTING TRANSACTION ({} - nonce: {}) -------------- ", arg.substring(arg.length() - 5), tx.getNonceAsInteger());
+        // LOGGER_FEDE.error("STORAGE RENT ENABLED: {}", isStorageRentEnabled());
+
         if (!this.init()) {
             return false;
         }
@@ -229,7 +243,6 @@ public class TransactionExecutor {
     }
 
     private boolean nonceIsValid() {
-        // todo(fedejinich) so the TX is a mock and it doesn't have any sender, then NULLPOINTER
         BigInteger reqNonce = blockTrack.getNonce(tx.getSender(signatureCache));
         BigInteger txNonce = toBI(tx.getNonce());
 
@@ -497,6 +510,8 @@ public class TransactionExecutor {
         return receipt;
     }
 
+    // todo(fedejinich) According to the rskip240, the payment it's done at the end of the tx execution
+    //  rent payment should be included right before cacheTrack.commit, that's the last place to consume gas from the execution
     private void finalization() {
         // RSK if local call gas balances must not be changed
         if (localCall) {
@@ -506,6 +521,12 @@ public class TransactionExecutor {
         }
 
         logger.trace("Finalize transaction {} {}", toBI(tx.getNonce()), tx.getHash());
+
+        if(isStorageRentEnabled()) {
+            // pay storage rent
+            gasLeftover = storageRentManager.pay(gasLeftover, executionBlock.getTimestamp(), blockTrack, transactionTrack, tx.getHash().toHexString());
+            // todo(fedejinich) blockTrack should stop tracking here
+        }
 
         // todo(fedejinich) if it's a precompiled execution, it commits cache twice, here and at 422, is that ok?
         transactionTrack.commit();
@@ -525,7 +546,7 @@ public class TransactionExecutor {
 
         TransactionExecutionSummary summary = buildTransactionExecutionSummary(summaryBuilder, gasRefund);
 
-        // Refund for gas leftover
+        // Refund remaining gas
         blockTrack.addBalance(tx.getSender(), summary.getLeftover().add(summary.getRefund()));
         logger.trace("Pay total refund to sender: [{}], refund val: [{}]", tx.getSender(), summary.getRefund());
 
@@ -594,6 +615,13 @@ public class TransactionExecutor {
         logger.trace("tx listener for gas estimation done");
 
         logger.trace("tx finalization for gas estimation done");
+    }
+
+    @VisibleForTesting
+    public boolean isStorageRentEnabled() {
+        // todo(fedejinich) should i add a check for remasc transaction?
+        return activations.isActive(RSKIP240) &&
+                (!isEmpty(tx.getData()) || GasCost.toGas(tx.getGasLimit()) != GasCost.TRANSACTION);
     }
 
     private TransactionExecutionSummary buildTransactionExecutionSummary(TransactionExecutionSummary.Builder summaryBuilder, long gasRefund) {
@@ -676,4 +704,9 @@ public class TransactionExecutor {
     }
 
     public Coin getPaidFees() { return paidFees; }
+
+    @VisibleForTesting
+    public StorageRentManager getStorageRentManager() {
+        return this.storageRentManager;
+    }
 }
