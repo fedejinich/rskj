@@ -113,6 +113,7 @@ public class TransactionExecutor {
     private SignatureCache signatureCache;
 
     private boolean localCall = false;
+    private boolean storageRentEnabled; // todo(fedejinich) this is a workaround to enable storage rent just in StorageRentDSLTest, it will be removed
 
     public TransactionExecutor(
             Constants constants, ActivationConfig activationConfig, Transaction tx, int txindex, RskAddress coinbase,
@@ -621,7 +622,8 @@ public class TransactionExecutor {
     public boolean isStorageRentEnabled() {
         // todo(fedejinich) should i add a check for remasc transaction?
         return activations.isActive(RSKIP240) &&
-                (!isEmpty(tx.getData()) || GasCost.toGas(tx.getGasLimit()) != GasCost.TRANSACTION);
+                (!isEmpty(tx.getData()) || GasCost.toGas(tx.getGasLimit()) != GasCost.TRANSACTION) &&
+                storageRentEnabled; // todo(fedejinich) this is a workaround to enable storageRent just in DSL test
     }
 
     private TransactionExecutionSummary buildTransactionExecutionSummary(TransactionExecutionSummary.Builder summaryBuilder, long gasRefund) {
@@ -708,5 +710,9 @@ public class TransactionExecutor {
     @VisibleForTesting
     public StorageRentManager getStorageRentManager() {
         return this.storageRentManager;
+    }
+
+    public void setStorageRentEnabled(boolean storageRentEnabled) {
+        this.storageRentEnabled = storageRentEnabled;
     }
 }

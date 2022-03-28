@@ -1,10 +1,12 @@
 package co.rsk.storagerent;
 
+import co.rsk.config.TestSystemProperties;
 import co.rsk.test.World;
 import co.rsk.test.dsl.DslParser;
 import co.rsk.test.dsl.DslProcessorException;
 import co.rsk.test.dsl.WorldDslProcessor;
 import co.rsk.util.HexUtils;
+import com.typesafe.config.ConfigValueFactory;
 import org.apache.commons.lang3.NotImplementedException;
 import org.ethereum.core.Transaction;
 import org.ethereum.core.TransactionExecutor;
@@ -177,14 +179,6 @@ public class StorageRentDSLTests {
     }
 
     /**
-     * An account pays rent, and then it's deleted (in the last transaction), it should stop paying rent after delete transaction
-     * */
-    @Test
-    public void tryToPayRentFromADeletedAccount() {
-        throw new NotImplementedException("needs to be implemented");
-    }
-
-    /**
      * Returns the token balance of an account given a txName.
      * @param world a world
      * @param address address to check balanceOf
@@ -225,8 +219,12 @@ public class StorageRentDSLTests {
     }
 
     private World processedWorldWithCustomTimeBetweenBlocks(String path, long timeBetweenBlocks) throws FileNotFoundException, DslProcessorException {
+        TestSystemProperties config = new TestSystemProperties(rawConfig ->
+                rawConfig.withValue("storageRent.enabled", ConfigValueFactory.fromAnyRef(true))
+        );
+
         DslParser parser = DslParser.fromResource(path);
-        World world = new World();
+        World world = new World(config);
         world.setCustomTimeBetweenBlocks(timeBetweenBlocks);
 
         WorldDslProcessor processor = new WorldDslProcessor(world);
