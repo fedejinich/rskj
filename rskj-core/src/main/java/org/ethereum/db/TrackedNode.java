@@ -10,18 +10,18 @@ public class TrackedNode {
     protected final ByteArrayWrapper key; // a trie key
     protected final OperationType operationType; // an operation type
     protected final String transactionHash; // a transaction  hash
-    protected final boolean result; // whether the operation was successful or not
+    protected final boolean isSuccessful; // whether the operation was successful or not
     protected final boolean isDelete; // if the node was deleted
 
     public TrackedNode(ByteArrayWrapper rawKey, OperationType operationType,
-                       String transactionHash, boolean result, boolean isDelete) {
+                       String transactionHash, boolean isSuccessful, boolean isDelete) {
         this.key = rawKey;
         this.operationType = operationType;
         this.transactionHash = transactionHash;
-        this.result = result;
+        this.isSuccessful = isSuccessful;
         this.isDelete = isDelete;
 
-        if(operationType.equals(WRITE_OPERATION) && !result) {
+        if(operationType.equals(WRITE_OPERATION) && !isSuccessful) {
             throw new IllegalArgumentException("a WRITE_OPERATION should always have a true result");
         }
 
@@ -45,8 +45,8 @@ public class TrackedNode {
         return transactionHash;
     }
 
-    public boolean getResult() {
-        return this.result;
+    public boolean getSuccessful() {
+        return this.isSuccessful;
     }
 
     public boolean isDelete() {
@@ -67,7 +67,7 @@ public class TrackedNode {
         }
 
         return "TrackedNode[key: " + key + ", operationType: " + operationType +
-                ", result:" + result + ", isDelete: " + isDelete + ", transactionHash: " + transactionHash +"]";
+                ", isSuccessful:" + isSuccessful + ", isDelete: " + isDelete + ", transactionHash: " + transactionHash +"]";
     }
 
     @Override
@@ -91,6 +91,6 @@ public class TrackedNode {
     }
 
     public boolean useForStorageRent() {
-        return this.result && !this.isDelete; // to filter storage rent nodes, excluding mismatches and deletes
+        return this.isSuccessful && !this.isDelete; // to filter storage rent nodes, excluding mismatches and deletes
     }
 }

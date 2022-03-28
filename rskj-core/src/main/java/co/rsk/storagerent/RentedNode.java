@@ -28,7 +28,7 @@ public class RentedNode extends TrackedNode {
 
     public RentedNode(TrackedNode trackedNode, Long nodeSize, Long rentTimestamp) {
         super(trackedNode.getKey(), trackedNode.getOperationType(),
-                trackedNode.getTransactionHash(), trackedNode.getResult(), trackedNode.isDelete());
+                trackedNode.getTransactionHash(), trackedNode.getSuccessful(), trackedNode.isDelete());
         this.nodeSize = nodeSize;
         this.rentTimestamp = rentTimestamp;
     }
@@ -168,7 +168,7 @@ public class RentedNode extends TrackedNode {
             throw new RuntimeException("shoudln't reach here"); // todo(fedejinch) checkout this exeception
         }
 
-        return "RentedNode[key: " + key + ", operationType: " + operationType + ", result: " + result + ", isDelete: " + isDelete +
+        return "RentedNode[key: " + key + ", operationType: " + operationType + ", isSuccessful: " + isSuccessful + ", isDelete: " + isDelete +
                 ", loadsContractCode: " + loadsContractCode + ", transactionHash: " + transactionHash +
                 ", nodeSize: " + nodeSize +", lastRentPaidTimestamp: " + rentTimestamp +"]";
     }

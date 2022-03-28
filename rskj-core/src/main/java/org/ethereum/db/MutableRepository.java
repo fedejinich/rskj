@@ -551,14 +551,14 @@ public class MutableRepository implements Repository {
         trackNode(key, READ_OPERATION, result, false);
     }
 
-    protected void trackNode(byte[] key, OperationType operationType, boolean result, boolean isDelete) {
+    protected void trackNode(byte[] key, OperationType operationType, boolean isSuccessful, boolean isDelete) {
         if(this.enableTracking) {
             // todo(fedejinich) NEED TO DEFINE WHEN/HOW TRACK CONTRACT CODES OPERATIONS
             TrackedNode trackedNode = new TrackedNode(
                 new ByteArrayWrapper(key),
                 operationType,
                 this.trackedTransactionHash,
-                result,
+                isSuccessful,
                 isDelete
             );
             if(this.trackedNodes.add(trackedNode)) {

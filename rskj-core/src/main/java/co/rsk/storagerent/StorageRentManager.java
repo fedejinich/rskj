@@ -73,7 +73,7 @@ public class StorageRentManager {
 
         this.rentedNodes = storageRentNodes.stream()
                 .map(trackedNode -> blockTrack.getRentedNode(trackedNode))
-                .filter(rentedNode -> rentedNode.getResult())
+                .filter(rentedNode -> rentedNode.getSuccessful())
                 .collect(Collectors.toSet());
         this.rollbackNodes = rollbackNodes.stream()
                 .map(trackedNode -> blockTrack.getRentedNode(trackedNode))

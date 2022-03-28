@@ -16,8 +16,8 @@ public class MutableRepositoryTestable extends MutableRepository {
         return new MutableRepositoryTestable(mutableTrie);
     }
 
-    public void trackNode(byte[] key, OperationType operationType, boolean result, boolean isDelete) {
-        super.trackNode(key, operationType, result, isDelete);
+    public void trackNode(byte[] key, OperationType operationType, boolean isSuccessful, boolean isDelete) {
+        super.trackNode(key, operationType, isSuccessful, isDelete);
     }
 
     public void trackNodeWriteOperation(byte[] key, boolean isDelete) {

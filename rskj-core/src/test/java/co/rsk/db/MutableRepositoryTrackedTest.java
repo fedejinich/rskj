@@ -349,7 +349,7 @@ public class MutableRepositoryTrackedTest {
         // track nodes
         testNodes.forEach(v -> {
             if(v.getOperationType().equals(READ_OPERATION)) {
-                repository.trackNodeReadOperation(v.getKey().getData(), v.getResult());
+                repository.trackNodeReadOperation(v.getKey().getData(), v.getSuccessful());
             } else if(v.getOperationType().equals(WRITE_OPERATION)) {
                 repository.trackNodeWriteOperation(v.getKey().getData(), v.isDelete());
             } else {
