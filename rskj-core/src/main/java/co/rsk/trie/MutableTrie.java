@@ -103,8 +103,6 @@ public interface MutableTrie {
      * */
     Optional<Long> getRentTimestamp(byte[] key);
 
-    long getNodeSize();
-
     @VisibleForTesting
     MutableTrie find(byte[] key);
 }

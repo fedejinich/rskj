@@ -283,11 +283,6 @@ public class MutableTrieCache implements MutableTrie {
         return this.trie.find(key);
     }
 
-    @Override
-    public long getNodeSize() {
-        return this.trie.getNodeSize();
-    }
-
     private static class StorageKeysIterator implements Iterator<DataWord> {
         private final Iterator<DataWord> keysIterator;
         private final Map<ByteArrayWrapper, byte[]> accountItems;

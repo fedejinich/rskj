@@ -168,7 +168,7 @@ public class RentedNode extends TrackedNode {
             throw new RuntimeException("shoudln't reach here"); // todo(fedejinch) checkout this exeception
         }
 
-        return "RentedNode[key: " + key + ", operationType: " + operationType + ", isSuccessful: " + isSuccessful + ", isDelete: " + isDelete +
+        return "RentedNode[key: " + key + ", operationType: " + operationType + ", isSuccessfulMut: " + isSuccessful + ", isDelete: " + isDelete +
                 ", loadsContractCode: " + loadsContractCode + ", transactionHash: " + transactionHash +
                 ", nodeSize: " + nodeSize +", lastRentPaidTimestamp: " + rentTimestamp +"]";
     }

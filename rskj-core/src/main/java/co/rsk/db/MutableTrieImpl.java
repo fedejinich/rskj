@@ -125,11 +125,6 @@ public class MutableTrieImpl implements MutableTrie {
     }
 
     @Override
-    public long getNodeSize() {
-        return trie.getMessageLength();
-    }
-
-    @Override
     public Optional<Long> getRentTimestamp(byte[] key) {
         String s = new ByteArrayWrapper(key).toString();
         String printableKey = s.substring(s.length() - 5);
