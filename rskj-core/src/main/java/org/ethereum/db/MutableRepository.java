@@ -561,11 +561,12 @@ public class MutableRepository implements Repository {
                 isSuccessful,
                 isDelete
             );
-            if(this.trackedNodes.add(trackedNode)) {
-                // LOGGER_FEDE.error("tracked node {}", trackedNode);
-            } else {
-                // LOGGER_FEDE.error("node already tracked {}", trackedNode);
-            }
+            boolean added = this.trackedNodes.add(trackedNode);
+//            if(added) {
+//                // LOGGER_FEDE.error("tracked node {}", trackedNode);
+//            } else {
+//                // LOGGER_FEDE.error("node already tracked {}", trackedNode);
+//            }
         } else {
             // LOGGER_FEDE.error("node tracking is disabled on this repository");
         }

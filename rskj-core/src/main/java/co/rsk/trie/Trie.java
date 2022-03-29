@@ -1335,7 +1335,9 @@ public class Trie {
         }
 
         TrieKeySlice subKey = key.slice(sharedPath.length() + 1, key.length());
-        Trie newNode = node.updateLastRentPaidTimestamp(subKey, newRentPaidTimestamp);
+        // sonarcloud refuses because 'node' is nullable, but it's handled in Trie:1334,
+        // therefore we have to disable it for this line
+        Trie newNode = node.updateLastRentPaidTimestamp(subKey, newRentPaidTimestamp); // NOSONAR
 
         // reference equality
         if (newNode == node) {

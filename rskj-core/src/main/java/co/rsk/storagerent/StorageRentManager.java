@@ -113,10 +113,11 @@ public class StorageRentManager {
     }
 
     private long rentBy(Collection<RentedNode> rentedNodes, Function<RentedNode, Long> rentFunction) {
-        return rentedNodes.isEmpty() ? 0 : rentedNodes.stream()
-            .map(r -> rentFunction.apply(r))
-            .reduce(GasCost::add)
-            .get();
+        Optional<Long> rent = rentedNodes.stream()
+                .map(r -> rentFunction.apply(r))
+                .reduce(GasCost::add);
+
+        return rentedNodes.isEmpty() || !rent.isPresent() ? 0 : rent.get();
     }
 
     @VisibleForTesting
