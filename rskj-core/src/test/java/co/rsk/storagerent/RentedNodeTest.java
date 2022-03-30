@@ -170,8 +170,7 @@ public class RentedNodeTest {
                 someKey,
                 operationType,
                 new Keccak256(HashUtil.keccak256("something".getBytes(StandardCharsets.UTF_8))).toHexString(),
-                true,
-                false
+                true
             ),
             NODE_SIZE,
             lastRentPaidTimestamp,

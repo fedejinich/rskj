@@ -52,6 +52,8 @@ public class StorageRentManager {
     public long pay(long gasRemaining, long executionBlockTimestamp,
                     Repository blockTrack, Repository transactionTrack,
                     String transactionHash) {
+        // get trie-nodes used within a transaction execution
+
         Set<TrackedNode> storageRentNodes = new HashSet<>();
         blockTrack.getStorageRentNodes(transactionHash).forEach(trackedNode -> storageRentNodes.add(trackedNode));
         transactionTrack.getStorageRentNodes(transactionHash).forEach(trackedNode -> storageRentNodes.add(trackedNode));
@@ -64,12 +66,15 @@ public class StorageRentManager {
                 .filter(r -> r.useForStorageRent())
                 .forEach(rollBackNode -> rollbackNodes.add(rollBackNode));
 
+        // todo(fedejinich) is it worth to do a more detailed check?
         if(storageRentNodes.isEmpty() && rollbackNodes.isEmpty()) {
             // todo(fedejinich) is this the right way to throw this exception
             throw new RuntimeException("there should be rented nodes or rollback nodes");
         }
 
         // LOGGER_FEDE.error("calculating payableRent and rollbacksRent");
+
+        // map tracked nodes to RentedNode to fetch nodeSize and rentTimestamp
 
         this.rentedNodes = storageRentNodes.stream()
                 .map(trackedNode -> blockTrack.getRentedNode(trackedNode))

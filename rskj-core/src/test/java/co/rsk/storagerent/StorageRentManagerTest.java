@@ -27,16 +27,16 @@ public class StorageRentManagerTest {
 
         // params
         Set<TrackedNode> rentedNodes = new HashSet<>(Arrays.asList(
-            trackedNodeWriteOperation("key2", false), // should pay rent cap
-            trackedNodeWriteOperation("key4", false), // should pay rent cap
-            trackedNodeWriteOperation("key7", false), // should pay rent cap
+            trackedNodeWriteOperation("key2"), // should pay rent cap
+            trackedNodeWriteOperation("key4"), // should pay rent cap
+            trackedNodeWriteOperation("key7"), // should pay rent cap
             trackedNodeReadOperation("key1", true), // should pay rent cap
             trackedNodeReadOperation("key6", true) // should pay rent cap
         ));
         List<TrackedNode> rollbackNodes = Arrays.asList(
-            trackedNodeWriteOperation("key3", false), // should pay 25% rent
+            trackedNodeWriteOperation("key3"), // should pay 25% rent
             trackedNodeReadOperation("key5", true), // should pay 25% rent
-            trackedNodeWriteOperation("key8", false) // should pay 25% rent
+            trackedNodeWriteOperation("key8") // should pay 25% rent
         );
         long gasRemaining = 28750;
         long executionBlockTimestamp = new GregorianCalendar(2022, 1, 1).getTime().getTime();
@@ -72,9 +72,9 @@ public class StorageRentManagerTest {
             // not enough accumulated rent, should pay zero gas
             trackedNodeReadOperation("key1", true),
             // not enough accumulated rent, should pay zero gas
-            trackedNodeWriteOperation("key3", false),
+            trackedNodeWriteOperation("key3"),
             // not enough accumulated rent, should pay zero gas
-            trackedNodeWriteOperation("key4", false)
+            trackedNodeWriteOperation("key4")
         ));
         List<TrackedNode> rollbackNodes = new ArrayList<>();
         long gasRemaining = 28750;
@@ -133,15 +133,15 @@ public class StorageRentManagerTest {
         // params
         Set<TrackedNode> rentedNodes = new HashSet<>(Arrays.asList(
             trackedNodeReadOperation("key1", true), // should pay rent cap
-            trackedNodeWriteOperation("key2", false), // should pay rent cap
-            trackedNodeWriteOperation("key4", false), // should pay rent cap
+            trackedNodeWriteOperation("key2"), // should pay rent cap
+            trackedNodeWriteOperation("key4"), // should pay rent cap
             trackedNodeReadOperation("key6", true), // should pay rent cap
-            trackedNodeWriteOperation("key7", false) // should pay rent cap
+            trackedNodeWriteOperation("key7") // should pay rent cap
         ));
         List<TrackedNode> rollbackNodes = Arrays.asList(
-            trackedNodeWriteOperation("key3", false), // should pay 25%
+            trackedNodeWriteOperation("key3"), // should pay 25%
             trackedNodeReadOperation("key5", true), // should pay 25%
-            trackedNodeWriteOperation("key8", false) // should pay 25%
+            trackedNodeWriteOperation("key8") // should pay 25%
         );
 
         long gasRemaining = 28750;
@@ -215,21 +215,20 @@ public class StorageRentManagerTest {
     }
 
     public static TrackedNode trackedNodeReadOperation(String key, boolean result) {
-        return trackedNode(key, READ_OPERATION, result, false);
+        return trackedNode(key, READ_OPERATION, result);
     }
 
-    public static TrackedNode trackedNodeWriteOperation(String key, boolean isDelete) {
-        return trackedNode(key, WRITE_OPERATION, true, isDelete);
+    public static TrackedNode trackedNodeWriteOperation(String key) {
+        return trackedNode(key, WRITE_OPERATION, true);
     }
 
-    private static TrackedNode trackedNode(String key, OperationType operationType, boolean result, boolean isDelete) {
+    private static TrackedNode trackedNode(String key, OperationType operationType, boolean result) {
         return new TrackedNode(
             new ByteArrayWrapper(key.getBytes(StandardCharsets.UTF_8)),
             operationType,
 //                        LOADS_CONTRACT,
             TRANSACTION_HASH,
-            result,
-            isDelete
+            result
         );
     }
 }

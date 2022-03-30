@@ -496,14 +496,17 @@ public class MutableRepository implements Repository {
 
     protected void internalPut(byte[] key, byte[] value) {
         mutableTrie.put(key, value);
-        // todo(fedejinich) should track delete operation (value == null)
-        trackNodeWriteOperation(key, value == null);
+        if(value == null) {
+            trackNodeDeleteOperation(key);
+        } else {
+            trackNodeWriteOperation(key);
+        }
     }
 
     protected void internalDeleteRecursive(byte[] key) {
         // todo(fedejinich) what happens for non existing keys? should track with false result?
         mutableTrie.deleteRecursive(key);
-        trackNodeWriteOperation(key, true);
+        trackNodeDeleteOperation(key);
     }
 
     protected byte[] internalGet(byte[] key) {
@@ -543,23 +546,26 @@ public class MutableRepository implements Repository {
         return storageKeys;
     }
 
-    protected void trackNodeWriteOperation(byte[] key, boolean isDelete) {
-        trackNode(key, WRITE_OPERATION, true, isDelete);
+    protected void trackNodeWriteOperation(byte[] key) {
+        trackNode(key, WRITE_OPERATION, true);
     }
 
     protected void trackNodeReadOperation(byte[] key, boolean result) {
-        trackNode(key, READ_OPERATION, result, false);
+        trackNode(key, READ_OPERATION, result);
     }
 
-    protected void trackNode(byte[] key, OperationType operationType, boolean isSuccessful, boolean isDelete) {
+    private void trackNodeDeleteOperation(byte[] key) {
+        trackNode(key, DELETE_OPERATION, true);
+    }
+
+    protected void trackNode(byte[] key, OperationType operationType, boolean isSuccessful) {
         if(this.enableTracking) {
             // todo(fedejinich) NEED TO DEFINE WHEN/HOW TRACK CONTRACT CODES OPERATIONS
             TrackedNode trackedNode = new TrackedNode(
                 new ByteArrayWrapper(key),
                 operationType,
                 this.trackedTransactionHash,
-                isSuccessful,
-                isDelete
+                isSuccessful
             );
             boolean added = this.trackedNodes.add(trackedNode);
 //            if(added) {
@@ -586,9 +592,7 @@ public class MutableRepository implements Repository {
         Map<ByteArrayWrapper, TrackedNode> storageRentNodes = new HashMap<>();
         this.trackedNodes.stream()
                 .filter(trackedNode -> trackedNode.getTransactionHash().equals(transactionHash) &&
-//                        trackedNode.getResult()) // nodes with failed operations are excluded
                         trackedNode.useForStorageRent()) // nodes with failed operations are excluded
-//                        trackedNode.getResult() && !trackedNode.isDelete()) // nodes with failed operations are excluded
                 .forEach(trackedNode -> {
                     ByteArrayWrapper key = new ByteArrayWrapper(trackedNode.getKey().getData());
                     TrackedNode containedNode = storageRentNodes.get(key);

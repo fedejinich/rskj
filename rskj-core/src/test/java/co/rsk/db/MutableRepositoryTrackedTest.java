@@ -240,7 +240,7 @@ public class MutableRepositoryTrackedTest {
 
     private void verifyNodeTracking(int invokedReads, int invokedWrites) {
         verify(spyRepository, times(invokedReads)).trackNodeReadOperation(any(), anyBoolean());
-        verify(spyRepository, times(invokedWrites)).trackNodeWriteOperation(any(), anyBoolean());
+        verify(spyRepository, times(invokedWrites)).trackNodeWriteOperation(any());
     }
 
     // Testing internalGetValueLength calls: isExist, getCodeLength
@@ -324,21 +324,21 @@ public class MutableRepositoryTrackedTest {
     public void trackNode_shouldTrackNodesWithoutDuplicates() {
         List<TrackedNode> testNodes = Arrays.asList(
                 trackedNodeReadOperation("key1", false),
-                trackedNodeWriteOperation("key1", false),
+                trackedNodeWriteOperation("key1"),
                 trackedNodeReadOperation("key1", true),
                 trackedNodeReadOperation("key1", true),
-                trackedNodeWriteOperation("key2", false),
+                trackedNodeWriteOperation("key2"),
                 trackedNodeReadOperation("key2", true),
-                trackedNodeWriteOperation("key2", true),
+                trackedNodeWriteOperation("key2"),
                 trackedNodeReadOperation("key3", true),
-                trackedNodeWriteOperation("key3", false),
+                trackedNodeWriteOperation("key3"),
                 trackedNodeReadOperation("key4", true),
                 trackedNodeReadOperation("key4", true),
                 trackedNodeReadOperation("key4", true),
                 trackedNodeReadOperation("key4", true),
-                trackedNodeWriteOperation("key5", false),
+                trackedNodeWriteOperation("key5"),
                 trackedNodeReadOperation("key6", true),
-                trackedNodeWriteOperation("key6", false),
+                trackedNodeWriteOperation("key6"),
                 trackedNodeReadOperation("key7", false)
         );
 
@@ -351,7 +351,7 @@ public class MutableRepositoryTrackedTest {
             if(v.getOperationType().equals(READ_OPERATION)) {
                 repository.trackNodeReadOperation(v.getKey().getData(), v.getSuccessful());
             } else if(v.getOperationType().equals(WRITE_OPERATION)) {
-                repository.trackNodeWriteOperation(v.getKey().getData(), v.isDelete());
+                repository.trackNodeWriteOperation(v.getKey().getData());
             } else {
                 fail("shouldn't reach here");
             }
@@ -362,35 +362,34 @@ public class MutableRepositoryTrackedTest {
         // all new nodes, they should be tracked normally
         assertEquals(11, trackedNodes.size());
         assertTrue(trackedNodes.contains(trackedNodeReadOperation("key1",false)));
-        assertTrue(trackedNodes.contains(trackedNodeWriteOperation("key1", false)));
+        assertTrue(trackedNodes.contains(trackedNodeWriteOperation("key1")));
         assertTrue(trackedNodes.contains(trackedNodeReadOperation("key1", true)));
-        assertTrue(trackedNodes.contains(trackedNodeWriteOperation("key2", false)));
+        assertTrue(trackedNodes.contains(trackedNodeWriteOperation("key2")));
         assertTrue(trackedNodes.contains(trackedNodeReadOperation("key2", true)));
-        assertTrue(trackedNodes.contains(trackedNodeWriteOperation("key2", true)));
+        assertTrue(trackedNodes.contains(trackedNodeWriteOperation("key2")));
         assertTrue(trackedNodes.contains(trackedNodeReadOperation("key3",true)));
-        assertTrue(trackedNodes.contains(trackedNodeWriteOperation("key3", false)));
+        assertTrue(trackedNodes.contains(trackedNodeWriteOperation("key3")));
         assertTrue(trackedNodes.contains(trackedNodeReadOperation("key4", true)));
-        assertTrue(trackedNodes.contains(trackedNodeWriteOperation("key5", false)));
+        assertTrue(trackedNodes.contains(trackedNodeWriteOperation("key5")));
         assertTrue(trackedNodes.contains(trackedNodeReadOperation("key6", true)));
-        assertTrue(trackedNodes.contains(trackedNodeWriteOperation("key6", false)));
+        assertTrue(trackedNodes.contains(trackedNodeWriteOperation("key6")));
         assertTrue(trackedNodes.contains(trackedNodeReadOperation("key7", false)));
     }
 
-    private TrackedNode trackedNodeWriteOperation(String key, boolean isDelete) {
-        return trackedNode(key, WRITE_OPERATION, true, isDelete);
+    private TrackedNode trackedNodeWriteOperation(String key) {
+        return trackedNode(key, WRITE_OPERATION, true);
     }
 
     private TrackedNode trackedNodeReadOperation(String key, boolean result) {
-        return trackedNode(key, READ_OPERATION, result, false);
+        return trackedNode(key, READ_OPERATION, result);
     }
 
-    private static TrackedNode trackedNode(String key, OperationType operationType, boolean result, boolean isDelete) {
+    private static TrackedNode trackedNode(String key, OperationType operationType, boolean result) {
         return new TrackedNode(
                 new ByteArrayWrapper(key.getBytes(StandardCharsets.UTF_8)),
                 operationType,
                 TRANSACTION_HASH,
-                result,
-                isDelete
+                result
         );
     }
 

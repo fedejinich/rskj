@@ -1,7 +1,6 @@
 package org.ethereum.db;
 
-import static org.ethereum.db.OperationType.READ_OPERATION;
-import static org.ethereum.db.OperationType.WRITE_OPERATION;
+import static org.ethereum.db.OperationType.*;
 
 /**
  * A presentational class, used (by MutableRepository) to track relevant data for trie accesses
@@ -11,22 +10,16 @@ public class TrackedNode {
     protected final OperationType operationType; // an operation type
     protected final String transactionHash; // a transaction  hash
     protected final boolean isSuccessful; // whether the operation was successful or not
-    protected final boolean isDelete; // if the node was deleted
 
     public TrackedNode(ByteArrayWrapper rawKey, OperationType operationType,
-                       String transactionHash, boolean isSuccessful, boolean isDelete) {
+                       String transactionHash, boolean isSuccessful) {
         this.key = rawKey;
         this.operationType = operationType;
         this.transactionHash = transactionHash;
         this.isSuccessful = isSuccessful;
-        this.isDelete = isDelete;
 
         if(operationType.equals(WRITE_OPERATION) && !isSuccessful) {
             throw new IllegalArgumentException("a WRITE_OPERATION should always have a true result");
-        }
-
-        if(operationType.equals(READ_OPERATION) && isDelete) {
-            throw new IllegalArgumentException("a READ_OPERATION shouldn't have an isDelete");
         }
 
         // todo(fedejinich) find a way to validate key param
@@ -49,10 +42,6 @@ public class TrackedNode {
         return this.isSuccessful;
     }
 
-    public boolean isDelete() {
-        return this.isDelete;
-    }
-
     @Override
     public String toString() { // todo(fedejinich) this was used for debugging purposes, might be removed before production
         String s = this.key.toString();
@@ -67,7 +56,7 @@ public class TrackedNode {
         }
 
         return "TrackedNode[key: " + key + ", operationType: " + operationType +
-                ", isSuccessful:" + isSuccessful + ", isDelete: " + isDelete + ", transactionHash: " + transactionHash +"]";
+                ", isSuccessful:" + isSuccessful + ", transactionHash: " + transactionHash +"]";
     }
 
     @Override
@@ -91,6 +80,6 @@ public class TrackedNode {
     }
 
     public boolean useForStorageRent() {
-        return this.isSuccessful && !this.isDelete; // to filter storage rent nodes, excluding mismatches and deletes
+        return this.isSuccessful && this.operationType != DELETE_OPERATION; // to filter storage rent nodes, excluding mismatches and deletes
     }
 }

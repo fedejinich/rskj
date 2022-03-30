@@ -16,15 +16,15 @@ public class MutableRepositoryTestable extends MutableRepository {
         return new MutableRepositoryTestable(mutableTrie);
     }
 
-    public void trackNode(byte[] key, OperationType operationType, boolean isSuccessful, boolean isDelete) {
-        super.trackNode(key, operationType, isSuccessful, isDelete);
+    public void trackNode(byte[] key, OperationType operationType, boolean isSuccessful) {
+        super.trackNode(key, operationType, isSuccessful);
     }
 
-    public void trackNodeWriteOperation(byte[] key, boolean isDelete) {
-        super.trackNode(key, WRITE_OPERATION, true, isDelete);
+    public void trackNodeWriteOperation(byte[] key) {
+        super.trackNode(key, WRITE_OPERATION, true);
     }
 
     public void trackNodeReadOperation(byte[] key, boolean result) {
-        super.trackNode(key, READ_OPERATION, result, false);
+        super.trackNode(key, READ_OPERATION, result);
     }
 }
