@@ -27,16 +27,13 @@ import co.rsk.metrics.profilers.Profiler;
 import co.rsk.metrics.profilers.ProfilerFactory;
 import co.rsk.panic.PanicProcessor;
 import co.rsk.rpc.modules.trace.ProgramSubtrace;
-import co.rsk.storagerent.RentedNode;
 import co.rsk.storagerent.StorageRentManager;
-import co.rsk.util.HexUtils;
 import com.google.common.annotations.VisibleForTesting;
 import org.ethereum.config.Constants;
 import org.ethereum.config.blockchain.upgrades.ActivationConfig;
 import org.ethereum.config.blockchain.upgrades.ConsensusRule;
 import org.ethereum.db.BlockStore;
 import org.ethereum.db.ReceiptStore;
-import org.ethereum.db.TrackedNode;
 import org.ethereum.vm.*;
 import org.ethereum.vm.exception.VMException;
 import org.ethereum.vm.program.Program;
@@ -52,7 +49,6 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static co.rsk.util.ListArrayUtil.getLength;
 import static co.rsk.util.ListArrayUtil.isEmpty;
