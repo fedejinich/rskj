@@ -8,12 +8,13 @@ import static org.ethereum.db.OperationType.READ_OPERATION;
 import static org.ethereum.db.OperationType.WRITE_OPERATION;
 
 public class MutableRepositoryTestable extends MutableRepository {
-    private MutableRepositoryTestable(MutableTrie mutableTrie) {
-        super(mutableTrie, null, true);
+    public MutableRepositoryTestable(MutableTrie mutableTrie,
+                                     MutableRepository parentRepository, boolean enableTracking) {
+        super(mutableTrie, parentRepository, enableTracking);
     }
 
     public static MutableRepositoryTestable trackedRepository(MutableTrie mutableTrie) {
-        return new MutableRepositoryTestable(mutableTrie);
+        return new MutableRepositoryTestable(mutableTrie, null, true);
     }
 
     public void trackNode(byte[] key, OperationType operationType, boolean isSuccessful) {
