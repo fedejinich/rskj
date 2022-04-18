@@ -17,8 +17,6 @@ import static co.rsk.storagerent.StorageRentComputation.*;
  * It also returns the relevant information to pay the storage rent.
  * */
 public class RentedNode extends TrackedNode {
-    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
-
     private final Long nodeSize;
     private final Long rentTimestamp;
 
@@ -89,15 +87,11 @@ public class RentedNode extends TrackedNode {
     private long duration(long currentBlockTimestamp) {
         long duration = 0;
         if(getRentTimestamp() == Trie.NO_RENT_TIMESTAMP) {
-           // LOGGER_FEDE.error("{} is not timestamped yet", printableKey(this.getKey().getData()));
-            logDuration(currentBlockTimestamp, duration);
-
             // new nodes or old nodes (before hop) have zero duration, but they receive the timestamp of the current block
             return duration;
         }
 
         duration = Math.subtractExact(currentBlockTimestamp, getRentTimestamp()); // this prevents overflows
-        logDuration(currentBlockTimestamp, duration); // todo(fedejinich) debug
 
         return duration;
     }
@@ -123,16 +117,6 @@ public class RentedNode extends TrackedNode {
     }
 
     // todo(fedejinich) should I override equals & hashcode?
-
-    private String printableKey(byte[] key) {
-        String s = HexUtils.toJsonHex(key);
-        return s.substring(s.length() - 5);
-    }
-
-    private void logDuration(long currentBlockTimsetamp, long duration) {
-        // LOGGER_FEDE.error("key: {}, blockTimestamp: {}, lastRentPaidTimestamp: {}, duration: {}", printableKey(getKey().getData()), currentBlockTimsetamp, getLastRentPaidTimestamp(), duration);
-    }
-
 
     @Override
     public boolean equals(Object o) {

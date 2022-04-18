@@ -55,8 +55,6 @@ import static co.rsk.trie.Trie.NO_RENT_TIMESTAMP;
 //  Storage rent uses a subset of all the tracked nodes, while parallel txs processing will use the entire set.
 //  NOTE: tracking capability might be extracted into a MutableRepositoryTracked
 public class MutableRepository implements Repository {
-    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
-
     private static final Logger logger = LoggerFactory.getLogger("repository");
     private static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
     public static final Keccak256 KECCAK_256_OF_EMPTY_ARRAY = new Keccak256(Keccak256Helper.keccak256(EMPTY_BYTE_ARRAY));
@@ -69,13 +67,13 @@ public class MutableRepository implements Repository {
     // enables node tracking feature
     private final boolean enableTracking;
     // a set to track all the used trie-value-containing nodes in this repository (and its children repositories)
-    protected final Set<TrackedNode> trackedNodes; // todo(fedejinich) this might be moved to MutableRepositoryTracked
+    protected final Set<TrackedNode> trackedNodes;
     // a list of nodes tracked nodes that were rolled back (due to revert or OOG)
-    protected final List<TrackedNode> rollbackNodes; // todo(fedejinich) this might be moved to MutableRepositoryTracked
+    protected final List<TrackedNode> rollbackNodes;
     // parent repository to commit tracked nodes
-    protected final MutableRepository parentRepository; // todo(fedejinich) this might be moved to MutableRepositoryTracked
+    protected final MutableRepository parentRepository;
     // this contains the hash of the ongoing tracked transaction
-    protected String trackedTransactionHash = "NO_TRANSACTION_HASH";  // todo(fedejinich) this might be moved to MutableRepositoryTracked
+    protected String trackedTransactionHash = "NO_TRANSACTION_HASH";
 
     // default constructor
     protected MutableRepository(MutableTrie mutableTrie, MutableRepository parentRepository,
@@ -110,7 +108,8 @@ public class MutableRepository implements Repository {
         this(mutableTrie, parentRepository, new HashSet<>(), new ArrayList<>(), enableTracking);
     }
 
-    // creates a tracked repository, all the child repositories (created with startTracking()) will also be tracked
+    // creates a tracked repository, all the child repositories (created with startTracking()) will also be tracked.
+    // this should be only called from RepositoryLocator.trackedRepository
     public static MutableRepository trackedRepository(MutableTrie mutableTrieCache) {
         return new MutableRepository(mutableTrieCache, null, true);
     }
@@ -474,18 +473,10 @@ public class MutableRepository implements Repository {
     @Override
     public void updateRents(Set<RentedNode> rentedNodes, long executionBlockTimestamp) {
         rentedNodes.forEach(node -> {
-            long oldTimestamp = node.getRentTimestamp();
             long updatedRentTimestamp = node.getUpdatedRentTimestamp(executionBlockTimestamp);
 
             this.mutableTrie.putRentTimestamp(node.getKey().getData(), updatedRentTimestamp);
-
-            // LOGGER_FEDE.error("updated timestamp - node: {}, oldTimestamp: {}, updatedRentTimestamp: {}", printableKey(node), oldTimestamp, updatedRentTimestamp);
         });
-    }
-
-    private String printableKey(RentedNode rentedNode) {
-        String s = rentedNode.getKey().toString();
-        return s.substring(s.length() - 5);
     }
 
     public void setTrackedTransactionHash(String trackedTransactionHash) {
@@ -567,14 +558,7 @@ public class MutableRepository implements Repository {
                 this.trackedTransactionHash,
                 isSuccessful
             );
-            boolean added = this.trackedNodes.add(trackedNode);
-//            if(added) {
-//                // LOGGER_FEDE.error("tracked node {}", trackedNode);
-//            } else {
-//                // LOGGER_FEDE.error("node already tracked {}", trackedNode);
-//            }
-        } else {
-            // LOGGER_FEDE.error("node tracking is disabled on this repository");
+            this.trackedNodes.add(trackedNode);
         }
     }
 
@@ -586,7 +570,6 @@ public class MutableRepository implements Repository {
         this.rollbackNodes.addAll(trackedNodes);
     }
 
-    // todo(fedejinich) this should return Set<TrackedNode>, storage rent filtering should be done by the StorageRentManager
     @Override
     public Set<TrackedNode> getStorageRentNodes(String transactionHash) {
         Map<ByteArrayWrapper, TrackedNode> storageRentNodes = new HashMap<>();

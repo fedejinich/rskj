@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
  * https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP240.md
  * */
 public class StorageRentManager {
-    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
-
     public static final long NO_ROLLBACK_RENT_YET = -1;
     private static final long NO_PAYABLE_RENT_YET = -1;
     private static final long NO_TOTAL_RENT_YET = -1;
@@ -72,8 +70,6 @@ public class StorageRentManager {
             throw new RuntimeException("there should be rented nodes or rollback nodes");
         }
 
-        // LOGGER_FEDE.error("calculating payableRent and rollbacksRent");
-
         // map tracked nodes to RentedNode to fetch nodeSize and rentTimestamp
 
         this.rentedNodes = storageRentNodes.stream()
@@ -89,11 +85,7 @@ public class StorageRentManager {
         long rollbacksRent = rentBy(this.rollbackNodes,
                 rentedNode -> rentedNode.rollbackFee(executionBlockTimestamp));
 
-        // LOGGER_FEDE.error("payableRent: {}, rollbacksRent: {}", payableRent, rollbacksRent);
-
         this.totalRent = payableRent + rollbacksRent;
-
-        // LOGGER_FEDE.error("gasRemaining({}) < totalRent({})", gasRemaining, this.totalRent);
 
         if(gasRemaining < totalRent) {
             // todo(fedejinich) this is not the right way to throw an OOG
@@ -101,18 +93,10 @@ public class StorageRentManager {
                     "gasRemaining: " + gasRemaining + ", gasNeeded: " + totalRent);
         }
 
-        // LOGGER_FEDE.error("executionBlockTimestamp: {}", executionBlockTimestamp);
-
-        // LOGGER_FEDE.error("-- UPDATING RENT TIMESTAMPS --");
-
-        // LOGGER_FEDE.error("rents to update: {}", this.rentedNodes);
-
         transactionTrack.updateRents(this.rentedNodes, executionBlockTimestamp);
 
         this.payableRent = payableRent;
         this.rollbacksRent = rollbacksRent;
-
-        // LOGGER_FEDE.error("storage rent has been paid - paidRent: {}, payableRent: {}, rollbacksRent: {}", getPaidRent(), this.payableRent, this.rollbacksRent);
 
         return GasCost.subtract(gasRemaining, getPaidRent());
     }

@@ -33,8 +33,6 @@ import java.util.concurrent.TimeUnit;
  * https://github.com/rsksmart/RSKIPs/blob/master/IPs/RSKIP240.md
  */
 public class StorageRentComputation {
-    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
-
     public static final long READ_THRESHOLD = 2500;
     public static final long READ_THRESHOLD_CONTRACT_CODE = 15000;
     public static final long WRITE_THRESHOLD = 1000;
@@ -60,13 +58,7 @@ public class StorageRentComputation {
 
         long computedRent = Math.min(rentCap, rentDue);
 
-        // LOGGER_FEDE.error("min(rentCap: {}, rentDue: {}) = {}", rentCap, rentDue, computedRent);
-
-        boolean b = computedRent > rentThreshold;
-
-        // LOGGER_FEDE.error("computedRent({}) > rentThreshold({}). pays rent ? {}", computedRent, rentThreshold, b);
-
-        return b ? computedRent : 0;
+        return computedRent > rentThreshold ? computedRent : 0;
     }
 
     /**
@@ -82,14 +74,7 @@ public class StorageRentComputation {
         validateArgumentsRentDue(nodeSize, duration);
         long nodeSizeWithOverhead = nodeSize + STORAGE_OVERHEAD;
 
-        // LOGGER_FEDE.error("received this duration {}", duration);
-
-        // todo(fedejinich) check time units
-        Double aDouble = Double.valueOf(nodeSizeWithOverhead);
-        Double aDouble1 = Double.valueOf(TimeUnit.MILLISECONDS.toSeconds(duration));
-        Double result = Math.floor(aDouble * aDouble1 * RENTAL_RATE);
-
-        // LOGGER_FEDE.error("rentDue = Math.floor({} * {} * {}) = {}", aDouble, aDouble1, RENTAL_RATE, result);
+        Double result = Math.floor(Double.valueOf(nodeSizeWithOverhead) * Double.valueOf(TimeUnit.MILLISECONDS.toSeconds(duration)) * RENTAL_RATE);
 
         return result.longValue();
     }
@@ -113,27 +98,21 @@ public class StorageRentComputation {
                 rentCap, rentThreshold);
 
         if(lastPaidTimestamp == Trie.NO_RENT_TIMESTAMP) {
-            // LOGGER_FEDE.error("this node is not timestamped yet, " + "giving the currentBlockTimestamp. oldTimestamp: {}, newTimestamp: {}", lastPaidTimestamp, currentBlockTimestamp);
             return currentBlockTimestamp;
         }
 
         if (rentDue <= rentThreshold) {
-            // LOGGER_FEDE.error("this node is below the threshold, keeping the same timestamp: {}", lastPaidTimestamp);
             return lastPaidTimestamp;
         }
 
         if (rentDue <= rentCap) {
-            // LOGGER_FEDE.error("this node is below the rentCap but above the threshold, " + "giving the currentBlockTimestamp. oldTimestamp: {}, newTimestamp: {}", lastPaidTimestamp, currentBlockTimestamp);
             return currentBlockTimestamp;
         }
 
         // partially advances the timestamp if rent due exceeds cap
         Double timePaid = Math.floor(rentCap / (nodeSize * RENTAL_RATE));
-        long l = lastPaidTimestamp + timePaid.longValue();
 
-        // LOGGER_FEDE.error("this node exceeds the rentCap, partially advancing the timestamp. " + "oldTimestamp: {}, newPartiallyAdvancedTimestamp: {}", lastPaidTimestamp, l);
-
-        return l;
+        return lastPaidTimestamp + timePaid.longValue();
     }
 
     private static void validateArgumentsComputeTimestamp(long nodeSize, long rentDue, long lastPaidTimestamp,
