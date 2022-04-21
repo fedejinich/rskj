@@ -582,7 +582,11 @@ public class MutableRepository implements Repository {
 
                     boolean isContainedNode = containedNode != null;
                     if(isContainedNode) {
-                        if(shouldBeReplaced(containedNode, trackedNode)) {
+                        long notRelevant = -1;
+                        RentedNode nodeToBeReplaced = new RentedNode(containedNode, notRelevant, notRelevant);
+                        RentedNode newNode = new RentedNode(trackedNode, notRelevant, notRelevant);
+                        if(nodeToBeReplaced.shouldBeReplaced(newNode)) {
+                            // we pass the TrackedNode instance because we don't need a populated RentedNode yet
                             storageRentNodes.put(key, trackedNode);
                         }
                     } else {
@@ -591,15 +595,5 @@ public class MutableRepository implements Repository {
                 });
 
         return new HashSet<>(storageRentNodes.values());
-    }
-
-    /**
-     * Determines if a node should be replaced by another one due to different operation types,
-     * the operation with the lowest threshold it's the one that leads the storage rent payment.
-     * In this case READ_OPERATION < WRITE_OPERATION
-     * */
-    private boolean shouldBeReplaced(TrackedNode nodeToBeReplaced, TrackedNode newNode) {
-        return nodeToBeReplaced.getOperationType().equals(READ_OPERATION) &&
-                newNode.getOperationType().equals(WRITE_OPERATION);
     }
 }

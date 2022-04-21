@@ -96,7 +96,7 @@ public class RentedNode extends TrackedNode {
         return duration;
     }
 
-    private long rentThreshold() {
+    public long rentThreshold() {
         switch (operationType) {
             case WRITE_OPERATION:
                 return WRITE_THRESHOLD;
@@ -155,5 +155,13 @@ public class RentedNode extends TrackedNode {
         return "RentedNode[key: " + key + ", operationType: " + operationType + ", isSuccessfulMut: " + isSuccessful +
                 ", loadsContractCode: " + loadsContractCode + ", transactionHash: " + transactionHash +
                 ", nodeSize: " + nodeSize +", lastRentPaidTimestamp: " + rentTimestamp +"]";
+    }
+
+    /**
+     * Determines if a node should be replaced by another one due to different operation types,
+     * the operation with the lowest threshold it's the one that leads the storage rent payment.
+     * */
+    public boolean shouldBeReplaced(RentedNode newNode) {
+        return newNode.rentThreshold() < this.rentThreshold();
     }
 }
