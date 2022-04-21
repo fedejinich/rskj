@@ -451,7 +451,8 @@ public class MutableRepository implements Repository {
 
     public List<TrackedNode> getRollBackNodes(String transactionHash) {
         return this.rollbackNodes.stream()
-                .filter(trackedNode -> trackedNode.getTransactionHash().equals(transactionHash))
+                .filter(trackedNode -> trackedNode.getTransactionHash().equals(transactionHash)
+                        && trackedNode.useForStorageRent())
                 .collect(Collectors.toList());
     }
 

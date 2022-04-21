@@ -57,12 +57,8 @@ public class StorageRentManager {
         transactionTrack.getStorageRentNodes(transactionHash).forEach(trackedNode -> storageRentNodes.add(trackedNode));
 
         List<TrackedNode> rollbackNodes = new ArrayList<>();
-        blockTrack.getRollBackNodes(transactionHash).stream()
-                .filter(r -> r.useForStorageRent())
-                .forEach(rollBackNode -> rollbackNodes.add(rollBackNode));
-        transactionTrack.getRollBackNodes(transactionHash).stream()
-                .filter(r -> r.useForStorageRent())
-                .forEach(rollBackNode -> rollbackNodes.add(rollBackNode));
+        blockTrack.getRollBackNodes(transactionHash).forEach(rollBackNode -> rollbackNodes.add(rollBackNode));
+        transactionTrack.getRollBackNodes(transactionHash).forEach(rollBackNode -> rollbackNodes.add(rollBackNode));
 
         // todo(fedejinich) is it worth to do a more detailed check?
         if(storageRentNodes.isEmpty() && rollbackNodes.isEmpty()) {
