@@ -79,7 +79,10 @@ public class TrackedNode {
         return result;
     }
 
-    public boolean useForStorageRent() {
-        return this.isSuccessful && this.operationType != DELETE_OPERATION; // to filter storage rent nodes, excluding mismatches and deletes
+    public boolean useForStorageRent(String transactionHash) {
+        // to filter storage rent nodes, excluding mismatches and deletes
+        return this.isSuccessful &&
+                this.operationType != DELETE_OPERATION &&
+                this.transactionHash.equals(transactionHash);
     }
 }

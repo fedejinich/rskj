@@ -451,8 +451,7 @@ public class MutableRepository implements Repository {
 
     public List<TrackedNode> getRollBackNodes(String transactionHash) {
         return this.rollbackNodes.stream()
-                .filter(trackedNode -> trackedNode.getTransactionHash().equals(transactionHash)
-                        && trackedNode.useForStorageRent())
+                .filter(trackedNode -> trackedNode.useForStorageRent(transactionHash))
                 .collect(Collectors.toList());
     }
 
@@ -575,8 +574,7 @@ public class MutableRepository implements Repository {
     public Set<TrackedNode> getStorageRentNodes(String transactionHash) {
         Map<ByteArrayWrapper, TrackedNode> storageRentNodes = new HashMap<>();
         this.trackedNodes.stream()
-                .filter(trackedNode -> trackedNode.getTransactionHash().equals(transactionHash) &&
-                        trackedNode.useForStorageRent()) // nodes with failed operations are excluded
+                .filter(trackedNode -> trackedNode.useForStorageRent(transactionHash))
                 .forEach(trackedNode -> {
                     ByteArrayWrapper key = new ByteArrayWrapper(trackedNode.getKey().getData());
                     TrackedNode containedNode = storageRentNodes.get(key);
