@@ -31,12 +31,6 @@ public class RentedNode extends TrackedNode {
         this.rentTimestamp = rentTimestamp;
     }
 
-    @VisibleForTesting
-    public RentedNode(TrackedNode trackedNode, Long nodeSize, Long rentTimestamp, boolean loadsContractCode) {
-        this(trackedNode, nodeSize, rentTimestamp);
-        this.loadsContractCode = loadsContractCode;
-    }
-
     /**
      * Calculates the payable rent amount (the total amount it's limited by the rent cap)
      *

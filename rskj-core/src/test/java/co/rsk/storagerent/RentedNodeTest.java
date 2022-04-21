@@ -173,8 +173,7 @@ public class RentedNodeTest {
                 true
             ),
             NODE_SIZE,
-            lastRentPaidTimestamp,
-            loadsContractCode
+            lastRentPaidTimestamp
         );
         return rentedNode;
     }

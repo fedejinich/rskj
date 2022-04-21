@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.ethereum.db.OperationType.READ_OPERATION;
 import static org.ethereum.db.OperationType.WRITE_OPERATION;
@@ -357,7 +358,10 @@ public class MutableRepositoryTrackedTest {
             }
         });
 
-        Set<TrackedNode> trackedNodes = repository.getTrackedNodes(TRANSACTION_HASH);
+        Set<TrackedNode> trackedNodes = repository.getTrackedNodes()
+                .stream()
+                .filter(trackedNode -> trackedNode.getTransactionHash().equals(TRANSACTION_HASH))
+                .collect(Collectors.toSet());
 
         // all new nodes, they should be tracked normally
         assertEquals(11, trackedNodes.size());

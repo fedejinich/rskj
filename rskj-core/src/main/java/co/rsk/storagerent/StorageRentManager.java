@@ -76,6 +76,8 @@ public class StorageRentManager {
                 .map(trackedNode -> blockTrack.getRentedNode(trackedNode))
                 .collect(Collectors.toList());
 
+        // calculate rent
+
         long payableRent = rentBy(this.rentedNodes,
                 rentedNode -> rentedNode.payableRent(executionBlockTimestamp));
         long rollbacksRent = rentBy(this.rollbackNodes,
@@ -88,6 +90,8 @@ public class StorageRentManager {
             throw new Program.OutOfGasException("not enough gasRemaining to pay storage rent. " +
                     "gasRemaining: " + gasRemaining + ", gasNeeded: " + totalRent);
         }
+
+        // update and pay storage rent
 
         transactionTrack.updateRents(this.rentedNodes, executionBlockTimestamp);
 

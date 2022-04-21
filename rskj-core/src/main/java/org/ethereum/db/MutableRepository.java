@@ -443,10 +443,9 @@ public class MutableRepository implements Repository {
 
     // todo(fedejinich) all the content below might be extracted to MutableRepositoryTracked
 
-    public Set<TrackedNode> getTrackedNodes(String transactionHash) {
-        return this.trackedNodes.stream()
-                .filter(trackedNode -> trackedNode.getTransactionHash().equals(transactionHash))
-                .collect(Collectors.toSet());
+    @VisibleForTesting
+    public Set<TrackedNode> getTrackedNodes() {
+        return this.trackedNodes;
     }
 
     public List<TrackedNode> getRollBackNodes(String transactionHash) {
