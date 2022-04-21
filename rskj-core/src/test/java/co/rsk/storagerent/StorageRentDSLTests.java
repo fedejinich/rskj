@@ -7,7 +7,6 @@ import co.rsk.test.dsl.DslProcessorException;
 import co.rsk.test.dsl.WorldDslProcessor;
 import co.rsk.util.HexUtils;
 import com.typesafe.config.ConfigValueFactory;
-import org.apache.commons.lang3.NotImplementedException;
 import org.ethereum.core.Transaction;
 import org.ethereum.core.TransactionExecutor;
 import org.ethereum.util.ByteUtil;
@@ -50,7 +49,7 @@ public class StorageRentDSLTests {
      * */
     @Test
     public void tokenTransfer() throws FileNotFoundException, DslProcessorException {
-        long blockCount = 35_290;
+        long blockCount = 67_716;
         World world = processedWorldWithCustomTimeBetweenBlocks(
             "dsl/storagerent/token_transfer.txt",
             BLOCK_AVERAGE_TIME * blockCount // this is the limit to start paying rent, 12 days aprox
@@ -78,22 +77,19 @@ public class StorageRentDSLTests {
 
         /**
          * Storage rent checks, each transaction is executed in a separate block to accumulate enough rent.
-         *
-         * paidRent is always 2605 (even with more rentedNodes): in this scenario, paidRent
-         * is given by the accumulated rent for the key 1ad80 (contractCode), which is always 2605.
-         * This can vary in real world scenarios.
+         * 'paidRent' for tx04 is 15001 because contract-code node accumulates rent "faster" than the rest (due to its size)
          * */
 
         // balanceOf
-        checkStorageRent(world,"tx02", 2605, 0, 4, 0, 0);
-        checkStorageRent(world,"tx03", 2605, 0, 3, 0, 0);
+        checkStorageRent(world,"tx02", 0, 0, 4, 0);
+        checkStorageRent(world,"tx03", 0, 0, 3, 0);
 
-        // transfer(senderAccountState, contractCode, balance1, balance2, storageRoot, ...) todo(fedejinich) i'm missing one node, ask shree
-        checkStorageRent(world,"tx04", 2605, 0, 5, 0,0);
+        // transfer(senderAccountState, contractCode, balance1, balance2, storageRoot, ...) todo(fedejinich) i think i'm missing one node, ask shree
+        checkStorageRent(world,"tx04", 15001, 0, 5, 0);
 
         // balanceOf
-        checkStorageRent(world,"tx05", 2605, 0, 4, 0,0);
-        checkStorageRent(world,"tx06", 2605, 0, 4, 0,0);
+        checkStorageRent(world,"tx05", 0, 0, 4, 0);
+        checkStorageRent(world,"tx06", 0, 0, 4, 0);
     }
 
     /**
@@ -105,13 +101,14 @@ public class StorageRentDSLTests {
      * */
     @Test
     public void internalTransactionFailsButOverallEndsOk() throws FileNotFoundException, DslProcessorException {
-        long blockCount = 534_161;
+        long blockCount = 74_875;
         World world = processedWorldWithCustomTimeBetweenBlocks(
             "dsl/storagerent/nested_call_handled_fail.txt",
                 BLOCK_AVERAGE_TIME * blockCount // this is the limit to start paying rent, 185 days aprox
         );
 
-        checkStorageRent(world, "tx04", 14033, 1000, 8, 10, 0);
+        // rollbackRent should be >0, we want to "penalize" failed access
+        checkStorageRent(world, "tx04", 2781, 280, 8, 10);
         // todo(fedejinich) check that contract C doesn't commits state changes and doesn't updates its timestamp
     }
 
@@ -135,8 +132,7 @@ public class StorageRentDSLTests {
 
         // there are 3 rented nodes (senderAccountState, receiverAccountState, receiverContractCode),
         // the rest should be part of the reverted nodes
-        checkStorageRent(world, "tx04", 3126, 625, 3, 9, 0);
-        // todo(fedejinich) check 25% for rollbackrent
+        checkStorageRent(world, "tx04", 1501, 1501, 3, 10);
     }
 
     /**
@@ -157,8 +153,7 @@ public class StorageRentDSLTests {
 
         // there are 3 rented nodes (senderAccountState, receiverAccountState, receiverContractCode),
         // the rest should be part of the reverted nodes
-        checkStorageRent(world, "tx04", 3126, 625, 3, 10, 0);
-        // todo(fedejinich) check 25% for rollbackrent
+        checkStorageRent(world, "tx04", 1501, 1501, 3, 11);
     }
 
     /**
@@ -175,7 +170,8 @@ public class StorageRentDSLTests {
             "dsl/storagerent/nested_call_succeeds_overall_succeeds.txt",
             BLOCK_AVERAGE_TIME * blockCount // this is the limit to start paying rent, aprox 25 days
         );
-        checkStorageRent(world, "tx04", 5002, 0, 8, 0, 0);
+//        checkStorageRent(world, "tx04", 5002, 0, 8, 0, 0);
+        checkStorageRent(world, "tx04", 2501, 0, 8, 0);
     }
 
     /**
@@ -207,7 +203,7 @@ public class StorageRentDSLTests {
     }
 
     private void checkStorageRent(World world, String txName, long paidRent, long rollbackRent, long rentedNodesCount,
-                                  long rollbackNodesCount, long mismatchesCount) {
+                                  long rollbackNodesCount) {
         TransactionExecutor transactionExecutor = world.getTransactionExecutor(txName);
         StorageRentManager storageRentManager = transactionExecutor.getStorageRentManager();
 

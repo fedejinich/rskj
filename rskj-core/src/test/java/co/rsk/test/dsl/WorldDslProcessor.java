@@ -245,6 +245,7 @@ public class WorldDslProcessor {
 
         throw new DslProcessorException(String.format("Unknown assert connect '%s", expected));
     }
+    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
 
     private void processBlockConnectCommand(DslCommand cmd) {
         BlockChainImpl blockChain = world.getBlockChain();
@@ -262,6 +263,7 @@ public class WorldDslProcessor {
             // The state is automatically reverted in tryToConnect to the state prior
             // execution.
 
+            // LOGGER_FEDE.error("processBlockConnectCommand");
             if (block.getParentHash().equals(blockChain.getBestBlock().getHash())) {
                 executor.executeAndFill(block, blockChain.getBestBlock().getHeader());
             }
@@ -295,7 +297,6 @@ public class WorldDslProcessor {
         }
         return diff;
     }
-
     private void processBlockChainCommand(DslCommand cmd) {
         Block parent = world.getBlockByName(cmd.getArgument(0));
 
@@ -326,6 +327,7 @@ public class WorldDslProcessor {
                             world.getBlockTxSignatureCache()
                     )
             );
+            // LOGGER_FEDE.error("processBlochcainCommand");
             executor.executeAndFill(block, parent.getHeader());
             world.saveBlock(name, block);
             parent = block;

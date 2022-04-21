@@ -33,6 +33,8 @@ import org.ethereum.datasource.HashMapDB;
 import org.ethereum.db.BlockStore;
 import org.ethereum.vm.PrecompiledContracts;
 import org.ethereum.vm.program.invoke.ProgramInvokeFactoryImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -133,10 +135,11 @@ public class BlockBuilder {
                             new BlockTxSignatureCache(new ReceivedTxSignatureCache())
                     )
             );
+            // LOGGER_FEDE.error("executeAndFill BlockBuilder");
             executor.executeAndFill(block, parent.getHeader());
         }
     }
-
+    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
     public Block buildWithoutExecution() {
         Block block = blockGenerator.createChildBlock(parent, txs, uncles, difficulty, this.minGasPrice, gasLimit);
 

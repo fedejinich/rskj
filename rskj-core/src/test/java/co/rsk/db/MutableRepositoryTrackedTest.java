@@ -18,8 +18,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.ethereum.db.OperationType.READ_OPERATION;
-import static org.ethereum.db.OperationType.WRITE_OPERATION;
+import static org.ethereum.db.OperationType.*;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -43,7 +42,7 @@ public class MutableRepositoryTrackedTest {
         // a nonexistent account
         spyRepository.getCode(randomAccountAddress());
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(1, 0);
+        verifyNodeTracking(1, 0, 0);
 
         spyRepository = newMutableRepositoryTestable();
 
@@ -53,7 +52,8 @@ public class MutableRepositoryTrackedTest {
 
         spyRepository.getCode(accAddress1);
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(4, 3);
+//        verifyNodeTracking(4, 3, 0);
+        verifyNodeTracking(3, 3, 1);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class MutableRepositoryTrackedTest {
         // a nonexistent account
         spyRepository.isContract(randomAccountAddress());
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(1, 0);
+        verifyNodeTracking(1, 0, 0);
 
         spyRepository = newMutableRepositoryTestable();
 
@@ -73,7 +73,7 @@ public class MutableRepositoryTrackedTest {
 
         spyRepository.isContract(accAddress1);
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(2, 3);
+        verifyNodeTracking(2, 3, 0);
     }
 
     @Test
@@ -83,14 +83,14 @@ public class MutableRepositoryTrackedTest {
         // should track a nonexistent storage key
         spyRepository.getStorageBytes(accAddress1, DataWord.ZERO);
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(1, 0);
+        verifyNodeTracking(1, 0, 0);
 
         spyRepository = newMutableRepositoryTestable();
 
         // should track a nonexistent account
         spyRepository.getStorageBytes(randomAccountAddress(), DataWord.ONE);
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(1, 0);
+        verifyNodeTracking(1, 0, 0);
 
         spyRepository = newMutableRepositoryTestable();
 
@@ -102,7 +102,7 @@ public class MutableRepositoryTrackedTest {
 
         spyRepository.getStorageBytes(accAddress1, DataWord.ONE);
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(3, 4);
+        verifyNodeTracking(3, 4, 0);
     }
 
     @Test
@@ -112,14 +112,14 @@ public class MutableRepositoryTrackedTest {
         // nonexistent storage key
         spyRepository.getStorageValue(accAddress1, DataWord.valueOf(2));
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(1, 0);
+        verifyNodeTracking(1, 0, 0);
 
         spyRepository = newMutableRepositoryTestable();
 
         // nonexistent account
         spyRepository.getStorageValue(randomAccountAddress(), DataWord.ONE);
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(1, 0);
+        verifyNodeTracking(1, 0, 0);
 
         spyRepository = newMutableRepositoryTestable();
 
@@ -133,7 +133,7 @@ public class MutableRepositoryTrackedTest {
         spyRepository.getStorageValue(accAddress1, DataWord.ONE);
 
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(3, 4);
+        verifyNodeTracking(3, 4, 0);
     }
 
     @Test
@@ -141,7 +141,7 @@ public class MutableRepositoryTrackedTest {
         // should track a nonexistent account state
         spyRepository.getAccountState(randomAccountAddress());
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(1, 0);
+        verifyNodeTracking(1, 0, 0);
 
         spyRepository = newMutableRepositoryTestable();
 
@@ -155,7 +155,7 @@ public class MutableRepositoryTrackedTest {
 
         spyRepository.getAccountState(accAddress1);
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(3, 4);
+        verifyNodeTracking(3, 4, 0);
     }
 
     // Testing internalPut calls: setupContract, saveCode, addStorageBytes, updateAccountState
@@ -164,14 +164,14 @@ public class MutableRepositoryTrackedTest {
     public void internalPut_setupContract_shouldTrackNodesIfValueItsPresent() {
         spyRepository.setupContract(randomAccountAddress());
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(0, 1);
+        verifyNodeTracking(0, 1, 0);
     }
 
     @Test
     public void internalPut_saveCode_shouldTrackNodesIfValueItsPresent() {
         spyRepository.saveCode(randomAccountAddress(), "something".getBytes(StandardCharsets.UTF_8));
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(1, 2);
+        verifyNodeTracking(1, 2, 0);
     }
 
     @Test
@@ -182,7 +182,7 @@ public class MutableRepositoryTrackedTest {
 
         spyRepository.addStorageBytes(accAddress1, DataWord.ONE, "something".getBytes(StandardCharsets.UTF_8));
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(1, 2);
+        verifyNodeTracking(1, 2, 0);
     }
 
     @Test
@@ -194,7 +194,7 @@ public class MutableRepositoryTrackedTest {
         spyRepository.updateAccountState(accAddress1, new AccountState());
 
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(0, 2);
+        verifyNodeTracking(0, 2, 0);
     }
 
     // Testing internalGetValueHash calls: getCodeHashStandard, getCodeHashNonStandard
@@ -204,7 +204,7 @@ public class MutableRepositoryTrackedTest {
         // track a nonexistent account state
         spyRepository.getCodeHashStandard(randomAccountAddress());
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(1, 0);
+        verifyNodeTracking(1, 0, 0);
 
         spyRepository = newMutableRepositoryTestable();
 
@@ -215,7 +215,7 @@ public class MutableRepositoryTrackedTest {
         spyRepository.getCodeHashStandard(accAddress1);
 
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(2, 1);
+        verifyNodeTracking(2, 1, 0);
     }
 
     @Test
@@ -224,7 +224,7 @@ public class MutableRepositoryTrackedTest {
         spyRepository.getCodeHashNonStandard(randomAccountAddress());
 
         // READ: isExist (MutableRepository:210), WRITE: 0
-        verifyNodeTracking(1, 0);
+        verifyNodeTracking(1, 0, 0);
 
         spyRepository = newMutableRepositoryTestable();
 
@@ -236,12 +236,13 @@ public class MutableRepositoryTrackedTest {
         spyRepository.getCodeHashNonStandard(accAddress1);
 
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(2, 1);
+        verifyNodeTracking(2, 1, 0);
     }
 
-    private void verifyNodeTracking(int invokedReads, int invokedWrites) {
+    private void verifyNodeTracking(int invokedReads, int invokedWrites, int invokedReadsContract) {
         verify(spyRepository, times(invokedReads)).trackNodeReadOperation(any(), anyBoolean());
         verify(spyRepository, times(invokedWrites)).trackNodeWriteOperation(any());
+        verify(spyRepository, times(invokedReadsContract)).trackNodeReadContractOperation(any(), anyBoolean());
     }
 
     // Testing internalGetValueLength calls: isExist, getCodeLength
@@ -251,7 +252,7 @@ public class MutableRepositoryTrackedTest {
         // should track a nonexistent account state
         spyRepository.isExist(randomAccountAddress());
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(1, 0);
+        verifyNodeTracking(1, 0, 0);
 
         spyRepository = newMutableRepositoryTestable();
 
@@ -263,7 +264,7 @@ public class MutableRepositoryTrackedTest {
 
         // one at createAccount(), the other one at isExist()
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(1, 1);
+        verifyNodeTracking(1, 1, 0);
     }
 
     @Test
@@ -271,7 +272,7 @@ public class MutableRepositoryTrackedTest {
         // should track a nonexistent account state
         spyRepository.getCodeLength(randomAccountAddress());
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(1, 0);
+        verifyNodeTracking(1, 0, 0);
 
         spyRepository = newMutableRepositoryTestable();
 
@@ -283,7 +284,7 @@ public class MutableRepositoryTrackedTest {
 
         spyRepository.getCodeLength(accAddress1);
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(3, 3);
+        verifyNodeTracking(3, 3, 0);
 
         spyRepository = newMutableRepositoryTestable();
 
@@ -294,7 +295,7 @@ public class MutableRepositoryTrackedTest {
 
         // because it's an address that doesn't have any code
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(2, 1);
+        verifyNodeTracking(2, 1, 0);
     }
 
     // Testing internalGetStorageKeys calls: getStorageKeys
@@ -304,7 +305,7 @@ public class MutableRepositoryTrackedTest {
         // should track on nonexistent account state
         spyRepository.getStorageKeys(randomAccountAddress());
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(1, 0);
+        verifyNodeTracking(1, 0, 0);
 
         spyRepository = newMutableRepositoryTestable();
 
@@ -316,7 +317,7 @@ public class MutableRepositoryTrackedTest {
 
         spyRepository.getStorageKeys(accAddress1);
         // todo(fedejinich) explain invokes
-        verifyNodeTracking(2, 3);
+        verifyNodeTracking(2, 3, 0);
     }
 
     // testing trackNode
@@ -351,6 +352,8 @@ public class MutableRepositoryTrackedTest {
         testNodes.forEach(v -> {
             if(v.getOperationType().equals(READ_OPERATION)) {
                 repository.trackNodeReadOperation(v.getKey().getData(), v.getSuccessful());
+            } else if(v.getOperationType().equals(READ_CONTRACT_CODE_OPERATION)) {
+                repository.trackNodeReadContractOperation(v.getKey().getData(), v.getSuccessful());
             } else if(v.getOperationType().equals(WRITE_OPERATION)) {
                 repository.trackNodeWriteOperation(v.getKey().getData());
             } else {

@@ -29,12 +29,12 @@ public class StorageRentManager {
     //  they will be removed before merging into master
     private long rollbacksRent;
     private long payableRent;
-    private long totalRent;
+    private long paidRent;
 
     public StorageRentManager() {
         this.rollbacksRent = NO_ROLLBACK_RENT_YET;
         this.payableRent = NO_PAYABLE_RENT_YET;
-        this.totalRent = NO_TOTAL_RENT_YET;
+        this.paidRent = NO_TOTAL_RENT_YET;
     }
 
     /**
@@ -50,6 +50,7 @@ public class StorageRentManager {
     public long pay(long gasRemaining, long executionBlockTimestamp,
                     Repository blockTrack, Repository transactionTrack,
                     String transactionHash) {
+        // todo(fedejinich) this step is unnecessary, i should request RentedNodes directly
         // get trie-nodes used within a transaction execution
 
         Set<TrackedNode> storageRentNodes = new HashSet<>();
@@ -57,6 +58,7 @@ public class StorageRentManager {
         transactionTrack.getStorageRentNodes(transactionHash).forEach(trackedNode -> storageRentNodes.add(trackedNode));
 
         List<TrackedNode> rollbackNodes = new ArrayList<>();
+        // todo(fedejinich) i guess that all the rollbacks are only present in transactionTrack
         blockTrack.getRollBackNodes(transactionHash).forEach(rollBackNode -> rollbackNodes.add(rollBackNode));
         transactionTrack.getRollBackNodes(transactionHash).forEach(rollBackNode -> rollbackNodes.add(rollBackNode));
 
@@ -70,7 +72,6 @@ public class StorageRentManager {
 
         this.rentedNodes = storageRentNodes.stream()
                 .map(trackedNode -> blockTrack.getRentedNode(trackedNode))
-                .filter(rentedNode -> rentedNode.getSuccessful())
                 .collect(Collectors.toSet());
         this.rollbackNodes = rollbackNodes.stream()
                 .map(trackedNode -> blockTrack.getRentedNode(trackedNode))
@@ -78,28 +79,42 @@ public class StorageRentManager {
 
         // calculate rent
 
+        // LOGGER_FEDE.error("__ calculating payable rent __");
         long payableRent = rentBy(this.rentedNodes,
                 rentedNode -> rentedNode.payableRent(executionBlockTimestamp));
+
+        // LOGGER_FEDE.error("__ calculating rollback rent __");
         long rollbacksRent = rentBy(this.rollbackNodes,
                 rentedNode -> rentedNode.rollbackFee(executionBlockTimestamp));
 
-        this.totalRent = payableRent + rollbacksRent;
+        // LOGGER_FEDE.error("___ PAYABLERENT: {}, ROLLBACKSRENT: {} ___", payableRent, rollbacksRent);
 
-        if(gasRemaining < totalRent) {
+        long rentToPay = payableRent + rollbacksRent;
+
+        if(gasRemaining < rentToPay) {
             // todo(fedejinich) this is not the right way to throw an OOG
             throw new Program.OutOfGasException("not enough gasRemaining to pay storage rent. " +
-                    "gasRemaining: " + gasRemaining + ", gasNeeded: " + totalRent);
+                    "gasRemaining: " + gasRemaining + ", gasNeeded: " + rentToPay);
         }
 
-        // update and pay storage rent
+        // pay storage rent
+        long gasAfterPayingRent = GasCost.subtract(gasRemaining, rentToPay);
 
-        transactionTrack.updateRents(this.rentedNodes, executionBlockTimestamp);
+        // update rent timestamps
+        // should update timestamps ONLY if there's any payable rent or if node is not timestamped yet
+        Set<RentedNode> nodesWithRent = this.rentedNodes.stream()
+                .filter(r -> r.shouldUpdateRentTimestamp(executionBlockTimestamp))
+                .collect(Collectors.toSet());
 
+        transactionTrack.updateRents(nodesWithRent, executionBlockTimestamp);
+
+        this.paidRent = rentToPay;
         this.payableRent = payableRent;
         this.rollbacksRent = rollbacksRent;
 
-        return GasCost.subtract(gasRemaining, getPaidRent());
+        return gasAfterPayingRent;
     }
+    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
 
     private long rentBy(Collection<RentedNode> rentedNodes, Function<RentedNode, Long> rentFunction) {
         Optional<Long> rent = rentedNodes.stream()
@@ -112,11 +127,11 @@ public class StorageRentManager {
     @VisibleForTesting
     public long getPaidRent() {
         if(this.payableRent == NO_PAYABLE_RENT_YET ||
-                this.rollbacksRent == NO_ROLLBACK_RENT_YET || this.totalRent == NO_TOTAL_RENT_YET) {
+                this.rollbacksRent == NO_ROLLBACK_RENT_YET || this.paidRent == NO_TOTAL_RENT_YET) {
             throw new RuntimeException("should pay rent before querying paid rent");
         }
 
-        return this.totalRent;
+        return this.paidRent;
     }
 
     @VisibleForTesting

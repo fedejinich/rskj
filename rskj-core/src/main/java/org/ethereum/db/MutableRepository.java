@@ -261,13 +261,13 @@ public class MutableRepository implements Repository {
         }
 
         byte[] key = trieKeyMapper.getCodeKey(addr);
-        return internalGet(key);
+        return internalGet(key, true);
     }
 
     @Override
     public boolean isContract(RskAddress addr) {
         byte[] prefix = trieKeyMapper.getAccountStoragePrefixKey(addr);
-        return internalGet(prefix) != null;
+        return internalGet(prefix, false) != null;
     }
 
     @Override
@@ -301,7 +301,7 @@ public class MutableRepository implements Repository {
     @Override
     public synchronized DataWord getStorageValue(RskAddress addr, DataWord key) {
         byte[] triekey = trieKeyMapper.getAccountStorageKey(addr, key);
-        byte[] value = internalGet(triekey);
+        byte[] value = internalGet(triekey, false);
         if (value == null) {
             return null;
         }
@@ -311,7 +311,7 @@ public class MutableRepository implements Repository {
     @Override
     public synchronized byte[] getStorageBytes(RskAddress addr, DataWord key) {
         byte[] triekey = trieKeyMapper.getAccountStorageKey(addr, key);
-        return internalGet(triekey);
+        return internalGet(triekey, false);
     }
 
     @Override
@@ -422,7 +422,7 @@ public class MutableRepository implements Repository {
     }
 
     private byte[] getAccountData(RskAddress addr) {
-        return internalGet(trieKeyMapper.getAccountKey(addr));
+        return internalGet(trieKeyMapper.getAccountKey(addr), false);
     }
 
     @VisibleForTesting // todo(techdebt) this method shouldn't be here
@@ -499,11 +499,16 @@ public class MutableRepository implements Repository {
         trackNodeDeleteOperation(key);
     }
 
-    protected byte[] internalGet(byte[] key) {
+    protected byte[] internalGet(byte[] key, boolean readsContractCode) {
         byte[] value = mutableTrie.get(key);
+        boolean isSuccessful = value != null;
 
-        // todo(fedejinich) should track get() success with a bool (value != null)
-        trackNodeReadOperation(key, value != null);
+        if(readsContractCode) {
+            trackNodeReadContractOperation(key, isSuccessful);
+        } else {
+            // todo(fedejinich) should track get() success with a bool (value != null)
+            trackNodeReadOperation(key, isSuccessful);
+        }
 
         return value;
     }
@@ -540,17 +545,20 @@ public class MutableRepository implements Repository {
         trackNode(key, WRITE_OPERATION, true);
     }
 
+    protected void trackNodeDeleteOperation(byte[] key) {
+        trackNode(key, DELETE_OPERATION, true);
+    }
+
     protected void trackNodeReadOperation(byte[] key, boolean result) {
         trackNode(key, READ_OPERATION, result);
     }
 
-    private void trackNodeDeleteOperation(byte[] key) {
-        trackNode(key, DELETE_OPERATION, true);
+    protected void trackNodeReadContractOperation(byte[] key, boolean result) {
+        trackNode(key, READ_CONTRACT_CODE_OPERATION, result);
     }
 
     protected void trackNode(byte[] key, OperationType operationType, boolean isSuccessful) {
         if(this.enableTracking) {
-            // todo(fedejinich) NEED TO DEFINE WHEN/HOW TRACK CONTRACT CODES OPERATIONS
             TrackedNode trackedNode = new TrackedNode(
                 new ByteArrayWrapper(key),
                 operationType,

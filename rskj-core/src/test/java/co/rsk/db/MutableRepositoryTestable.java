@@ -4,8 +4,7 @@ import co.rsk.trie.MutableTrie;
 import org.ethereum.db.MutableRepository;
 import org.ethereum.db.OperationType;
 
-import static org.ethereum.db.OperationType.READ_OPERATION;
-import static org.ethereum.db.OperationType.WRITE_OPERATION;
+import static org.ethereum.db.OperationType.*;
 
 public class MutableRepositoryTestable extends MutableRepository {
     public MutableRepositoryTestable(MutableTrie mutableTrie,
@@ -17,15 +16,15 @@ public class MutableRepositoryTestable extends MutableRepository {
         return new MutableRepositoryTestable(mutableTrie, null, true);
     }
 
-    public void trackNode(byte[] key, OperationType operationType, boolean isSuccessful) {
-        super.trackNode(key, operationType, isSuccessful);
-    }
-
     public void trackNodeWriteOperation(byte[] key) {
         super.trackNode(key, WRITE_OPERATION, true);
     }
 
     public void trackNodeReadOperation(byte[] key, boolean result) {
         super.trackNode(key, READ_OPERATION, result);
+    }
+
+    public void trackNodeReadContractOperation(byte[] key, boolean result) {
+        super.trackNode(key, READ_CONTRACT_CODE_OPERATION, result);
     }
 }

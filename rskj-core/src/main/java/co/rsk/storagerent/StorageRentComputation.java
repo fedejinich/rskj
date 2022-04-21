@@ -58,8 +58,15 @@ public class StorageRentComputation {
 
         long computedRent = Math.min(rentCap, rentDue);
 
-        return computedRent > rentThreshold ? computedRent : 0;
+        // LOGGER_FEDE.error("computedRent: {}", computedRent);
+
+        long result = computedRent > rentThreshold ? computedRent : 0;
+
+        // LOGGER_FEDE.error("compute rent. rentThreshold: {}, result: {}", rentThreshold, result);
+
+        return result;
     }
+    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
 
     /**
      * Calculates the total rent due.

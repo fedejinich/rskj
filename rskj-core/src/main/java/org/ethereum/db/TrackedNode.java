@@ -18,7 +18,7 @@ public class TrackedNode {
         this.transactionHash = transactionHash;
         this.isSuccessful = isSuccessful;
 
-        if(operationType.equals(WRITE_OPERATION) && !isSuccessful) {
+        if(operationType == WRITE_OPERATION && !isSuccessful) {
             throw new IllegalArgumentException("a WRITE_OPERATION should always have a true result");
         }
 
