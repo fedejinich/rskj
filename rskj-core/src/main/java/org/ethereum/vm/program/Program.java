@@ -697,7 +697,6 @@ public class Program {
      * @param msg         is the message call object
      */
     public void callToAddress(MessageCall msg) {
-        String id = String.valueOf(new Random().nextInt());
         if (getCallDeep() == getMaxDepth()) {
             stackPushZero();
             refundGas(msg.getGas().longValue(), " call deep limit reach");

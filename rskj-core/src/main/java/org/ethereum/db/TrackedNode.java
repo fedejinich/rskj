@@ -43,20 +43,12 @@ public class TrackedNode {
     }
 
     @Override
-    public String toString() { // todo(fedejinich) this was used for debugging purposes, might be removed before production
-        String s = this.key.toString();
-        String key = s;//s.substring(s.length() - 5);
-        String transactionHash = this.transactionHash.substring(this.transactionHash.length() - 5);
-        String operationType = "";
-
-        if(this.operationType.equals(OperationType.READ_OPERATION)) {
-            operationType = "READ_OPERATION";
-        } else if(this.operationType.equals(WRITE_OPERATION)) {
-            operationType = "WRITE_OPERATION";
-        }
-
-        return "TrackedNode[key: " + key + ", operationType: " + operationType +
-                ", isSuccessful:" + isSuccessful + ", transactionHash: " + transactionHash +"]";
+    public String toString() {
+        return "TrackedNode[key: " + key +
+                ", operationType: " + operationType +
+                ", isSuccessful:" + isSuccessful +
+                ", transactionHash: " + transactionHash
+                +"]";
     }
 
     @Override

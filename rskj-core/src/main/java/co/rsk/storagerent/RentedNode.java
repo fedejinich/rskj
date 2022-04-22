@@ -2,10 +2,7 @@ package co.rsk.storagerent;
 
 import co.rsk.trie.Trie;
 import com.google.common.annotations.VisibleForTesting;
-import org.ethereum.db.ByteArrayWrapper;
 import org.ethereum.db.TrackedNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
@@ -139,21 +136,14 @@ public class RentedNode extends TrackedNode {
 
     @Override
     public String toString() {
-        String s = this.key.toString();
-        String key = s;//s.substring(s.length() - 5);
-        String transactionHash = this.transactionHash.substring(this.transactionHash.length() - 5);
-        String operationType = "NO_OP";
-        if(this.operationType.equals(READ_OPERATION)) {
-            operationType = "READ_OPERATION";
-        } else if(this.operationType.equals(WRITE_OPERATION)) {
-            operationType = "WRITE_OPERATION";
-        } else {
-            throw new RuntimeException("shoudln't reach here"); // todo(fedejinch) checkout this exeception
-        }
-
-        return "RentedNode[key: " + key + ", operationType: " + operationType + ", isSuccessfulMut: " + isSuccessful +
-                ", loadsContractCode: " + loadsContractCode + ", transactionHash: " + transactionHash +
-                ", nodeSize: " + nodeSize +", lastRentPaidTimestamp: " + rentTimestamp +"]";
+        return "RentedNode[key: " + key +
+                ", operationType: " + operationType +
+                ", isSuccessful: " + isSuccessful +
+                ", loadsContractCode: " + loadsContractCode +
+                ", transactionHash: " + transactionHash +
+                ", nodeSize: " + nodeSize +
+                ", lastRentPaidTimestamp: " + rentTimestamp
+                +"]";
     }
 
     /**

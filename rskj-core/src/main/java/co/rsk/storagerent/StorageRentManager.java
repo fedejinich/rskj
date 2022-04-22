@@ -6,8 +6,6 @@ import org.ethereum.core.Repository;
 import org.ethereum.db.TrackedNode;
 import org.ethereum.vm.GasCost;
 import org.ethereum.vm.program.Program;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.function.Function;
@@ -147,11 +145,5 @@ public class StorageRentManager {
     @VisibleForTesting
     public List<RentedNode> getRollbackNodes() {
         return this.rollbackNodes;
-    }
-
-    // todo(fedejinich) this is for debugging
-    private String printableKey(RentedNode node) {
-        String s = HexUtils.toJsonHex(node.getKey().getData());
-        return s.substring(s.length() - 5);
     }
 }

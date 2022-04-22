@@ -65,7 +65,6 @@ public interface MutableTrie {
      * */
     void putRentTimestamp(byte[] key, long rentTimestamp);
 
-    // TODO(mc) this method is only used from tests
     @VisibleForTesting
     Set<ByteArrayWrapper> collectKeys(int size);
 

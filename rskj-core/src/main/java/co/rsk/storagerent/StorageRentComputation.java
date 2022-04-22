@@ -23,8 +23,6 @@ package co.rsk.storagerent;
 // todo(fedejinich) this class can be moved into StorageRent
 
 import co.rsk.trie.Trie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -94,7 +92,7 @@ public class StorageRentComputation {
      * */
     public static long computeNewTimestamp(long nodeSize, long rentDue, long lastPaidTimestamp,
                                            long currentBlockTimestamp, long rentCap, long rentThreshold) {
-        validateArgumentsComputeTimestamp(nodeSize, rentDue, lastPaidTimestamp, currentBlockTimestamp,
+        validateArgumentsComputeTimestamp(nodeSize, rentDue, currentBlockTimestamp,
                 rentCap, rentThreshold);
 
         if(lastPaidTimestamp == Trie.NO_RENT_TIMESTAMP) {
@@ -115,12 +113,11 @@ public class StorageRentComputation {
         return lastPaidTimestamp + timePaid.longValue();
     }
 
-    private static void validateArgumentsComputeTimestamp(long nodeSize, long rentDue, long lastPaidTimestamp,
+    private static void validateArgumentsComputeTimestamp(long nodeSize, long rentDue,
                                                           long currentBlockTimestamp, long rentCap,
                                                           long rentThreshold) {
         validPositiveValue(nodeSize, "nodeSize must be positive");
         validPositiveValue(rentDue, "rentDue must be positive");
-//        validPositiveValue(lastPaidTimestamp, "lastPaidTime must be positive"); // todo(fedejinich) not always. new created nodes or nodes < Hop contains -1
         validPositiveValue(currentBlockTimestamp, "currentBlockTimestamp must be positive");
         validPositiveValue(rentCap, "rentCap must be positive");
         validPositiveValue(rentThreshold, "rentThreshold must be positive");
