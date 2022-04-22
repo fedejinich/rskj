@@ -30,7 +30,6 @@ public class RentedNode extends TrackedNode {
         this.nodeSize = nodeSize;
         this.rentTimestamp = rentTimestamp;
     }
-    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
 
     /**
      * Calculates the payable rent amount (the total amount it's limited by the rent cap)
@@ -40,9 +39,6 @@ public class RentedNode extends TrackedNode {
      * @return the rent amount expressed in gas units
      * */
     public long payableRent(long currentBlockTimestamp) {
-        String key = this.key.toString();
-//        // LOGGER_FEDE.error("payableRent({}). key: {}", currentBlockTimestamp, key.substring(0, 5) + "..." + key.substring(key.length() - 5));
-        // LOGGER_FEDE.error("payableRent({}). key: {}", currentBlockTimestamp, key);
         return computeRent(
                 rentDue(getNodeSize(), duration(currentBlockTimestamp)),
                 rentCap(),
@@ -112,7 +108,6 @@ public class RentedNode extends TrackedNode {
     }
 
     public long rollbackFee(long executionBlockTimestamp) {
-        // LOGGER_FEDE.error("rollbackFee({})", executionBlockTimestamp);
         long computedRent = computeRent(
                 rentDue(getNodeSize(), duration(executionBlockTimestamp)),
                 rentCap(),

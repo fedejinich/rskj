@@ -135,11 +135,9 @@ public class BlockBuilder {
                             new BlockTxSignatureCache(new ReceivedTxSignatureCache())
                     )
             );
-            // LOGGER_FEDE.error("executeAndFill BlockBuilder");
             executor.executeAndFill(block, parent.getHeader());
         }
     }
-    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
     public Block buildWithoutExecution() {
         Block block = blockGenerator.createChildBlock(parent, txs, uncles, difficulty, this.minGasPrice, gasLimit);
 

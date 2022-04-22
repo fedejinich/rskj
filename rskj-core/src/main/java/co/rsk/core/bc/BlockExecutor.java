@@ -79,7 +79,6 @@ public class BlockExecutor {
      * @param parent       The parent of the block.
      */
     public BlockResult executeAndFill(Block block, BlockHeader parent) {
-        // LOGGER_FEDE.error("executeAndFill");
         BlockResult result = execute(block, parent, true, false);
         fill(block, result);
         return result;
@@ -87,14 +86,12 @@ public class BlockExecutor {
 
     @VisibleForTesting
     public void executeAndFillAll(Block block, BlockHeader parent) {
-        // LOGGER_FEDE.error("executeAndFillAll");
         BlockResult result = execute(block, parent, false, true);
         fill(block, result);
     }
 
     @VisibleForTesting
     public void executeAndFillReal(Block block, BlockHeader parent) {
-        // LOGGER_FEDE.error("executeAndFillReal");
         BlockResult result = execute(block, parent, false, false);
         if (result != BlockResult.INTERRUPTED_EXECUTION_BLOCK_RESULT) {
             fill(block, result);
@@ -126,7 +123,6 @@ public class BlockExecutor {
      */
     @VisibleForTesting
     public boolean executeAndValidate(Block block, BlockHeader parent) {
-        // LOGGER_FEDE.error("executeAndValidate");
         BlockResult result = execute(block, parent, false, false);
 
         return this.validate(block, result);
@@ -224,12 +220,10 @@ public class BlockExecutor {
 
     @VisibleForTesting
     public BlockResult execute(Block block, BlockHeader parent, boolean discardInvalidTxs) {
-        // LOGGER_FEDE.error("execute1");
         return execute(block, parent, discardInvalidTxs, false);
     }
 
     public BlockResult execute(Block block, BlockHeader parent, boolean discardInvalidTxs, boolean ignoreReadyToExecute) {
-        // LOGGER_FEDE.error("execute2");
         return executeInternal(null, 0, block, parent, discardInvalidTxs, ignoreReadyToExecute);
     }
 
@@ -248,7 +242,6 @@ public class BlockExecutor {
         );
     }
 
-    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
     private BlockResult executeInternal(
             @Nullable ProgramTraceProcessor programTraceProcessor,
             int vmTraceOptions,
@@ -256,7 +249,6 @@ public class BlockExecutor {
             BlockHeader parent,
             boolean discardInvalidTxs,
             boolean acceptInvalidTransactions) {
-        // LOGGER_FEDE.error("executeInternal");
         boolean vmTrace = programTraceProcessor != null;
         logger.trace("Start executeInternal.");
         logger.trace("applyBlock: block: [{}] tx.list: [{}]", block.getNumber(), block.getTransactionsList().size());

@@ -143,7 +143,6 @@ public class TransactionExecutor {
      * @return true if the transaction is valid and executed, false if the transaction is invalid
      */
     public boolean executeTransaction() {
-        // LOGGER_FEDE.error("----------------------- TX ({}) -----------------------", tx.getNonceAsInteger());
         if (!this.init()) {
             return false;
         }
@@ -154,7 +153,6 @@ public class TransactionExecutor {
 
         return true;
     }
-    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
 
     /**
      * Do all the basic validation, if the executor

@@ -79,16 +79,12 @@ public class StorageRentManager {
 
         // calculate rent
 
-        // LOGGER_FEDE.error("__ calculating payable rent __");
         long payableRent = rentBy(this.rentedNodes,
                 rentedNode -> rentedNode.payableRent(executionBlockTimestamp));
 
-        // LOGGER_FEDE.error("__ calculating rollback rent __");
         long rollbacksRent = rentBy(this.rollbackNodes,
                 rentedNode -> rentedNode.rollbackFee(executionBlockTimestamp));
-
-        // LOGGER_FEDE.error("___ PAYABLERENT: {}, ROLLBACKSRENT: {} ___", payableRent, rollbacksRent);
-
+        
         long rentToPay = payableRent + rollbacksRent;
 
         if(gasRemaining < rentToPay) {
@@ -114,7 +110,6 @@ public class StorageRentManager {
 
         return gasAfterPayingRent;
     }
-    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
 
     private long rentBy(Collection<RentedNode> rentedNodes, Function<RentedNode, Long> rentFunction) {
         Optional<Long> rent = rentedNodes.stream()

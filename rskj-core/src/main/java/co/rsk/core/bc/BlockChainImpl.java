@@ -185,8 +185,6 @@ public class BlockChainImpl implements Blockchain {
 
     }
 
-    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
-
     private ImportResult internalTryToConnect(Block block) {
         Metric metric = profiler.start(Profiler.PROFILING_TYPE.BEFORE_BLOCK_EXEC);
 
@@ -252,7 +250,6 @@ public class BlockChainImpl implements Blockchain {
             long saveTime = System.nanoTime();
             logger.trace("execute start");
 
-            // LOGGER_FEDE.error("tryToConnect");
             result = blockExecutor.execute(block, parent.getHeader(), false, noValidation);
 
             logger.trace("execute done");
@@ -273,7 +270,7 @@ public class BlockChainImpl implements Blockchain {
             String timeInSeconds = FormatUtils.formatNanosecondsToSeconds(totalTime);
 
             if (BlockUtils.tooMuchProcessTime(totalTime)) {
-                logger.warn("block: num: [{}] hash: [{}], executed after: [{}]seconds", block.getNumber(), block.getPrintableHash(), timeInSeconds);
+                logger.warn("block: num: [{}] hash: [{}], executed after: [{}]seconds",q block.getNumber(), block.getPrintableHash(), timeInSeconds);
             }
             else {
                 logger.trace("block: num: [{}] hash: [{}], executed after: [{}]seconds", block.getNumber(), block.getPrintableHash(), timeInSeconds);

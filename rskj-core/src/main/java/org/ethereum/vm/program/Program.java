@@ -687,7 +687,7 @@ public class Program {
         }
         return d;
     }
-    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
+    
     /**
      * That method is for internal code invocations
      * <p/>
@@ -698,7 +698,6 @@ public class Program {
      */
     public void callToAddress(MessageCall msg) {
         String id = String.valueOf(new Random().nextInt());
-        // LOGGER_FEDE.error("intrenalTx({})", id);
         if (getCallDeep() == getMaxDepth()) {
             stackPushZero();
             refundGas(msg.getGas().longValue(), " call deep limit reach");
@@ -778,11 +777,9 @@ public class Program {
 
         // 4. THE FLAG OF SUCCESS IS ONE PUSHED INTO THE STACK
         if (callResult) {
-            // LOGGER_FEDE.error("internalTx({}) succeed", id);
             stackPushOne();
         }
         else {
-            // LOGGER_FEDE.error("internalTx({}) failed", id);
             stackPushZero();
         }
     }

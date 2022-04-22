@@ -100,7 +100,7 @@ public class BlockToMineBuilder {
         this.minimumGasPriceCalculator = minimumGasPriceCalculator;
         this.minerUtils = minerUtils;
     }
-    private static final Logger LOGGER_FEDE = LoggerFactory.getLogger("fede");
+    
     /**
      * Creates a new block to mine based on the previous mainchain blocks.
      *
@@ -128,7 +128,6 @@ public class BlockToMineBuilder {
         final Block newBlock = createBlock(mainchainHeaders, uncles, txs, minimumGasPrice, extraData);
 
         removePendingTransactions(txsToRemove);
-        // LOGGER_FEDE.error("build");
         return executor.executeAndFill(newBlock, newBlockParentHeader);
     }
 
