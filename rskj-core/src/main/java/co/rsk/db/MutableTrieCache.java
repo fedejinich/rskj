@@ -115,13 +115,7 @@ public class MutableTrieCache implements MutableTrie {
 
         return this.trie.getRentTimestamp(wrappedKey.getData());
     }
-
-//        return internalGet(key,
-//                k -> trie.getLastRentPaidTimestamp(k).orElse(null),
-//                cachedTimestamp -> ByteUtil.byteArrayToLong(cachedTimestamp),
-//                true);
-
-
+    
     public Iterator<DataWord> getStorageKeys(RskAddress addr) {
         byte[] accountStoragePrefixKey = trieKeyMapper.getAccountStoragePrefixKey(addr);
         ByteArrayWrapper accountWrapper = getAccountWrapper(new ByteArrayWrapper(accountStoragePrefixKey));
