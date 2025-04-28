@@ -147,18 +147,8 @@ if block_infos:
     # Scatter plot
     plt.figure(figsize=(12, 7))
 
-    plt.scatter(
-        range(len(propagation_times)),
-        propagation_times,
-        color="blue",
-        label="Propagation Time",
-    )
-    plt.scatter(
-        range(len(broadcasting_times)),
-        broadcasting_times,
-        color="red",
-        label="Broadcasting Time",
-    )
+    plt.scatter(range(len(propagation_times)), propagation_times, color="blue", label="Propagation Time")
+    plt.scatter(range(len(broadcasting_times)), broadcasting_times, color="red", label="Broadcasting Time")
 
     plt.title("Block Propagation and Broadcasting Times (Fully Propagated Blocks)")
     plt.xlabel("Block Index")
@@ -168,18 +158,22 @@ if block_infos:
     plt.tight_layout()
     plt.show()
 
-    # Pie chart: total propagation vs broadcasting time
+    # Pie chart: broadcasting time vs propagation time
     total_propagation = sum(propagation_times)
     total_broadcasting = sum(broadcasting_times)
 
+    broadcast_share = total_broadcasting / total_propagation
+    propagation_share = 1 - broadcast_share
+
     plt.figure(figsize=(7, 7))
     plt.pie(
-        [total_propagation, total_broadcasting],
-        labels=["Propagation Time", "Broadcasting Time"],
+        [broadcast_share, propagation_share],
+        labels=["Broadcasting Time", "Remaining Propagation Time"],
         autopct="%1.1f%%",
         startangle=140,
-        colors=["blue", "red"],
+        colors=["red", "blue"]
     )
-    plt.title("Total Propagation vs Broadcasting Time (Fully Propagated Blocks)")
+    plt.title("Broadcasting Time Share Over Propagation Time")
     plt.tight_layout()
     plt.show()
+
