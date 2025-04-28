@@ -19,6 +19,7 @@ public class BlockProfilingData {
 
     @Override
     public String toString() {
+        // instant,blockHash,phase
         return String.format("%d,%s,%s", instant, ByteUtil.toHexString(blockHash), phase);
     }
 }
