@@ -46,7 +46,7 @@ public class MessageVisitor {
 
   private static final Logger logger = LoggerFactory.getLogger("messagehandler");
   private static final Logger loggerMessageProcess = LoggerFactory.getLogger("messageProcess");
-  private static final Logger blockPropagationProfiler = LoggerFactory.getLogger("blockPropagationProfiler");
+  private static final Logger blockPropagationProfiler = LoggerFactory.getLogger("blockProfiler");
 
   private final BlockProcessor blockProcessor;
   private final SyncProcessor syncProcessor;

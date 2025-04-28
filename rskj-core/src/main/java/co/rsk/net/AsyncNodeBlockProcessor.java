@@ -53,7 +53,7 @@ public class AsyncNodeBlockProcessor extends NodeBlockProcessor implements Inter
 
     private static final Logger logger = LoggerFactory.getLogger("asyncblockprocessor");
 
-    private static final Logger blockPropagationProfiler = LoggerFactory.getLogger("blockPropagationProfiler");
+    private static final Logger blockPropagationProfiler = LoggerFactory.getLogger("blockProfiler");
 
     private final BlockingQueue<BlockInfo> blocksToProcess = new LinkedBlockingQueue<>();
 

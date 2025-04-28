@@ -88,3 +88,5 @@ infer-out/
 .java-version
 
 doc/rpc/openrpc.json
+
+logs/*.csv

@@ -128,8 +128,8 @@
 
     <!-- profiling loggers -->
 
-    <!-- block propagation profiler  -->
-    <appender name="BLOCK_PROPAGATION_CSV" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- block profiler  -->
+  <appender name="BLOCK_PROFILER" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <immediateFlush>true</immediateFlush>
         <file>./logs/block_propagation.csv</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -144,7 +144,7 @@
     </appender>
 
     <!-- Logger for profiling block propagation -->
-    <logger name="blockPropagationProfiler" level="INFO" additivity="false">
-        <appender-ref ref="BLOCK_PROPAGATION_CSV"/>
+    <logger name="blockProfiler" level="INFO" additivity="false">
+        <appender-ref ref="BLOCK_PROFILER"/>
     </logger>
 </configuration>
