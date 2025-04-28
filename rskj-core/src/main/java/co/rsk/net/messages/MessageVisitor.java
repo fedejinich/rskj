@@ -21,6 +21,7 @@ package co.rsk.net.messages;
 import co.rsk.config.RskSystemProperties;
 import co.rsk.crypto.Keccak256;
 import co.rsk.net.*;
+import co.rsk.profiler.BlockProfilingData;
 import co.rsk.scoring.EventType;
 import co.rsk.scoring.PeerScoringManager;
 import co.rsk.util.FormatUtils;
@@ -34,6 +35,8 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import co.rsk.profiler.BlockProfilingData.Phase;
+
 /**
  * The MessageVisitor handles the received wire messages resolution.
  * <p>
@@ -43,6 +46,7 @@ public class MessageVisitor {
 
     private static final Logger logger = LoggerFactory.getLogger("messagehandler");
     private static final Logger loggerMessageProcess = LoggerFactory.getLogger("messageProcess");
+    private static final Logger blockPropagationProfiler = LoggerFactory.getLogger("blockPropagationProfiler");
 
     private final BlockProcessor blockProcessor;
     private final SyncProcessor syncProcessor;
@@ -76,6 +80,8 @@ public class MessageVisitor {
      * @param message the BlockMessage.
      */
     public void apply(BlockMessage message) {
+        blockPropagationProfiler.info("{}", new BlockProfilingData(message.getBlock().getHash().getBytes(), Phase.PROCESSING_START));
+
         final Block block = message.getBlock();
 
         logger.trace("Process block {} {}", block.getNumber(), block.getPrintableHash());
@@ -156,6 +162,7 @@ public class MessageVisitor {
     }
 
     public void apply(NewBlockHashMessage message) {
+        blockPropagationProfiler.info("{}", new BlockProfilingData(message.getBlockHash(), Phase.ANOUNCEMENT));
         this.syncProcessor.processNewBlockHash(sender, message);
     }
 
@@ -177,6 +184,10 @@ public class MessageVisitor {
     }
 
     public void apply(NewBlockHashesMessage message) {
+        for(BlockIdentifier b : message.getBlockIdentifiers()) {
+            blockPropagationProfiler.info("{}", new BlockProfilingData(b.getHash(), Phase.ANOUNCEMENT));
+        }
+
         if (blockProcessor.hasBetterBlockToSync()) {
             loggerMessageProcess.debug("Message[{}] not processed.", message.getMessageType());
             return;

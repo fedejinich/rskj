@@ -21,6 +21,8 @@ package co.rsk.net;
 import co.rsk.config.InternalService;
 import co.rsk.crypto.Keccak256;
 import co.rsk.net.sync.SyncConfiguration;
+import co.rsk.profiler.BlockProfilingData;
+import co.rsk.profiler.BlockProfilingData.Phase;
 import co.rsk.util.FormatUtils;
 import co.rsk.validators.BlockValidator;
 import org.ethereum.core.Block;
@@ -50,6 +52,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class AsyncNodeBlockProcessor extends NodeBlockProcessor implements InternalService, Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger("asyncblockprocessor");
+
+    private static final Logger blockPropagationProfiler = LoggerFactory.getLogger("blockPropagationProfiler");
 
     private final BlockingQueue<BlockInfo> blocksToProcess = new LinkedBlockingQueue<>();
 
@@ -179,9 +183,11 @@ public class AsyncNodeBlockProcessor extends NodeBlockProcessor implements Inter
                 if (logger.isTraceEnabled()) {
                     logger.trace("Start block processing with number {} and hash {} from {}", block.getNumber(), block.getPrintableHash(), sender);
                 }
-                
+
                 Map<Keccak256, ImportResult> connectResult = blockSyncService.connectBlocksAndDescendants(sender, Collections.singletonList(block), false);
                 BlockProcessResult blockProcessResult = BlockProcessResult.connectResult(block, start, connectResult);
+
+                blockPropagationProfiler.info("{}", new BlockProfilingData(block.getHash().getBytes(), Phase.PROCESSING_END));
 
                 if (logger.isTraceEnabled()) {
                     logger.trace("Finished block processing after [{}] seconds.", FormatUtils.formatNanosecondsToSeconds(Duration.between(start, Instant.now()).toNanos()));
