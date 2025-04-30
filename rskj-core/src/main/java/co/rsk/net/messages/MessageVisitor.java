@@ -120,7 +120,7 @@ public class MessageVisitor {
       return;
     }
 
-    tryRelayBlock(block, result); // BROADCASTED at the end
+    tryRelayBlock(block, result);
 
     sender.imported(result.isBest());
 

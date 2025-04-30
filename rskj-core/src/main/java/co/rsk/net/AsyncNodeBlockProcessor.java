@@ -92,19 +92,27 @@ public class AsyncNodeBlockProcessor extends NodeBlockProcessor implements Inter
         final String peer = sender != null ? sender.getPeerNodeID().toString() : "N/A";
 
         // Validate block header first to see if its PoW is valid at all
+        blockPropagationProfiler.info("{}", new BlockProfilingData(block.getHash().getBytes(), Phase.VALIDATION_BLOCK_HEADER));
         if (!isBlockHeaderValid(block)) {
+            // blockPropagationProfiler.info("{}", new BlockProfilingData(block.getHash().getBytes(), Phase.VALIDATION_BLOCK_HEADER_END));
             logger.warn("Invalid block header with number {} {} from {} ", blockNumber, blockHash, peer);
             return invalidBlockResult(block, start);
         }
+        // blockPropagationProfiler.info("{}", new BlockProfilingData(block.getHash().getBytes(), Phase.VALIDATION_BLOCK_HEADER_END));
 
         // Check if block is already in the queue
+        blockPropagationProfiler.info("{}", new BlockProfilingData(block.getHash().getBytes(), Phase.VALIDATION_BLOCK_CONTAINED));
         if (store.hasBlock(block)) {
+            // blockPropagationProfiler.info("{}", new BlockProfilingData(block.getHash().getBytes(), Phase.VALIDATION_BLOCK_CONTAINED_END));
             logger.trace("Ignored block with number {} and hash {} from {} as it's already in the queue", blockNumber, blockHash, peer);
             return ignoreBlockResult(block, start);
         }
+        // blockPropagationProfiler.info("{}", new BlockProfilingData(block.getHash().getBytes(), Phase.VALIDATION_BLOCK_CONTAINED_END));
 
         // Check if block is ready for processing - if the block is not too advanced, its ancestor blocks are in place etc.
+        blockPropagationProfiler.info("{}", new BlockProfilingData(block.getHash().getBytes(), Phase.VALIDATION_PREPROCESS_START));
         List<Block> blocksToConnect = blockSyncService.preprocessBlock(block, sender, false);
+        blockPropagationProfiler.info("{}", new BlockProfilingData(block.getHash().getBytes(), Phase.VALIDATION_PREPROCESS_END));
         if (blocksToConnect.isEmpty()) {
             logger.trace("Ignored block with number {} and hash {} from {} as it's not ready for processing yet", blockNumber, blockHash, peer);
             return ignoreBlockResult(block, start);
@@ -117,12 +125,18 @@ public class AsyncNodeBlockProcessor extends NodeBlockProcessor implements Inter
             if (isBlockValid(block)) {
                 scheduleForProcessing(new BlockInfo(sender, block), blockNumber, blockHash, peer);
 
+                blockPropagationProfiler.info("{}", new BlockProfilingData(block.getHash().getBytes(), Phase.PROCESSING_ASYNC));
+
                 return scheduledForProcessingResult(block, start);
             }
 
+
+            blockPropagationProfiler.info("{}", new BlockProfilingData(block.getHash().getBytes(), Phase.PROCESSING_REJECTED));
             logger.warn("Invalid block with number {} {} from {} ", blockNumber, blockHash, peer);
             return invalidBlockResult(block, start);
         }
+
+        blockPropagationProfiler.info("{}", new BlockProfilingData(block.getHash().getBytes(), Phase.PROCESSING_SYNC));
 
         // if besides the block there are some ancestors, connect them all synchronously
         Map<Keccak256, ImportResult> connectResult = blockSyncService.connectBlocksAndDescendants(sender, blocksToConnect, false);

@@ -23,6 +23,8 @@ import co.rsk.core.bc.BlockUtils;
 import co.rsk.crypto.Keccak256;
 import co.rsk.net.messages.GetBlockMessage;
 import co.rsk.net.sync.SyncConfiguration;
+import co.rsk.profiler.BlockProfilingData;
+import co.rsk.profiler.BlockProfilingData.Phase;
 import co.rsk.validators.BlockValidator;
 import org.ethereum.core.Block;
 import org.ethereum.core.Blockchain;
@@ -42,6 +44,7 @@ import java.util.*;
  */
 public class BlockSyncService {
     private static final Logger logger = LoggerFactory.getLogger("blocksyncservice");
+    private static final Logger blockPropagationProfiler = LoggerFactory.getLogger("blockProfiler");
 
     private static final int PROCESSED_BLOCKS_TO_CHECK_STORE = 200;
     private static final int RELEASED_RANGE = 1000;
@@ -135,6 +138,13 @@ public class BlockSyncService {
         logger.trace("Trying to add to blockchain");
 
         Map<Keccak256, ImportResult> connectResult = connectBlocksAndDescendants(sender, blocksToConnect, ignoreMissingHashes);
+        
+        for(Block b: blocksToConnect) {
+            ImportResult result = connectResult.get(b.getHash());
+            if(!result.isSuccessful()) {
+                blockPropagationProfiler.info("{}", new BlockProfilingData(block.getHash().getBytes(), Phase.PROCESSING_REJECTED));
+            }
+        }
         return BlockProcessResult.connectResult(block, start, connectResult);
     }
 
