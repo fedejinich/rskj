@@ -36,6 +36,7 @@ contained_to_preprocess_times = []
 preprocessing_times           = []
 broadcasting_times            = []
 propagation_times             = []
+total_consumed_times          = []
 
 # Counters
 total_announcements = 0
@@ -58,7 +59,7 @@ for block_hash, events in blocks.items():
     broadcasted           = None
     processing_end        = None
 
-    # Classify each timestamp
+    # Classify timestamps
     for t, phase in events:
         if phase == "ANOUNCEMENT":
             announcement_instants.append(t)
@@ -118,6 +119,7 @@ for block_hash, events in blocks.items():
         p_time     = processing_end - broadcasted
         broadcasting_times.append(b_time)
         propagation_times.append(p_time)
+        total_consumed_times.append(total_time)
 
     if broadcasted is not None:
         broadcasted_blocks += 1
@@ -166,40 +168,44 @@ with open(csv_output, "w", newline="") as out:
             rec["PropagationTime"],
             rec["TotalConsumedTime"],
         ])
-print(f"Analysis written to {csv_output}\n")
 
-# Print per-block details
-for rec in detailed_metrics:
-    parts = [f"Block {rec['hash'][:8]}"]
-    for key in [
-        "AnnouncementLatency",
-        "HeaderValidation",
-        "ContainedValidation",
-        "Preprocessing",
-        "BroadcastingTime",
-        "PropagationTime",
-        "TotalConsumedTime",
-    ]:
-        val = rec.get(key)
-        if val is not None:
-            parts.append(f"{key}={val}ms")
-    print(", ".join(parts))
+# # Print per-block details
+# for rec in detailed_metrics:
+#     parts = [f"Block {rec['hash'][:8]}"]
+#     for key in [
+#         "AnnouncementLatency",
+#         "HeaderValidation",
+#         "ContainedValidation",
+#         "Preprocessing",
+#         "BroadcastingTime",
+#         "PropagationTime",
+#         "TotalConsumedTime",
+#     ]:
+#         val = rec.get(key)
+#         if val is not None:
+#             parts.append(f"{key}={val}ms")
+#     print(", ".join(parts))
 
-# Overall statistics (unchanged)
+# Overall statistics
 def stat(name, arr):
     return f"{name}: avg={mean(arr):.2f}ms, med={median(arr):.2f}ms" if arr else f"{name}: No data"
 
-print("\n--- Overall Metrics ---")
+print("\n--- Overall Metrics ---\n")
 print(stat("Announcement Latency", announcement_times))
 print(stat("Header Validation", header_to_contained_times))
 print(stat("Contained Validation", contained_to_preprocess_times))
 print(stat("Preprocessing", preprocessing_times))
 print(stat("Broadcasting Time", broadcasting_times))
 print(stat("Propagation Time", propagation_times))
+print("\n-----------------------\n")
+print(stat("Total Cumulative Time", total_consumed_times))
+print("\n-----------------------\n")
 print(f"Total Announcements: {total_announcements}")
 print(f"Blocks Announced: {announced_blocks}")
 print(f"Blocks Broadcasted: {broadcasted_blocks}")
 print(f"Blocks Fully Propagated: {propagated_blocks}")
+print("\n-----------------------\n")
+print(f"Analysis written to {csv_output}\n")
 
 # ————— Plot cumulative timeline by block —————
 filtered = [
@@ -219,7 +225,7 @@ plt.scatter(idx, a_cum, label="Announcement Cumulative")
 plt.scatter(idx, b_cum, label="Broadcasting Cumulative")
 plt.scatter(idx, p_cum, label="Propagation Cumulative")
 plt.xticks([])  # remove X-axis labels
-plt.title("Cumulative Timeline per Block")
+plt.title("Cumulative Timeline per Block (1000 Blocks)")
 plt.xlabel("Block Index")
 plt.ylabel("Cumulative Time (ms)")
 plt.legend()
@@ -244,13 +250,13 @@ plt.figure(figsize=(8, 6))
 
 # Average bar
 plt.bar(x[0], avg_ann, width, color=colors[0])
-plt.bar(x[0], avg_b,   width, bottom=avg_ann,            color=colors[1])
-plt.bar(x[0], avg_p,   width, bottom=avg_ann + avg_b,    color=colors[2])
+plt.bar(x[0], avg_b,   width, bottom=avg_ann,         color=colors[1])
+plt.bar(x[0], avg_p,   width, bottom=avg_ann + avg_b, color=colors[2])
 
 # Median bar
 plt.bar(x[1], med_ann, width, color=colors[0])
-plt.bar(x[1], med_b,   width, bottom=med_ann,            color=colors[1])
-plt.bar(x[1], med_p,   width, bottom=med_ann + med_b,    color=colors[2])
+plt.bar(x[1], med_b,   width, bottom=med_ann,         color=colors[1])
+plt.bar(x[1], med_p,   width, bottom=med_ann + med_b, color=colors[2])
 
 plt.xticks(x, ["Average", "Median"])
 plt.ylabel("Time (ms)")
