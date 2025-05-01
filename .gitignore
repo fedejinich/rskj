@@ -90,3 +90,5 @@ infer-out/
 doc/rpc/openrpc.json
 
 logs/*.csv
+profiling-scripts/*.csv
+profiling-scripts/*.txt

@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 # Input and output
 csv_input  = "../logs/block_profiler.csv"
 csv_output = "block_profiler_analyzed.csv"
+metrics_name = "block_profiler_metrics.txt"
 
 # Blocks to exclude from the plot
 EXCLUDED_BLOCK_HASHES = [
@@ -43,8 +44,8 @@ total_announcements = 0
 announced_blocks    = 0
 broadcasted_blocks  = 0
 propagated_blocks   = 0
-sync_count          = 0   # new: count blocks processed synchronously
-async_count         = 0   # new: count blocks processed asynchronously
+sync_count          = 0   # count blocks processed synchronously
+async_count         = 0   # count blocks processed asynchronously
 
 # For CSV output and detailed metrics
 block_infos      = []
@@ -61,7 +62,7 @@ for block_hash, events in blocks.items():
     broadcasted           = None
     processing_end        = None
 
-    # new: flags for processing type
+    # Flags for sync/async
     is_sync  = False
     is_async = False
 
@@ -81,9 +82,9 @@ for block_hash, events in blocks.items():
             v_pre_end = v_pre_end or t
         elif phase == "BROADCASTED":
             broadcasted = broadcasted or t
-        elif phase == "PROCESSING_SYNC":     # new
+        elif phase == "PROCESSING_SYNC":
             is_sync = True
-        elif phase == "PROCESSING_ASYNC":    # new
+        elif phase == "PROCESSING_ASYNC":
             is_async = True
         elif phase == "PROCESSING_END":
             processing_end = processing_end or t
@@ -131,7 +132,7 @@ for block_hash, events in blocks.items():
         processing_times.append(proc_time)
         total_consumed_times.append(total_time)
 
-        # new: count sync vs async only if block fully processed
+        # Count sync vs async
         if is_sync:
             sync_count += 1
         elif is_async:
@@ -144,9 +145,9 @@ for block_hash, events in blocks.items():
 
     # Store for CSV and plots
     block_infos.append({
-        "hash"              : block_hash,
-        "BroadcastTime"     : b_time,
-        "ProcessingTime"    : proc_time,
+        "hash"             : block_hash,
+        "BroadcastTime"    : b_time,
+        "ProcessingTime"   : proc_time,
         "TotalConsumedTime": total_time,
     })
     detailed_metrics.append({
@@ -207,6 +208,30 @@ print(f"Blocks Broadcasted: {broadcasted_blocks}")
 print(f"Blocks Fully Processed: {propagated_blocks}")
 print("\n-----------------------\n")
 print(f"Analysis written to {csv_output}\n")
+
+# Write overall metrics to text file
+overall_lines = [
+    "--- Overall Metrics ---", 
+    stat("Announcement Latency", announcement_times),
+    stat("Header Validation", header_to_contained_times),
+    stat("Contained Validation", contained_to_preprocess_times),
+    stat("Preprocessing", preprocessing_times),
+    stat("Broadcast Time", broadcasting_times),
+    stat("Processing Time", processing_times),
+    stat("Total Cumulative Time", total_consumed_times),
+    "-----------------------",
+    f"Synchronous processed blocks: {sync_count}",
+    f"Asynchronous processed blocks: {async_count}",
+    "-----------------------",
+    f"Total Announcements: {total_announcements}",
+    f"Blocks Announced: {announced_blocks}",
+    f"Blocks Broadcasted: {broadcasted_blocks}",
+    f"Blocks Fully Processed: {propagated_blocks}",
+    "-----------------------",
+    f"Analysis written to {csv_output}"
+]
+with open(metrics_name, "w") as mf:
+    mf.write("\n".join(overall_lines))
 
 # ————— Plot cumulative timeline by block —————
 filtered = [
