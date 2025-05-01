@@ -35,7 +35,7 @@ header_to_contained_times     = []
 contained_to_preprocess_times = []
 preprocessing_times           = []
 broadcasting_times            = []
-propagation_times             = []
+processing_times              = []
 total_consumed_times          = []
 
 # Counters
@@ -93,7 +93,7 @@ for block_hash, events in blocks.items():
     cont_val   = None
     preproc    = None
     b_time     = None
-    p_time     = None
+    proc_time  = None
     total_time = None
 
     if processing_start is not None:
@@ -116,21 +116,21 @@ for block_hash, events in blocks.items():
     if broadcasted is not None and processing_end is not None:
         total_time = processing_end - first_ann
         b_time     = (broadcasted - processing_start) if processing_start else (broadcasted - first_ann)
-        p_time     = processing_end - broadcasted
+        proc_time  = processing_end - broadcasted
         broadcasting_times.append(b_time)
-        propagation_times.append(p_time)
+        processing_times.append(proc_time)
         total_consumed_times.append(total_time)
 
     if broadcasted is not None:
         broadcasted_blocks += 1
-    if None not in (ann_lat, b_time, p_time):
+    if None not in (ann_lat, b_time, proc_time):
         propagated_blocks += 1
 
     # Store for CSV and plots
     block_infos.append({
-        "hash"             : block_hash,
-        "BroadcastingTime" : b_time,
-        "PropagationTime"  : p_time,
+        "hash"              : block_hash,
+        "BroadcastTime"     : b_time,
+        "ProcessingTime"    : proc_time,
         "TotalConsumedTime": total_time,
     })
     detailed_metrics.append({
@@ -139,8 +139,8 @@ for block_hash, events in blocks.items():
         "HeaderValidation"    : hdr_valid,
         "ContainedValidation" : cont_val,
         "Preprocessing"       : preproc,
-        "BroadcastingTime"    : b_time,
-        "PropagationTime"     : p_time,
+        "BroadcastTime"       : b_time,
+        "ProcessingTime"      : proc_time,
         "TotalConsumedTime"   : total_time,
     })
 
@@ -153,8 +153,8 @@ with open(csv_output, "w", newline="") as out:
         "HeaderValidation",
         "ContainedValidation",
         "Preprocessing",
-        "BroadcastingTime",
-        "PropagationTime",
+        "BroadcastTime",
+        "ProcessingTime",
         "TotalConsumedTime",
     ])
     for rec in detailed_metrics:
@@ -164,27 +164,10 @@ with open(csv_output, "w", newline="") as out:
             rec["HeaderValidation"],
             rec["ContainedValidation"],
             rec["Preprocessing"],
-            rec["BroadcastingTime"],
-            rec["PropagationTime"],
+            rec["BroadcastTime"],
+            rec["ProcessingTime"],
             rec["TotalConsumedTime"],
         ])
-
-# # Print per-block details
-# for rec in detailed_metrics:
-#     parts = [f"Block {rec['hash'][:8]}"]
-#     for key in [
-#         "AnnouncementLatency",
-#         "HeaderValidation",
-#         "ContainedValidation",
-#         "Preprocessing",
-#         "BroadcastingTime",
-#         "PropagationTime",
-#         "TotalConsumedTime",
-#     ]:
-#         val = rec.get(key)
-#         if val is not None:
-#             parts.append(f"{key}={val}ms")
-#     print(", ".join(parts))
 
 # Overall statistics
 def stat(name, arr):
@@ -195,15 +178,15 @@ print(stat("Announcement Latency", announcement_times))
 print(stat("Header Validation", header_to_contained_times))
 print(stat("Contained Validation", contained_to_preprocess_times))
 print(stat("Preprocessing", preprocessing_times))
-print(stat("Broadcasting Time", broadcasting_times))
-print(stat("Propagation Time", propagation_times))
+print(stat("Broadcast Time", broadcasting_times))
+print(stat("Processing Time", processing_times))
 print("\n-----------------------\n")
 print(stat("Total Cumulative Time", total_consumed_times))
 print("\n-----------------------\n")
 print(f"Total Announcements: {total_announcements}")
 print(f"Blocks Announced: {announced_blocks}")
 print(f"Blocks Broadcasted: {broadcasted_blocks}")
-print(f"Blocks Fully Propagated: {propagated_blocks}")
+print(f"Blocks Fully Processed: {propagated_blocks}")
 print("\n-----------------------\n")
 print(f"Analysis written to {csv_output}\n")
 
@@ -217,13 +200,13 @@ filtered = filtered[:1000]
 
 idx   = list(range(len(filtered)))
 a_cum = [rec["AnnouncementLatency"]                          for rec in filtered]
-b_cum = [rec["AnnouncementLatency"] + rec["BroadcastingTime"] for rec in filtered]
+b_cum = [rec["AnnouncementLatency"] + rec["BroadcastTime"]     for rec in filtered]
 p_cum = [rec["TotalConsumedTime"]                            for rec in filtered]
 
 plt.figure(figsize=(12, 7))
 plt.scatter(idx, a_cum, label="Announcement Cumulative")
-plt.scatter(idx, b_cum, label="Broadcasting Cumulative")
-plt.scatter(idx, p_cum, label="Propagation Cumulative")
+plt.scatter(idx, b_cum, label="Broadcast Cumulative")
+plt.scatter(idx, p_cum, label="Processing Cumulative")
 plt.xticks([])  # remove X-axis labels
 plt.title("Cumulative Timeline per Block (1000 Blocks)")
 plt.xlabel("Block Index")
@@ -236,11 +219,11 @@ plt.show()
 # ————— Stacked bar chart: Average vs Median per event —————
 avg_ann = mean(announcement_times)
 avg_b   = mean(broadcasting_times)
-avg_p   = mean(propagation_times)
+avg_p   = mean(processing_times)
 
 med_ann = median(announcement_times)
 med_b   = median(broadcasting_times)
-med_p   = median(propagation_times)
+med_p   = median(processing_times)
 
 x = [0, 1]
 width = 0.5
@@ -250,18 +233,18 @@ plt.figure(figsize=(8, 6))
 
 # Average bar
 plt.bar(x[0], avg_ann, width, color=colors[0])
-plt.bar(x[0], avg_b,   width, bottom=avg_ann,         color=colors[1])
-plt.bar(x[0], avg_p,   width, bottom=avg_ann + avg_b, color=colors[2])
+plt.bar(x[0], avg_b,   width, bottom=avg_ann,             color=colors[1])
+plt.bar(x[0], avg_p,   width, bottom=avg_ann + avg_b,     color=colors[2])
 
 # Median bar
 plt.bar(x[1], med_ann, width, color=colors[0])
-plt.bar(x[1], med_b,   width, bottom=med_ann,         color=colors[1])
-plt.bar(x[1], med_p,   width, bottom=med_ann + med_b, color=colors[2])
+plt.bar(x[1], med_b,   width, bottom=med_ann,             color=colors[1])
+plt.bar(x[1], med_p,   width, bottom=med_ann + med_b,     color=colors[2])
 
 plt.xticks(x, ["Average", "Median"])
 plt.ylabel("Time (ms)")
 plt.title("Average vs Median per Block Event")
-plt.legend(["Announcement", "Broadcasting", "Propagation"], loc="upper left")
+plt.legend(["Announcement", "Broadcast", "Processing"], loc="upper left")
 plt.grid(True, axis="y")
 plt.tight_layout()
 plt.show()
