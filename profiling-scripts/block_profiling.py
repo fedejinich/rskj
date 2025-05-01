@@ -43,6 +43,8 @@ total_announcements = 0
 announced_blocks    = 0
 broadcasted_blocks  = 0
 propagated_blocks   = 0
+sync_count          = 0   # new: count blocks processed synchronously
+async_count         = 0   # new: count blocks processed asynchronously
 
 # For CSV output and detailed metrics
 block_infos      = []
@@ -58,6 +60,10 @@ for block_hash, events in blocks.items():
     v_pre_end             = None
     broadcasted           = None
     processing_end        = None
+
+    # new: flags for processing type
+    is_sync  = False
+    is_async = False
 
     # Classify timestamps
     for t, phase in events:
@@ -75,6 +81,10 @@ for block_hash, events in blocks.items():
             v_pre_end = v_pre_end or t
         elif phase == "BROADCASTED":
             broadcasted = broadcasted or t
+        elif phase == "PROCESSING_SYNC":     # new
+            is_sync = True
+        elif phase == "PROCESSING_ASYNC":    # new
+            is_async = True
         elif phase == "PROCESSING_END":
             processing_end = processing_end or t
 
@@ -120,6 +130,12 @@ for block_hash, events in blocks.items():
         broadcasting_times.append(b_time)
         processing_times.append(proc_time)
         total_consumed_times.append(total_time)
+
+        # new: count sync vs async only if block fully processed
+        if is_sync:
+            sync_count += 1
+        elif is_async:
+            async_count += 1
 
     if broadcasted is not None:
         broadcasted_blocks += 1
@@ -180,8 +196,10 @@ print(stat("Contained Validation", contained_to_preprocess_times))
 print(stat("Preprocessing", preprocessing_times))
 print(stat("Broadcast Time", broadcasting_times))
 print(stat("Processing Time", processing_times))
-print("\n-----------------------\n")
 print(stat("Total Cumulative Time", total_consumed_times))
+print("\n-----------------------\n")
+print(f"Synchronous processed blocks: {sync_count}")
+print(f"Asynchronous processed blocks: {async_count}")
 print("\n-----------------------\n")
 print(f"Total Announcements: {total_announcements}")
 print(f"Blocks Announced: {announced_blocks}")
