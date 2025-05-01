@@ -3,11 +3,11 @@ from collections import defaultdict
 from statistics import mean, median
 import matplotlib.pyplot as plt
 
-# Input y output
+# Input and output
 csv_input  = "../logs/block_profiler.csv"
 csv_output = "block_profiler_analyzed.csv"
 
-# Bloques a excluir del plot
+# Blocks to exclude from the plot
 EXCLUDED_BLOCK_HASHES = [
     "db58f0a1033b7fba60ff54f92ad1223904aaf3633aa7edbecbca95236e4affa7",
     "5ce8fdaa288be18be7da8c224d4a845b06bab375ad971791ea4f8291d22dbe40",
@@ -15,7 +15,7 @@ EXCLUDED_BLOCK_HASHES = [
     "6d7e47efc4cdf2f9cda7afede90c730db4f98f97394e45682dd096378329c518",
 ]
 
-# Leer CSV y agrupar por hash
+# Read CSV and group by hash
 blocks = defaultdict(list)
 with open(csv_input, newline="") as f:
     reader = csv.reader(f)
@@ -25,11 +25,11 @@ with open(csv_input, newline="") as f:
         instant, block_hash, phase = row
         blocks[block_hash].append((int(instant), phase))
 
-# Ordenar eventos por tiempo
+# Sort events by time for each block
 for ev in blocks.values():
     ev.sort(key=lambda x: x[0])
 
-# Contenedores de métricas
+# Metric containers
 announcement_times            = []
 header_to_contained_times     = []
 contained_to_preprocess_times = []
@@ -37,17 +37,17 @@ preprocessing_times           = []
 broadcasting_times            = []
 propagation_times             = []
 
-# Contadores
+# Counters
 total_announcements = 0
 announced_blocks    = 0
 broadcasted_blocks  = 0
 propagated_blocks   = 0
 
-# Para CSV y detalle
+# For CSV output and detailed metrics
 block_infos      = []
 detailed_metrics = []
 
-# Procesar cada bloque
+# Process each block
 for block_hash, events in blocks.items():
     announcement_instants = []
     processing_start      = None
@@ -58,6 +58,7 @@ for block_hash, events in blocks.items():
     broadcasted           = None
     processing_end        = None
 
+    # Classify each timestamp
     for t, phase in events:
         if phase == "ANOUNCEMENT":
             announcement_instants.append(t)
@@ -76,15 +77,16 @@ for block_hash, events in blocks.items():
         elif phase == "PROCESSING_END":
             processing_end = processing_end or t
 
+    # Skip if no announcement
     if not announcement_instants:
         continue
 
-    # primer instante de anuncio
+    # First announcement timestamp
     first_ann = min(announcement_instants)
     announced_blocks += 1
     total_announcements += len(announcement_instants)
 
-    # sub-métricas
+    # Initialize metrics
     ann_lat    = None
     hdr_valid  = None
     cont_val   = None
@@ -109,7 +111,7 @@ for block_hash, events in blocks.items():
         preproc = v_pre_end - v_pre_start
         preprocessing_times.append(preproc)
 
-    # deltas principales
+    # Main deltas
     if broadcasted is not None and processing_end is not None:
         total_time = processing_end - first_ann
         b_time     = (broadcasted - processing_start) if processing_start else (broadcasted - first_ann)
@@ -122,7 +124,7 @@ for block_hash, events in blocks.items():
     if None not in (ann_lat, b_time, p_time):
         propagated_blocks += 1
 
-    # guardar todo
+    # Store for CSV and plots
     block_infos.append({
         "hash"             : block_hash,
         "BroadcastingTime" : b_time,
@@ -140,7 +142,7 @@ for block_hash, events in blocks.items():
         "TotalConsumedTime"   : total_time,
     })
 
-# Escribir CSV final
+# Write final CSV
 with open(csv_output, "w", newline="") as out:
     w = csv.writer(out)
     w.writerow([
@@ -164,9 +166,9 @@ with open(csv_output, "w", newline="") as out:
             rec["PropagationTime"],
             rec["TotalConsumedTime"],
         ])
-print(f"Analizado escrito en {csv_output}\n")
+print(f"Analysis written to {csv_output}\n")
 
-# Imprimir detalle por bloque
+# Print per-block details
 for rec in detailed_metrics:
     parts = [f"Block {rec['hash'][:8]}"]
     for key in [
@@ -183,7 +185,7 @@ for rec in detailed_metrics:
             parts.append(f"{key}={val}ms")
     print(", ".join(parts))
 
-# Estadísticas generales (sin cambios)
+# Overall statistics (unchanged)
 def stat(name, arr):
     return f"{name}: avg={mean(arr):.2f}ms, med={median(arr):.2f}ms" if arr else f"{name}: No data"
 
@@ -199,7 +201,7 @@ print(f"Blocks Announced: {announced_blocks}")
 print(f"Blocks Broadcasted: {broadcasted_blocks}")
 print(f"Blocks Fully Propagated: {propagated_blocks}")
 
-# ————— Plot acumulados incluyendo Announcement, Broadcasting y Propagation —————
+# ————— Plot cumulative timeline by block —————
 filtered = [
     rec for rec in detailed_metrics
     if rec["hash"] not in EXCLUDED_BLOCK_HASHES
@@ -208,37 +210,53 @@ filtered = [
 filtered = filtered[:1000]
 
 idx   = list(range(len(filtered)))
-# Announcement Cumulative = AnnouncementLatency
 a_cum = [rec["AnnouncementLatency"]                          for rec in filtered]
-# Broadcasting Cumulative = AnnouncementLatency + BroadcastingTime
 b_cum = [rec["AnnouncementLatency"] + rec["BroadcastingTime"] for rec in filtered]
-# Propagation Cumulative = TotalConsumedTime
 p_cum = [rec["TotalConsumedTime"]                            for rec in filtered]
 
 plt.figure(figsize=(12, 7))
 plt.scatter(idx, a_cum, label="Announcement Cumulative")
 plt.scatter(idx, b_cum, label="Broadcasting Cumulative")
 plt.scatter(idx, p_cum, label="Propagation Cumulative")
-plt.xticks([])  # quita etiquetas en X
-plt.title("Timeline acumulado por bloque")
-plt.xlabel("Índice de bloque")
-plt.ylabel("Tiempo acumulado (ms)")
+plt.xticks([])  # remove X-axis labels
+plt.title("Cumulative Timeline per Block")
+plt.xlabel("Block Index")
+plt.ylabel("Cumulative Time (ms)")
 plt.legend()
-plt.grid(True, axis='y')   # solo horizontales
+plt.grid(True, axis='y')
 plt.tight_layout()
 plt.show()
 
-# Pie chart de proporción de DELTAS (opcional)
-total_p = sum(propagation_times)
-total_b = sum(broadcasting_times)
-if total_p > 0:
-    plt.figure(figsize=(7, 7))
-    plt.pie(
-        [total_b/total_p, 1 - total_b/total_p],
-        labels=["Broadcasting", "Remaining"],
-        autopct="%1.1f%%"
-    )
-    plt.title("Broadcasting vs Remaining Propagation Share")
-    plt.tight_layout()
-    plt.show()
+# ————— Stacked bar chart: Average vs Median per event —————
+avg_ann = mean(announcement_times)
+avg_b   = mean(broadcasting_times)
+avg_p   = mean(propagation_times)
+
+med_ann = median(announcement_times)
+med_b   = median(broadcasting_times)
+med_p   = median(propagation_times)
+
+x = [0, 1]
+width = 0.5
+colors = ["tab:blue", "tab:orange", "tab:green"]
+
+plt.figure(figsize=(8, 6))
+
+# Average bar
+plt.bar(x[0], avg_ann, width, color=colors[0])
+plt.bar(x[0], avg_b,   width, bottom=avg_ann,            color=colors[1])
+plt.bar(x[0], avg_p,   width, bottom=avg_ann + avg_b,    color=colors[2])
+
+# Median bar
+plt.bar(x[1], med_ann, width, color=colors[0])
+plt.bar(x[1], med_b,   width, bottom=med_ann,            color=colors[1])
+plt.bar(x[1], med_p,   width, bottom=med_ann + med_b,    color=colors[2])
+
+plt.xticks(x, ["Average", "Median"])
+plt.ylabel("Time (ms)")
+plt.title("Average vs Median per Block Event")
+plt.legend(["Announcement", "Broadcasting", "Propagation"], loc="upper left")
+plt.grid(True, axis="y")
+plt.tight_layout()
+plt.show()
 
