@@ -131,19 +131,16 @@
     <!-- block profiler  -->
   <appender name="BLOCK_PROFILER" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <immediateFlush>true</immediateFlush>
-        <file>./logs/block_propagation.csv</file>
+        <file>./logs/block_profiler.csv</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>./logs/profiling_block_propagation-%d{yyyy-MM-dd}.csv</fileNamePattern>
+            <fileNamePattern>./logs/block_profiler-%d{yyyy-MM-dd}.csv</fileNamePattern>
             <maxHistory>14</maxHistory>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <!-- Only the message is printed (already CSV formatted by Java logger) -->
             <pattern>%msg%n</pattern>
-            <!-- <header>blockHash,instant,phase%n</header> -->
         </encoder>
     </appender>
 
-    <!-- Logger for profiling block propagation -->
     <logger name="blockProfiler" level="INFO" additivity="false">
         <appender-ref ref="BLOCK_PROFILER"/>
     </logger>

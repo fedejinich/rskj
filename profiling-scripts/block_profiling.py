@@ -1,13 +1,23 @@
 import csv
 from collections import defaultdict
 from statistics import mean, median
+import matplotlib.pyplot as plt
 
-csv_file = "../logs/block_propagation.csv"
+# Input y output
+csv_input  = "../logs/block_profiler.csv"
+csv_output = "block_profiler_analyzed.csv"
 
-# Group events by block hash
+# Bloques a excluir del plot
+EXCLUDED_BLOCK_HASHES = [
+    "db58f0a1033b7fba60ff54f92ad1223904aaf3633aa7edbecbca95236e4affa7",
+    "5ce8fdaa288be18be7da8c224d4a845b06bab375ad971791ea4f8291d22dbe40",
+    "2ef854d61d456e4ba4df6c9501936310e667da38054693ec062ad7a5f2d984d1",
+    "6d7e47efc4cdf2f9cda7afede90c730db4f98f97394e45682dd096378329c518",
+]
+
+# Leer CSV y agrupar por hash
 blocks = defaultdict(list)
-
-with open(csv_file, newline="") as f:
+with open(csv_input, newline="") as f:
     reader = csv.reader(f)
     for row in reader:
         if len(row) != 3:
@@ -15,165 +25,220 @@ with open(csv_file, newline="") as f:
         instant, block_hash, phase = row
         blocks[block_hash].append((int(instant), phase))
 
-# Sort each block's events by instant
-for events in blocks.values():
-    events.sort(key=lambda e: e[0])
+# Ordenar eventos por tiempo
+for ev in blocks.values():
+    ev.sort(key=lambda x: x[0])
 
-# Analyze
-propagation_times = []
-broadcasting_times = []
-anounced_blocks = 0
-broadcasted_blocks = 0
-propagated_blocks = 0
-total_anouncements = 0
+# Contenedores de métricas
+announcement_times            = []
+header_to_contained_times     = []
+contained_to_preprocess_times = []
+preprocessing_times           = []
+broadcasting_times            = []
+propagation_times             = []
 
-block_infos = []
+# Contadores
+total_announcements = 0
+announced_blocks    = 0
+broadcasted_blocks  = 0
+propagated_blocks   = 0
 
-print()
+# Para CSV y detalle
+block_infos      = []
+detailed_metrics = []
 
+# Procesar cada bloque
 for block_hash, events in blocks.items():
     announcement_instants = []
-    processing_start = None
-    broadcasted = None
-    processing_end = None
+    processing_start      = None
+    v_header              = None
+    v_contained           = None
+    v_pre_start           = None
+    v_pre_end             = None
+    broadcasted           = None
+    processing_end        = None
 
-    for instant, phase in events:
+    for t, phase in events:
         if phase == "ANOUNCEMENT":
-            announcement_instants.append(instant)
-        elif phase == "PROCESSING_START" and processing_start is None:
-            processing_start = instant
-        elif phase == "BROADCASTED" and broadcasted is None:
-            broadcasted = instant
-        elif phase == "PROCESSING_END" and processing_end is None:
-            processing_end = instant
+            announcement_instants.append(t)
+        elif phase == "PROCESSING_START":
+            processing_start = processing_start or t
+        elif phase == "VALIDATION_BLOCK_HEADER":
+            v_header = v_header or t
+        elif phase == "VALIDATION_BLOCK_CONTAINED":
+            v_contained = v_contained or t
+        elif phase == "VALIDATION_PREPROCESS_START":
+            v_pre_start = v_pre_start or t
+        elif phase == "VALIDATION_PREPROCESS_END":
+            v_pre_end = v_pre_end or t
+        elif phase == "BROADCASTED":
+            broadcasted = broadcasted or t
+        elif phase == "PROCESSING_END":
+            processing_end = processing_end or t
 
-    if announcement_instants:
-        first_announcement = min(announcement_instants)
-        anounced_blocks += 1
-        total_anouncements += len(announcement_instants)
-    else:
+    if not announcement_instants:
         continue
 
-    if first_announcement and broadcasted:
+    # primer instante de anuncio
+    first_ann = min(announcement_instants)
+    announced_blocks += 1
+    total_announcements += len(announcement_instants)
+
+    # sub-métricas
+    ann_lat    = None
+    hdr_valid  = None
+    cont_val   = None
+    preproc    = None
+    b_time     = None
+    p_time     = None
+    total_time = None
+
+    if processing_start is not None:
+        ann_lat = processing_start - first_ann
+        announcement_times.append(ann_lat)
+
+    if v_header is not None and v_contained is not None:
+        hdr_valid = v_contained - v_header
+        header_to_contained_times.append(hdr_valid)
+
+    if v_contained is not None and v_pre_start is not None:
+        cont_val = v_pre_start - v_contained
+        contained_to_preprocess_times.append(cont_val)
+
+    if v_pre_start is not None and v_pre_end is not None:
+        preproc = v_pre_end - v_pre_start
+        preprocessing_times.append(preproc)
+
+    # deltas principales
+    if broadcasted is not None and processing_end is not None:
+        total_time = processing_end - first_ann
+        b_time     = (broadcasted - processing_start) if processing_start else (broadcasted - first_ann)
+        p_time     = processing_end - broadcasted
+        broadcasting_times.append(b_time)
+        propagation_times.append(p_time)
+
+    if broadcasted is not None:
         broadcasted_blocks += 1
+    if None not in (ann_lat, b_time, p_time):
+        propagated_blocks += 1
 
-    if first_announcement and processing_start and broadcasted and processing_end:
-        if first_announcement <= processing_start <= broadcasted <= processing_end:
-            propagated_blocks += 1
+    # guardar todo
+    block_infos.append({
+        "hash"             : block_hash,
+        "BroadcastingTime" : b_time,
+        "PropagationTime"  : p_time,
+        "TotalConsumedTime": total_time,
+    })
+    detailed_metrics.append({
+        "hash"                : block_hash,
+        "AnnouncementLatency" : ann_lat,
+        "HeaderValidation"    : hdr_valid,
+        "ContainedValidation" : cont_val,
+        "Preprocessing"       : preproc,
+        "BroadcastingTime"    : b_time,
+        "PropagationTime"     : p_time,
+        "TotalConsumedTime"   : total_time,
+    })
 
-            propagation_time = processing_end - first_announcement
-            broadcasting_time = broadcasted - first_announcement
+# Escribir CSV final
+with open(csv_output, "w", newline="") as out:
+    w = csv.writer(out)
+    w.writerow([
+        "Block",
+        "AnnouncementLatency",
+        "HeaderValidation",
+        "ContainedValidation",
+        "Preprocessing",
+        "BroadcastingTime",
+        "PropagationTime",
+        "TotalConsumedTime",
+    ])
+    for rec in detailed_metrics:
+        w.writerow([
+            rec["hash"],
+            rec["AnnouncementLatency"],
+            rec["HeaderValidation"],
+            rec["ContainedValidation"],
+            rec["Preprocessing"],
+            rec["BroadcastingTime"],
+            rec["PropagationTime"],
+            rec["TotalConsumedTime"],
+        ])
+print(f"Analizado escrito en {csv_output}\n")
 
-            propagation_times.append(propagation_time)
-            broadcasting_times.append(broadcasting_time)
+# Imprimir detalle por bloque
+for rec in detailed_metrics:
+    parts = [f"Block {rec['hash'][:8]}"]
+    for key in [
+        "AnnouncementLatency",
+        "HeaderValidation",
+        "ContainedValidation",
+        "Preprocessing",
+        "BroadcastingTime",
+        "PropagationTime",
+        "TotalConsumedTime",
+    ]:
+        val = rec.get(key)
+        if val is not None:
+            parts.append(f"{key}={val}ms")
+    print(", ".join(parts))
 
-            block_infos.append(
-                {
-                    "hash": block_hash,
-                    "propagation_time": propagation_time,
-                    "broadcasting_time": broadcasting_time,
-                    "anouncements": len(announcement_instants),
-                }
-            )
+# Estadísticas generales (sin cambios)
+def stat(name, arr):
+    return f"{name}: avg={mean(arr):.2f}ms, med={median(arr):.2f}ms" if arr else f"{name}: No data"
 
-            print(
-                f"Block {block_hash[:8]}: "
-                f"Propagation={propagation_time}ms, "
-                f"Broadcasting={broadcasting_time}ms, "
-                f"Anouncements={len(announcement_instants)}"
-            )
+print("\n--- Overall Metrics ---")
+print(stat("Announcement Latency", announcement_times))
+print(stat("Header Validation", header_to_contained_times))
+print(stat("Contained Validation", contained_to_preprocess_times))
+print(stat("Preprocessing", preprocessing_times))
+print(stat("Broadcasting Time", broadcasting_times))
+print(stat("Propagation Time", propagation_times))
+print(f"Total Announcements: {total_announcements}")
+print(f"Blocks Announced: {announced_blocks}")
+print(f"Blocks Broadcasted: {broadcasted_blocks}")
+print(f"Blocks Fully Propagated: {propagated_blocks}")
 
+# ————— Plot acumulados incluyendo Announcement, Broadcasting y Propagation —————
+filtered = [
+    rec for rec in detailed_metrics
+    if rec["hash"] not in EXCLUDED_BLOCK_HASHES
+       and rec["TotalConsumedTime"] is not None
+]
+filtered = filtered[:1000]
 
-def print_stats(name, times):
-    if times:
-        print(f"{name}:")
-        print(f"  Average: {mean(times):.2f} ms")
-        print(f"  Median: {median(times):.2f} ms")
-    else:
-        print(f"{name}: No valid data")
+idx   = list(range(len(filtered)))
+# Announcement Cumulative = AnnouncementLatency
+a_cum = [rec["AnnouncementLatency"]                          for rec in filtered]
+# Broadcasting Cumulative = AnnouncementLatency + BroadcastingTime
+b_cum = [rec["AnnouncementLatency"] + rec["BroadcastingTime"] for rec in filtered]
+# Propagation Cumulative = TotalConsumedTime
+p_cum = [rec["TotalConsumedTime"]                            for rec in filtered]
 
+plt.figure(figsize=(12, 7))
+plt.scatter(idx, a_cum, label="Announcement Cumulative")
+plt.scatter(idx, b_cum, label="Broadcasting Cumulative")
+plt.scatter(idx, p_cum, label="Propagation Cumulative")
+plt.xticks([])  # quita etiquetas en X
+plt.title("Timeline acumulado por bloque")
+plt.xlabel("Índice de bloque")
+plt.ylabel("Tiempo acumulado (ms)")
+plt.legend()
+plt.grid(True, axis='y')   # solo horizontales
+plt.tight_layout()
+plt.show()
 
-print()
-print_stats("Block Propagation Time", propagation_times)
-print_stats("Block Broadcasting Time", broadcasting_times)
-
-print()
-print(f"Total Anouncements (count all ANOUNCEMENT entries): {total_anouncements}")
-print(f"Blocks announced (at least 1 ANOUNCEMENT): {anounced_blocks}")
-print(f"Blocks broadcasted (ANOUNCEMENT + BROADCASTED): {broadcasted_blocks}")
-print(
-    f"Blocks fully propagated (ANOUNCEMENT <= PROCESSING_START <= BROADCASTED <= PROCESSING_END): {propagated_blocks}"
-)
-
-# ---------- Mini Table Summary ----------
-
-
-def mini_table(title, block):
-    print()
-    print(f"{title}")
-    print("-" * len(title))
-    print(f"Block Hash: {block['hash'][:8]}...")
-    print(f"Propagation Time: {block['propagation_time']} ms")
-    print(f"Broadcasting Time: {block['broadcasting_time']} ms")
-    print(f"Anouncements: {block['anouncements']}")
-    print()
-
-
-if block_infos:
-    fastest_propagated = min(block_infos, key=lambda x: x["propagation_time"])
-    slowest_propagated = max(block_infos, key=lambda x: x["propagation_time"])
-
-    fastest_broadcasted = min(block_infos, key=lambda x: x["broadcasting_time"])
-    slowest_broadcasted = max(block_infos, key=lambda x: x["broadcasting_time"])
-
-    mini_table("Fastest Propagated Block", fastest_propagated)
-    mini_table("Slowest Propagated Block", slowest_propagated)
-    mini_table("Fastest Broadcasted Block", fastest_broadcasted)
-    mini_table("Slowest Broadcasted Block", slowest_broadcasted)
-
-
-import matplotlib.pyplot as plt
-
-EXCLUDED_BLOCK_HASH = "db58f0a1033b7fba60ff54f92ad1223904aaf3633aa7edbecbca95236e4affa7"
-
-if block_infos:
-    # Exclude the specific block
-    filtered_block_infos = [b for b in block_infos if b["hash"] != EXCLUDED_BLOCK_HASH]
-
-    propagation_times = [b["propagation_time"] for b in filtered_block_infos]
-    broadcasting_times = [b["broadcasting_time"] for b in filtered_block_infos]
-    block_labels = [b["hash"] for b in filtered_block_infos]
-
-    # Scatter plot
-    plt.figure(figsize=(12, 7))
-
-    plt.scatter(range(len(propagation_times)), propagation_times, color="blue", label="Propagation Time")
-    plt.scatter(range(len(broadcasting_times)), broadcasting_times, color="red", label="Broadcasting Time")
-
-    plt.title("Block Propagation and Broadcasting Times (Fully Propagated Blocks)")
-    plt.xlabel("Block Index")
-    plt.ylabel("Time (ms)")
-    plt.legend()
-    plt.grid(True)
-    plt.tight_layout()
-    plt.show()
-
-    # Pie chart: broadcasting time vs propagation time
-    total_propagation = sum(propagation_times)
-    total_broadcasting = sum(broadcasting_times)
-
-    broadcast_share = total_broadcasting / total_propagation
-    propagation_share = 1 - broadcast_share
-
+# Pie chart de proporción de DELTAS (opcional)
+total_p = sum(propagation_times)
+total_b = sum(broadcasting_times)
+if total_p > 0:
     plt.figure(figsize=(7, 7))
     plt.pie(
-        [broadcast_share, propagation_share],
-        labels=["Broadcasting Time", "Remaining Propagation Time"],
-        autopct="%1.1f%%",
-        startangle=140,
-        colors=["red", "blue"]
+        [total_b/total_p, 1 - total_b/total_p],
+        labels=["Broadcasting", "Remaining"],
+        autopct="%1.1f%%"
     )
-    plt.title("Broadcasting Time Share Over Propagation Time")
+    plt.title("Broadcasting vs Remaining Propagation Share")
     plt.tight_layout()
     plt.show()
 
