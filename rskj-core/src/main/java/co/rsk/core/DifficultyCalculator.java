@@ -23,6 +23,7 @@ import org.ethereum.config.blockchain.upgrades.ActivationConfig;
 import org.ethereum.config.blockchain.upgrades.ConsensusRule;
 import org.ethereum.core.BlockHeader;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import static org.ethereum.util.BIUtil.max;
@@ -41,7 +42,7 @@ public class DifficultyCalculator {
 
         boolean rskipPatoActive = activationConfig.isActive(ConsensusRule.RSKIP_PATO, blockNumber);
         if(rskipPatoActive) {
-            return getBlockDifficultyPato(blockNumber);
+            return getBlockDifficultyPato(blockNumber, header, parentHeader);
         }
 
         boolean rskip97Active = activationConfig.isActive(ConsensusRule.RSKIP97, blockNumber);
@@ -55,9 +56,30 @@ public class DifficultyCalculator {
         return getBlockDifficulty(header, parentHeader);
     }
 
-    private BlockDifficulty getBlockDifficultyPato(long blockNumber) {
-      // TODO Auto-generated method stub
-      throw new UnsupportedOperationException("Unimplemented method 'getBlockDifficultyPato'");
+    private static final long BLOCK_COUNT_WINDOW = 32; // last N blocks
+    private static final double ALPHA = 0.05; // todo(fede) checkout if double is the best fit
+    private static final double T = 16; // target time between blocks
+    private static final long UNCLE_TRESHOLD = 0;
+
+    private BlockDifficulty getBlockDifficultyPato(long blockNumber, BlockHeader blockHeader, BlockHeader parentHeader) {
+        long A = averageOf(parentHeader, BLOCK_COUNT_WINDOW, block -> block.getTimestamp()); // block time average
+        long R = averageOf(parentHeader, BLOCK_COUNT_WINDOW, block -> block.getUncleCount()); // uncle rate
+        long C = UNCLE_TRESHOLD;
+        
+        double F; // todo(fede) checkout if double is the best fit
+        if (R >= C) {
+            F = ALPHA;
+        } else if (R < C && T > A) {
+            F = ALPHA;
+        } else if (R < C && T <= A) {
+            F = -ALPHA;
+        }
+
+        BigInteger newDifficulty = parentHeader.getDifficulty()
+            .asBigInteger()
+            .multiply(BigDecimal.valueOf(1+F).toBigIntegerExact());
+
+        return new BlockDifficulty(newDifficulty);
     }
 
     private BlockDifficulty getBlockDifficulty(
