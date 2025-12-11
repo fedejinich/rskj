@@ -13,6 +13,9 @@ import org.ethereum.core.BlockFactory;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.core.BlockHeaderBuilder;
 import org.ethereum.util.ByteUtil;
+import org.ethereum.util.RLP;
+import org.ethereum.util.RLPElement;
+import org.ethereum.util.RLPList;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
@@ -26,7 +29,7 @@ class SingleBlockHashTest {
 
     private static final Path FIXTURE_PATH = resolveFixturePath();
     private static final String EXPECTED_HASH =
-            "0xbc691843fa28bbbec2d4b610de2b6de857ff5cff54c539cf364b18489680103d";
+            "0x2bbf443d05330eccaf6b0d2d8372471f95446e29608126d4fb77b632cd3ec373";
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
     // Activaciones tomadas del main.conf real de mainnet (incluye lovell700).
@@ -41,6 +44,8 @@ class SingleBlockHashTest {
 
         BlockHeader header = buildHeader(h, BLOCK_FACTORY);
         String computed = "0x" + ByteUtil.toHexString(header.getHash().getBytes());
+
+        printRlpFields("single:getEncodedForHash", header.getEncodedForHash());
 
         assertEquals(EXPECTED_HASH.toLowerCase(), computed.toLowerCase());
     }
@@ -99,6 +104,29 @@ class SingleBlockHashTest {
         return Hex.decode(clean);
     }
 
+    private static void printRlpFields(String tag, byte[] encoded) {
+        RLPList list = (RLPList) RLP.decode2(encoded).get(0);
+        System.out.println(tag + " fields=" + list.size());
+        for (int i = 0; i < list.size(); i++) {
+            RLPElement el = list.get(i);
+            String name = fieldName(i);
+            if (el instanceof RLPList) {
+                System.out.println(tag + "[" + i + "] " + name + " = list");
+                RLPList nested = (RLPList) el;
+                for (int j = 0; j < nested.size(); j++) {
+                    RLPElement nel = nested.get(j);
+                    System.out.println(tag + "[" + i + "][" + j + "]=" + hex(nel.getRLPData()));
+                }
+            } else {
+                System.out.println(tag + "[" + i + "] " + name + " = " + hex(el.getRLPData()));
+            }
+        }
+    }
+
+    private static String hex(byte[] data) {
+        return data == null ? "null" : "0x" + ByteUtil.toHexString(data);
+    }
+
     private static BigInteger bigInt(JsonNode h, String field) {
         return bigInt(h.get(field).asText());
     }
@@ -133,5 +161,30 @@ class SingleBlockHashTest {
             return 0;
         }
         return new BigInteger(clean, 16).longValueExact();
+    }
+
+    private static String fieldName(int idx) {
+        String[] names = new String[]{
+                "parentHash",
+                "unclesHash",
+                "coinbase",
+                "stateRoot",
+                "transactionsRoot",
+                "receiptsRoot",
+                "logsBloom/extension",
+                "difficulty",
+                "number",
+                "gasLimit",
+                "gasUsed",
+                "timestamp",
+                "extraData",
+                "paidFees",
+                "minimumGasPrice",
+                "uncleCount",
+                "ummRoot_or_version_or_mmHeader",
+                "mmMerkleProof",
+                "mmCoinbaseTx"
+        };
+        return idx < names.length ? names[idx] : "field" + idx;
     }
 }

@@ -13,6 +13,9 @@ import org.ethereum.core.BlockFactory;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.core.BlockHeaderBuilder;
 import org.ethereum.util.ByteUtil;
+import org.ethereum.util.RLP;
+import org.ethereum.util.RLPElement;
+import org.ethereum.util.RLPList;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
@@ -41,6 +44,9 @@ class MinichainBlockHashTest {
 
             BlockHeader header = buildHeader(h);
             String computed = "0x" + ByteUtil.toHexString(header.getHash().getBytes());
+
+            printRlpFields(entry.get("tag").asText() + ":getEncodedForHash", header.getEncodedForHash());
+            printRlpFields(entry.get("tag").asText() + ":getFullEncoded", header.getFullEncoded());
 
             assertEquals(expected.toLowerCase(), computed.toLowerCase(),
                     () -> "hash mismatch for " + entry.get("tag").asText());
@@ -136,5 +142,53 @@ class MinichainBlockHashTest {
             return 0;
         }
         return new BigInteger(clean, 16).longValueExact();
+    }
+
+    private static void printRlpFields(String tag, byte[] encoded) {
+        RLPList list = (RLPList) RLP.decode2(encoded).get(0);
+        System.out.println(tag + " fields=" + list.size());
+        for (int i = 0; i < list.size(); i++) {
+            RLPElement el = list.get(i);
+            String name = fieldName(i);
+            if (el instanceof RLPList) {
+                System.out.println(tag + "[" + i + "] " + name + " = list");
+                RLPList nested = (RLPList) el;
+                for (int j = 0; j < nested.size(); j++) {
+                    RLPElement nel = nested.get(j);
+                    System.out.println(tag + "[" + i + "][" + j + "]=" + hex(nel.getRLPData()));
+                }
+            } else {
+                System.out.println(tag + "[" + i + "] " + name + " = " + hex(el.getRLPData()));
+            }
+        }
+    }
+
+    private static String hex(byte[] data) {
+        return data == null ? "null" : "0x" + ByteUtil.toHexString(data);
+    }
+
+    private static String fieldName(int idx) {
+        String[] names = new String[]{
+                "parentHash",
+                "unclesHash",
+                "coinbase",
+                "stateRoot",
+                "transactionsRoot",
+                "receiptsRoot",
+                "logsBloom/extension",
+                "difficulty",
+                "number",
+                "gasLimit",
+                "gasUsed",
+                "timestamp",
+                "extraData",
+                "paidFees",
+                "minimumGasPrice",
+                "uncleCount",
+                "ummRoot_or_version_or_mmHeader",
+                "mmMerkleProof",
+                "mmCoinbaseTx"
+        };
+        return idx < names.length ? names[idx] : "field" + idx;
     }
 }
