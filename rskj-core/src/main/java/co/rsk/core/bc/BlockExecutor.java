@@ -680,13 +680,19 @@ public class BlockExecutor {
                 continue;
             }
 
+            boolean touchesDisallowedPrecompile = txExecutor.precompiledContractsCalled().stream()
+                    .anyMatch(this.concurrentContractsDisallowed::contains);
+            if (logger.isInfoEnabled() && touchesDisallowedPrecompile) {
+                logger.info("RSKIP144: tx {} calls disallowed precompile(s) {}", tx.getHash(), txExecutor.precompiledContractsCalled());
+            }
+
             Optional<Long> sublistGasAccumulated = addTxToSublistAndGetAccumulatedGas(
                     readWrittenKeysTracker,
                     parallelizeTransactionHandler,
                     tx,
                     tx.isRemascTransaction(txindex, transactionsList.size()),
                     txExecutor.getGasConsumed(),
-                    txExecutor.precompiledContractsCalled().stream().anyMatch(this.concurrentContractsDisallowed::contains));
+                    touchesDisallowedPrecompile);
 
             if (!acceptInvalidTransactions && !sublistGasAccumulated.isPresent()) {
                 if (!discardInvalidTxs) {
@@ -696,6 +702,13 @@ public class BlockExecutor {
                 loggingDiscardedBlock(block, tx);
                 txindex++;
                 continue;
+            }
+            if (logger.isInfoEnabled()) {
+                logger.info(
+                        "RSKIP144: tx {} scheduled as {}",
+                        tx.getHash(),
+                        touchesDisallowedPrecompile ? "SEQUENTIAL" : "PARALLEL"
+                );
             }
 
             registerTxExecutedForMiningAfterRSKIP144(readWrittenKeysTracker, tx, txExecutor);

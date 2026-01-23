@@ -142,6 +142,8 @@ public class TransactionExecutor {
      * @return true if the transaction is valid and executed, false if the transaction is invalid
      */
     public boolean executeTransaction() {
+
+
         if (!this.init()) {
             return false;
         }
@@ -177,7 +179,15 @@ public class TransactionExecutor {
         }
 
         long txGasLimit = GasCost.toGas(tx.getGasLimit());
-        long gasLimit = activations.isActive(RSKIP144) ? sublistGasLimit : GasCost.toGas(executionBlock.getGasLimit());
+        // long gasLimit = activations.isActive(RSKIP144) ? sublistGasLimit : GasCost.toGas(executionBlock.getGasLimit());
+        long gasLimit;
+        if (activations.isActive(ConsensusRule.RSKIP144)) {
+            gasLimit = sublistGasLimit;
+            logger.info("RSKIP144 is enabled");
+        } else {
+            gasLimit = GasCost.toGas(executionBlock.getGasLimit());
+            logger.info("RSKIP144 is disabled");
+        }
 
         if (!gasIsValid(txGasLimit, gasLimit)) {
             return false;

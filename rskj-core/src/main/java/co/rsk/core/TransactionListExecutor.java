@@ -114,6 +114,7 @@ public class TransactionListExecutor implements Callable<Boolean> {
             }
 
             if (!this.concurrentContractsDisallowed.isEmpty() && txExecutor.precompiledContractsCalled().stream().anyMatch(this.concurrentContractsDisallowed::contains)) {
+                logger.error("Transaction {} failed because of concurrent contracts", tx.getHash());
                 transactionSucceeded = false;
             }
 

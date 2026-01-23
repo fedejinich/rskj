@@ -320,6 +320,7 @@ public class Constants {
     }
 
     public static Constants regtest() {
+        System.out.println("patched regtest1");
         return new Constants(
                 REGTEST_CHAIN_ID,
                 true,
@@ -330,11 +331,12 @@ public class Constants {
                 0,
                 new BridgeRegTestConstants(),
                 new BlockDifficulty(MINIMUN_DIFFICULTY_FOR_RSKIP290),
-                1_000_000L
+                MIN_SEQUENTIAL_SET_GAS_LIMIT
         );
     }
 
     public static Constants regtestWithFederation(List<BtcECKey> federationPublicKeys) {
+        System.out.println("patched regtest2");
         return new Constants(
                 REGTEST_CHAIN_ID,
                 true,
@@ -345,7 +347,7 @@ public class Constants {
                 0,
                 new BridgeRegTestConstants(federationPublicKeys),
                 new BlockDifficulty(MINIMUN_DIFFICULTY_FOR_RSKIP290),
-                1_000_000L
+                MIN_SEQUENTIAL_SET_GAS_LIMIT
         );
     }
 }
