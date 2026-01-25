@@ -1,0 +1,62 @@
+pcReqID=WNXP2EkCswsPR7O]  Not enough blocks on window, default to Fee Market not working
+2026-01-25-13:39:27.0215 DEBUG [minerClient] [Refresh work for mining]  There is a new best block: 0xede9cad6ee6aa45a591ef8c8de7ed821b8ca439014d57cdb22f01bdbf767a4ce
+2026-01-25-13:39:28.0218 DEBUG [minerClient] [Refresh work for mining]  There is a new best block: 0xede9cad6ee6aa45a591ef8c8de7ed821b8ca439014d57cdb22f01bdbf767a4ce
+2026-01-25-13:39:29.0222 DEBUG [minerClient] [Refresh work for mining]  There is a new best block: 0xede9cad6ee6aa45a591ef8c8de7ed821b8ca439014d57cdb22f01bdbf767a4ce
+2026-01-25-13:39:30.0226 DEBUG [minerClient] [Refresh work for mining]  There is a new best block: 0xede9cad6ee6aa45a591ef8c8de7ed821b8ca439014d57cdb22f01bdbf767a4ce
+2026-01-25-13:39:31.0207 INFO [minerClient] [miner client]  Mined block: 0xede9cad6ee6aa45a591ef8c8de7ed821b8ca439014d57cdb22f01bdbf767a4ce
+2026-01-25-13:39:31.0208 INFO [minerserver] [miner client]  Received block 18 ede9cad6ee6aa45a591ef8c8de7ed821b8ca439014d57cdb22f01bdbf767a4ce
+2026-01-25-13:39:31.0209 INFO [execute] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  RSKIP144 is enabled
+2026-01-25-13:39:31.0218 INFO [minerserver] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  Starting block to mine from parent 18 a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119
+2026-01-25-13:39:31.0218 DEBUG [c.r.m.MinimumGasPriceCalculator] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  Previous MGP: 0. Target MGP: 0 is in range: [0; 1]. Returning target MGP
+2026-01-25-13:39:31.0218 DEBUG [blocktominebuilder] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  getting transactions from pending state
+2026-01-25-13:39:31.0218 DEBUG [blocktominebuilder] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  4 transaction(s) collected from pending state
+2026-01-25-13:39:31.0219 INFO [execute] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  RSKIP144 is enabled
+2026-01-25-13:39:31.0242 DEBUG [c.r.b.c.Context] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  Creating bitcoinj 0.14.4 context.
+2026-01-25-13:39:31.0250 INFO [blockexecutor] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  RSKIP144: tx 5ca208ca522d3e5774f8d0cfabf664061320f5b3283b54d39a45b26e8c6070c2 calls disallowed precompile(s) [0000000000000000000000000000000001000006]
+2026-01-25-13:39:31.0250 INFO [blockexecutor] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  RSKIP144: tx 5ca208ca522d3e5774f8d0cfabf664061320f5b3283b54d39a45b26e8c6070c2 scheduled as SEQUENTIAL
+2026-01-25-13:39:31.0251 INFO [execute] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  RSKIP144 is enabled
+2026-01-25-13:39:31.0251 INFO [blockexecutor] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  RSKIP144: tx 59665e2540704e36d4438a6fa66388b00ced15c2dfd31f5e372b51d50163a2a1 scheduled as PARALLEL
+2026-01-25-13:39:31.0251 INFO [execute] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  RSKIP144 is enabled
+2026-01-25-13:39:31.0252 INFO [blockexecutor] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  RSKIP144: tx 51c446fcd59f8100f36247b54fa07cb6cb74cf41102d45eecb711b40b5b4cc62 scheduled as PARALLEL
+2026-01-25-13:39:31.0252 INFO [execute] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  RSKIP144 is enabled
+2026-01-25-13:39:31.0253 INFO [blockexecutor] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  RSKIP144: tx da12e8d84651328557795e0a974d1a54344833d18c22f5b1f07395c720ed9789 scheduled as PARALLEL
+2026-01-25-13:39:31.0253 INFO [execute] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  RSKIP144 is enabled
+2026-01-25-13:39:31.0256 INFO [blockexecutor] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  RSKIP144: tx a7f39dbee1cc63543e4c725c6ac32539f7bfc1c9e11d6f0adb9ba8d26be4353e calls disallowed precompile(s) [0000000000000000000000000000000001000008]
+2026-01-25-13:39:31.0256 INFO [blockexecutor] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  RSKIP144: tx a7f39dbee1cc63543e4c725c6ac32539f7bfc1c9e11d6f0adb9ba8d26be4353e scheduled as SEQUENTIAL
+2026-01-25-13:39:31.0256 INFO [blockchain] [miner client] [blockHash=a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119, blockHeight=18]  block: num: [18] hash: [a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119], processed after: [0.047524]seconds, result IMPORTED_BEST
+2026-01-25-13:39:31.0256 INFO [minerserver] [miner client]  Mined block import result is IMPORTED_BEST: a6591f9b09ab86c69a9a51f1ef42a6d44e9dd8ea94a3bce79347b5345e264119 ede9cad6ee6aa45a591ef8c8de7ed821b8ca439014d57cdb22f01bdbf767a4ce at height 18
+2026-01-25-13:39:32.0232 DEBUG [minerClient] [Refresh work for mining]  There is a new best block: 0xa7f6ef9bce5551b19a772c83cc40d8ff8f27d8fd97677c49f525b8fce6c4fdbb
+2026-01-25-13:39:33.0234 DEBUG [minerClient] [Refresh work for mining]  There is a new best block: 0xa7f6ef9bce5551b19a772c83cc40d8ff8f27d8fd97677c49f525b8fce6c4fdbb
+2026-01-25-13:39:34.0236 DEBUG [minerClient] [Refresh work for mining]  There is a new best block: 0xa7f6ef9bce5551b19a772c83cc40d8ff8f27d8fd97677c49f525b8fce6c4fdbb
+2026-01-25-13:39:35.0240 DEBUG [minerClient] [Refresh work for mining]  There is a new best block: 0xa7f6ef9bce5551b19a772c83cc40d8ff8f27d8fd97677c49f525b8fce6c4fdbb
+2026-01-25-13:39:36.0245 DEBUG [minerClient] [Refresh work for mining]  There is a new best block: 0xa7f6ef9bce5551b19a772c83cc40d8ff8f27d8fd97677c49f525b8fce6c4fdbb
+2026-01-25-13:39:36.0262 INFO [minerClient] [miner client]  Mined block: 0xa7f6ef9bce5551b19a772c83cc40d8ff8f27d8fd97677c49f525b8fce6c4fdbb
+2026-01-25-13:39:36.0263 INFO [minerserver] [miner client]  Received block 19 a7f6ef9bce5551b19a772c83cc40d8ff8f27d8fd97677c49f525b8fce6c4fdbb
+2026-01-25-13:39:36.0266 INFO [blockexecutor] [miner client] [blockHash=d2e66dd1cf9ddeddd18b7f7cfe052c82eb6e395417995144f536ec9f82bca613, blockHeight=19]  New block execution thread [BlockExecutorWorker-0-0] for parallel list [0] has been created
+2026-01-25-13:39:36.0267 INFO [blockexecutor] [miner client] [blockHash=d2e66dd1cf9ddeddd18b7f7cfe052c82eb6e395417995144f536ec9f82bca613, blockHeight=19]  New block execution thread [BlockExecutorWorker-1-0] for parallel list [1] has been created
+2026-01-25-13:39:36.0267 INFO [execute] [BlockExecutorWorker-0-0]  RSKIP144 is enabled
+2026-01-25-13:39:36.0267 INFO [execute] [BlockExecutorWorker-1-0]  RSKIP144 is enabled
+2026-01-25-13:39:36.0268 DEBUG [c.r.b.c.Context] [BlockExecutorWorker-0-0]  Creating bitcoinj 0.14.4 context.
+2026-01-25-13:39:36.0268 DEBUG [c.r.b.c.Context] [BlockExecutorWorker-1-0]  Creating bitcoinj 0.14.4 context.
+2026-01-25-13:39:36.0268 ERROR [transactionlistexecutor] [BlockExecutorWorker-1-0]  Transaction 51c446fcd59f8100f36247b54fa07cb6cb74cf41102d45eecb711b40b5b4cc62 failed because of concurrent contracts
+2026-01-25-13:39:36.0268 ERROR [transactionlistexecutor] [BlockExecutorWorker-0-0]  Transaction 59665e2540704e36d4438a6fa66388b00ced15c2dfd31f5e372b51d50163a2a1 failed because of concurrent contracts
+2026-01-25-13:39:36.0268 WARN [transactionlistexecutor] [BlockExecutorWorker-1-0]  block: [19] execution interrupted because of invalid tx: [51c446fcd59f8100f36247b54fa07cb6cb74cf41102d45eecb711b40b5b4cc62]
+2026-01-25-13:39:36.0269 WARN [transactionlistexecutor] [BlockExecutorWorker-0-0]  block: [19] execution interrupted because of invalid tx: [59665e2540704e36d4438a6fa66388b00ced15c2dfd31f5e372b51d50163a2a1]
+2026-01-25-13:39:36.0269 ERROR [blockexecutor] [miner client] [blockHash=d2e66dd1cf9ddeddd18b7f7cfe052c82eb6e395417995144f536ec9f82bca613, blockHeight=19]  Block 19 [d2e66dd1cf9ddeddd18b7f7cfe052c82eb6e395417995144f536ec9f82bca613] execution was interrupted because of an invalid transaction
+2026-01-25-13:39:36.0269 INFO [blockchain] [miner client] [blockHash=d2e66dd1cf9ddeddd18b7f7cfe052c82eb6e395417995144f536ec9f82bca613, blockHeight=19]  block: num: [19] hash: [d2e66dd1cf9ddeddd18b7f7cfe052c82eb6e395417995144f536ec9f82bca613], processed after: [0.005727]seconds, result INVALID_BLOCK
+2026-01-25-13:39:36.0269 INFO [minerserver] [miner client]  Mined block import result is INVALID_BLOCK: d2e66dd1cf9ddeddd18b7f7cfe052c82eb6e395417995144f536ec9f82bca613 a7f6ef9bce5551b19a772c83cc40d8ff8f27d8fd97677c49f525b8fce6c4fdbb at height 19
+2026-01-25-13:39:41.0273 INFO [minerClient] [miner client]  Mined block: 0xa7f6ef9bce5551b19a772c83cc40d8ff8f27d8fd97677c49f525b8fce6c4fdbb
+2026-01-25-13:39:41.0274 INFO [minerserver] [miner client]  Received block 19 a7f6ef9bce5551b19a772c83cc40d8ff8f27d8fd97677c49f525b8fce6c4fdbb
+2026-01-25-13:39:41.0276 INFO [execute] [BlockExecutorWorker-0-0]  RSKIP144 is enabled
+2026-01-25-13:39:41.0276 INFO [execute] [BlockExecutorWorker-1-0]  RSKIP144 is enabled
+2026-01-25-13:39:41.0279 DEBUG [c.r.b.c.Context] [BlockExecutorWorker-0-0]  Creating bitcoinj 0.14.4 context.
+2026-01-25-13:39:41.0279 DEBUG [c.r.b.c.Context] [BlockExecutorWorker-1-0]  Creating bitcoinj 0.14.4 context.
+2026-01-25-13:39:41.0280 ERROR [transactionlistexecutor] [BlockExecutorWorker-0-0]  Transaction 59665e2540704e36d4438a6fa66388b00ced15c2dfd31f5e372b51d50163a2a1 failed because of concurrent contracts
+2026-01-25-13:39:41.0280 WARN [transactionlistexecutor] [BlockExecutorWorker-0-0]  block: [19] execution interrupted because of invalid tx: [59665e2540704e36d4438a6fa66388b00ced15c2dfd31f5e372b51d50163a2a1]
+2026-01-25-13:39:41.0280 ERROR [transactionlistexecutor] [BlockExecutorWorker-1-0]  Transaction 51c446fcd59f8100f36247b54fa07cb6cb74cf41102d45eecb711b40b5b4cc62 failed because of concurrent contracts
+2026-01-25-13:39:41.0280 WARN [transactionlistexecutor] [BlockExecutorWorker-1-0]  block: [19] execution interrupted because of invalid tx: [51c446fcd59f8100f36247b54fa07cb6cb74cf41102d45eecb711b40b5b4cc62]
+2026-01-25-13:39:41.0280 ERROR [blockexecutor] [miner client] [blockHash=e0776410fd029fa6afacbf27c5dad39368317983c9846e7b2a200a26c243cd46, blockHeight=19]  Block 19 [e0776410fd029fa6afacbf27c5dad39368317983c9846e7b2a200a26c243cd46] execution was interrupted because of an invalid transaction
+2026-01-25-13:39:41.0280 INFO [blockchain] [miner client] [blockHash=e0776410fd029fa6afacbf27c5dad39368317983c9846e7b2a200a26c243cd46, blockHeight=19]  block: num: [19] hash: [e0776410fd029fa6afacbf27c5dad39368317983c9846e7b2a200a26c243cd46], processed after: [0.005228]seconds, result INVALID_BLOCK
+2026-01-25-13:39:41.0281 INFO [minerserver] [miner client]  Mined block import result is INVALID_BLOCK: e0776410fd029fa6afacbf27c5dad39368317983c9846e7b2a200a26c243cd46 a7f6ef9bce5551b19a772c83cc40d8ff8f27d8fd97677c49f525b8fce6c4fdbb at height 19
+
+

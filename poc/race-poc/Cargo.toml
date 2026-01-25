@@ -1,0 +1,20 @@
+[package]
+name = "race-poc"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "race-poc"
+path = "rust/main.rs"
+
+[dependencies]
+anyhow = "1.0"
+alloy-primitives = "1.4.1"
+alloy-provider = "1.1.0"
+alloy-rpc-types-eth = "1.1.0"
+alloy-signer-local = "1.1.0"
+alloy-sol-types = "1.4.1"
+clap = { version = "4.5.23", features = ["derive", "env"] }
+futures = "0.3"
+reqwest = "0.12"
+tokio = { version = "1.37", features = ["full"] }
