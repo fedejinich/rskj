@@ -27,6 +27,7 @@ import co.rsk.trie.MutableTrie;
 import co.rsk.trie.Trie;
 import co.rsk.trie.TrieStore;
 import co.rsk.trie.engine.TrieEngineType;
+import co.rsk.trie.engine.rust.diagnostics.TrieDifferentialRecorder;
 import org.ethereum.db.ByteArrayWrapper;
 import org.ethereum.util.ByteUtil;
 import org.ethereum.vm.DataWord;
@@ -70,6 +71,7 @@ public class RustMutableTrie implements MutableTrie {
     private final RustUnitrieBridge bridge;
     private final long nativeHandle;
     private final boolean rootComparisonEnabled;
+    private final TrieDifferentialRecorder differentialRecorder;
 
     public RustMutableTrie(
             TrieStore trieStore,
@@ -77,9 +79,27 @@ public class RustMutableTrie implements MutableTrie {
             TrieEngineType engineType,
             boolean failOnMismatch,
             @Nullable String rustLibraryPath) {
+        this(
+                trieStore,
+                trie,
+                engineType,
+                failOnMismatch,
+                rustLibraryPath,
+                TrieDifferentialRecorder.noop()
+        );
+    }
+
+    public RustMutableTrie(
+            TrieStore trieStore,
+            Trie trie,
+            TrieEngineType engineType,
+            boolean failOnMismatch,
+            @Nullable String rustLibraryPath,
+            TrieDifferentialRecorder differentialRecorder) {
         this.trieStore = Objects.requireNonNull(trieStore, "trieStore");
         this.engineType = Objects.requireNonNull(engineType, "engineType");
         this.failOnMismatch = failOnMismatch;
+        this.differentialRecorder = Objects.requireNonNull(differentialRecorder, "differentialRecorder");
         this.storeAdapter = new RustTrieStoreAdapter(trieStore);
         this.javaDelegate = engineType == TrieEngineType.RUST_SHADOW ? new MutableTrieImpl(trieStore, trie) : null;
         this.javaMirror = new MutableTrieImpl(trieStore, trie);
@@ -132,11 +152,14 @@ public class RustMutableTrie implements MutableTrie {
     @Override
     public byte[] get(byte[] key) {
         if (engineType == TrieEngineType.RUST && bridge != null) {
-            return bridge.get(nativeHandle, key);
+            byte[] value = bridge.get(nativeHandle, key);
+            recordDifferentialOperation("get", key, value, value == null ? null : value.length, null, null, null);
+            return value;
         }
 
         byte[] javaValue = javaDelegateOrMirror().get(key);
         compareRustValue("get", key, javaValue);
+        recordDifferentialOperation("get", key, javaValue, javaValue == null ? null : javaValue.length, null, null, null);
         return javaValue;
     }
 
@@ -145,8 +168,10 @@ public class RustMutableTrie implements MutableTrie {
         if (engineType == TrieEngineType.RUST && bridge != null) {
             if (value == null) {
                 bridge.delete(nativeHandle, key);
+                recordDifferentialOperation("delete", key, null, null, null, null, null);
             } else {
                 bridge.put(nativeHandle, key, value);
+                recordDifferentialOperation("put", key, value, value.length, null, null, null);
             }
 
             javaMirror.put(key, value);
@@ -158,8 +183,10 @@ public class RustMutableTrie implements MutableTrie {
         if (bridge != null) {
             if (value == null) {
                 bridge.delete(nativeHandle, key);
+                recordDifferentialOperation("delete", key, null, null, null, null, null);
             } else {
                 bridge.put(nativeHandle, key, value);
+                recordDifferentialOperation("put", key, value, value.length, null, null, null);
             }
             compareRustTransition("put", key, javaSource.get(key));
         }
@@ -180,6 +207,7 @@ public class RustMutableTrie implements MutableTrie {
     public Uint24 getValueLength(byte[] key) {
         if (engineType == TrieEngineType.RUST && bridge != null) {
             int valueLength = bridge.getValueLength(nativeHandle, key);
+            recordDifferentialOperation("getValueLength", key, null, valueLength < 0 ? null : valueLength, null, null, null);
             return valueLength < 0 ? Uint24.ZERO : new Uint24(valueLength);
         }
 
@@ -196,6 +224,7 @@ public class RustMutableTrie implements MutableTrie {
                 ));
             }
         }
+        recordDifferentialOperation("getValueLength", key, null, javaLength.intValue(), null, null, null);
         return javaLength;
     }
 
@@ -203,6 +232,7 @@ public class RustMutableTrie implements MutableTrie {
     public Optional<Keccak256> getValueHash(byte[] key) {
         if (engineType == TrieEngineType.RUST && bridge != null) {
             byte[] valueHash = bridge.getValueHash(nativeHandle, key);
+            recordDifferentialOperation("getValueHash", key, null, null, valueHash, null, null);
             return valueHash == null ? Optional.empty() : Optional.of(new Keccak256(valueHash));
         }
 
@@ -219,6 +249,7 @@ public class RustMutableTrie implements MutableTrie {
                 ));
             }
         }
+        recordDifferentialOperation("getValueHash", key, null, null, javaHash.map(Keccak256::getBytes).orElse(null), null, null);
 
         return javaHash;
     }
@@ -227,6 +258,7 @@ public class RustMutableTrie implements MutableTrie {
     public Iterator<DataWord> getStorageKeys(RskAddress addr) {
         if (engineType == TrieEngineType.RUST && bridge != null) {
             Iterator<byte[]> keys = bridge.getStorageKeys(nativeHandle, addr.getBytes());
+            recordDifferentialOperation("getStorageKeys", addr.getBytes(), null, null, null, null, null);
             return new Iterator<>() {
                 @Override
                 public boolean hasNext() {
@@ -255,6 +287,7 @@ public class RustMutableTrie implements MutableTrie {
                     rustKeys.size()
             ));
         }
+        recordDifferentialOperation("getStorageKeys", addr.getBytes(), null, null, null, null, null);
 
         return toDataWordIterator(javaKeys);
     }
@@ -264,6 +297,7 @@ public class RustMutableTrie implements MutableTrie {
         if (engineType == TrieEngineType.RUST && bridge != null) {
             bridge.deleteRecursive(nativeHandle, key);
             javaMirror.deleteRecursive(key);
+            recordDifferentialOperation("deleteRecursive", key, null, null, null, null, null);
             return;
         }
 
@@ -273,6 +307,7 @@ public class RustMutableTrie implements MutableTrie {
             bridge.deleteRecursive(nativeHandle, key);
             compareRustTransition("deleteRecursive", key, javaSource.get(key));
         }
+        recordDifferentialOperation("deleteRecursive", key, null, null, null, null, null);
     }
 
     @Override
@@ -280,6 +315,7 @@ public class RustMutableTrie implements MutableTrie {
         if (engineType == TrieEngineType.RUST && bridge != null) {
             bridge.save(nativeHandle, storeAdapter);
             reloadMirrorFromStore();
+            recordDifferentialOperation("save", null, null, null, null, null, null);
             return;
         }
 
@@ -289,6 +325,7 @@ public class RustMutableTrie implements MutableTrie {
             bridge.save(nativeHandle, storeAdapter);
             compareRustRoot("save");
         }
+        recordDifferentialOperation("save", null, null, null, null, null, null);
     }
 
     @Override
@@ -309,6 +346,7 @@ public class RustMutableTrie implements MutableTrie {
             for (byte[] key : rustKeys) {
                 result.add(new ByteArrayWrapper(key));
             }
+            recordDifferentialOperation("collectKeys", null, null, null, null, size, null);
             return result;
         }
 
@@ -329,6 +367,7 @@ public class RustMutableTrie implements MutableTrie {
                 ));
             }
         }
+        recordDifferentialOperation("collectKeys", null, null, null, null, size, null);
 
         return javaKeys;
     }
@@ -461,11 +500,39 @@ public class RustMutableTrie implements MutableTrie {
     }
 
     private void onMismatch(String message) {
+        recordDifferentialOperation("mismatch", null, null, null, null, null, message);
         if (failOnMismatch) {
             throw new IllegalStateException(message);
         }
 
         logger.error(message);
+    }
+
+    private void recordDifferentialOperation(
+            String operation,
+            @Nullable byte[] key,
+            @Nullable byte[] value,
+            @Nullable Integer valueLength,
+            @Nullable byte[] valueHash,
+            @Nullable Integer size,
+            @Nullable String mismatchMessage) {
+        if (!differentialRecorder.isEnabled() || bridge == null || engineType != TrieEngineType.RUST_SHADOW) {
+            return;
+        }
+
+        byte[] javaRoot = javaDelegateOrMirror().getHash().getBytes();
+        byte[] rustRoot = bridge.currentRootHash(nativeHandle);
+        differentialRecorder.recordOperation(
+                operation,
+                key,
+                value,
+                valueLength,
+                valueHash,
+                size,
+                javaRoot,
+                rustRoot,
+                mismatchMessage
+        );
     }
 
     private static String nullableHex(@Nullable byte[] value) {

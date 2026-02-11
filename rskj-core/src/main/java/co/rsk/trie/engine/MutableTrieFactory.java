@@ -23,6 +23,7 @@ import co.rsk.trie.MutableTrie;
 import co.rsk.trie.Trie;
 import co.rsk.trie.TrieStore;
 import co.rsk.trie.engine.rust.RustMutableTrie;
+import co.rsk.trie.engine.rust.diagnostics.TrieDifferentialRecorder;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -33,14 +34,24 @@ public class MutableTrieFactory {
     private final boolean rustFailOnMismatch;
     @Nullable
     private final String rustLibraryPath;
+    private final TrieDifferentialRecorder differentialRecorder;
 
     public MutableTrieFactory(
             TrieEngineType engineType,
             boolean rustFailOnMismatch,
             @Nullable String rustLibraryPath) {
+        this(engineType, rustFailOnMismatch, rustLibraryPath, TrieDifferentialRecorder.noop());
+    }
+
+    public MutableTrieFactory(
+            TrieEngineType engineType,
+            boolean rustFailOnMismatch,
+            @Nullable String rustLibraryPath,
+            TrieDifferentialRecorder differentialRecorder) {
         this.engineType = Objects.requireNonNull(engineType, "engineType");
         this.rustFailOnMismatch = rustFailOnMismatch;
         this.rustLibraryPath = rustLibraryPath;
+        this.differentialRecorder = Objects.requireNonNull(differentialRecorder, "differentialRecorder");
     }
 
     public static MutableTrieFactory javaDefault() {
@@ -57,7 +68,8 @@ public class MutableTrieFactory {
                 trie,
                 engineType,
                 rustFailOnMismatch,
-                rustLibraryPath
+                rustLibraryPath,
+                differentialRecorder
         );
     }
 

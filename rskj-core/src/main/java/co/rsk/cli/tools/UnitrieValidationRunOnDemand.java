@@ -23,6 +23,8 @@ import co.rsk.core.bc.BlockResult;
 import co.rsk.db.RepositoryLocator;
 import co.rsk.trie.engine.MutableTrieFactory;
 import co.rsk.trie.engine.TrieEngineType;
+import co.rsk.trie.engine.rust.diagnostics.JsonlTrieDifferentialRecorder;
+import co.rsk.trie.engine.rust.diagnostics.TrieDifferentialRecorder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.ethereum.core.Block;
@@ -285,6 +287,13 @@ public class UnitrieValidationRunOnDemand extends PicoCliToolRskContextAware {
                 long rustBlockNanos = System.nanoTime() - rustStart;
                 rustNanos += rustBlockNanos;
                 rustExceptionCount++;
+                Path capturedCorpusPath = maybeCaptureDifferentialCorpus(
+                        effectiveRunId,
+                        attemptIndex,
+                        block,
+                        parent,
+                        javaResult.getFinalState().getHash().getBytes()
+                );
 
                 UnitrieDivergenceArtifact artifact = buildDivergenceArtifact(
                         "Rust execution failed with exception: " + ex.getMessage(),
@@ -296,6 +305,7 @@ public class UnitrieValidationRunOnDemand extends PicoCliToolRskContextAware {
                         nanosToMillis(javaBlockNanos),
                         nanosToMillis(rustBlockNanos),
                         effectiveArtifactLevel,
+                        capturedCorpusPath,
                         ex
                 );
                 Path textPath = writeDivergenceArtifact(attemptDir, artifact);
@@ -312,6 +322,13 @@ public class UnitrieValidationRunOnDemand extends PicoCliToolRskContextAware {
 
             if (!Arrays.equals(javaRoot, rustRoot)) {
                 divergenceCount++;
+                Path capturedCorpusPath = maybeCaptureDifferentialCorpus(
+                        effectiveRunId,
+                        attemptIndex,
+                        block,
+                        parent,
+                        javaRoot
+                );
 
                 UnitrieDivergenceArtifact artifact = buildDivergenceArtifact(
                         "State root divergence detected between Java and Rust engines",
@@ -323,6 +340,7 @@ public class UnitrieValidationRunOnDemand extends PicoCliToolRskContextAware {
                         nanosToMillis(javaBlockNanos),
                         nanosToMillis(rustBlockNanos),
                         effectiveArtifactLevel,
+                        capturedCorpusPath,
                         null
                 );
                 Path textPath = writeDivergenceArtifact(attemptDir, artifact);
@@ -333,10 +351,6 @@ public class UnitrieValidationRunOnDemand extends PicoCliToolRskContextAware {
                         ByteUtil.toHexString(rustRoot),
                         textPath
                 );
-
-                if (captureCorpusOnMismatch) {
-                    printInfo("Auto corpus capture requested for mismatch block {} (pending diagnostic implementation)", blockNumber);
-                }
 
                 if (failFast) {
                     break;
@@ -423,6 +437,7 @@ public class UnitrieValidationRunOnDemand extends PicoCliToolRskContextAware {
         content.append("config.failFast=").append(artifact.getConfig().isFailFast()).append('\n');
         content.append("config.failOnMismatch=").append(artifact.getConfig().isFailOnMismatch()).append('\n');
         content.append("config.rustLibraryPath=").append(nullableString(artifact.getConfig().getRustLibraryPath())).append('\n');
+        content.append("corpus.path=").append(nullableString(artifact.getCorpusPath())).append('\n');
 
         if (artifact.getException() != null) {
             content.append("exception.class=").append(artifact.getException().getClassName()).append('\n');
@@ -442,6 +457,7 @@ public class UnitrieValidationRunOnDemand extends PicoCliToolRskContextAware {
             double javaMsBlock,
             double rustMsBlock,
             ArtifactLevel effectiveArtifactLevel,
+            @Nullable Path corpusPath,
             @Nullable RuntimeException exception) {
         boolean includeExtended = effectiveArtifactLevel == ArtifactLevel.EXTENDED;
         List<String> txHashes = includeExtended
@@ -492,15 +508,101 @@ public class UnitrieValidationRunOnDemand extends PicoCliToolRskContextAware {
                 timingInfo,
                 txInfo,
                 configInfo,
+                corpusPath == null ? null : corpusPath.toAbsolutePath().toString(),
                 exceptionInfo
         );
+    }
+
+    @Nullable
+    private Path maybeCaptureDifferentialCorpus(
+            String effectiveRunId,
+            int attemptIndex,
+            Block block,
+            Block parent,
+            @Nullable byte[] javaRoot) {
+        if (!captureCorpusOnMismatch) {
+            return null;
+        }
+
+        String fullBlockHash = block.getHash().toHexString();
+        String shortBlockHash = fullBlockHash.length() > 12 ? fullBlockHash.substring(0, 12) : fullBlockHash;
+        Path corpusPath = corpusOutDir.resolve(
+                "corpus-block-" + block.getNumber() + "-" + shortBlockHash + ".jsonl"
+        );
+
+        try (TrieDifferentialRecorder recorder = new JsonlTrieDifferentialRecorder(corpusPath)) {
+            BlockExecutor shadowExecutor = buildExecutor(
+                    TrieEngineType.RUST_SHADOW,
+                    true,
+                    rustLibraryPath,
+                    recorder
+            );
+            try {
+                BlockResult shadowResult = shadowExecutor.execute(
+                        null,
+                        0,
+                        block,
+                        parent.getHeader(),
+                        false,
+                        false,
+                        false
+                );
+
+                byte[] shadowRoot = shadowResult.getFinalState().getHash().getBytes();
+                if (javaRoot != null && !Arrays.equals(javaRoot, shadowRoot)) {
+                    recorder.recordOperation(
+                            "probeFinalStateRoot",
+                            null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            javaRoot,
+                            shadowRoot,
+                            "Probe replay ended with root mismatch"
+                    );
+                }
+            } catch (RuntimeException ex) {
+                recorder.recordOperation(
+                        "probeException",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        javaRoot,
+                        null,
+                        ex.getClass().getName() + ": " + ex.getMessage()
+                );
+            }
+        } catch (RuntimeException ex) {
+            printError("Could not capture differential corpus for block {}: {}", block.getNumber(), ex.getMessage());
+            return null;
+        }
+
+        printInfo(
+                "Captured differential corpus for runId={} attempt={} block={} path={}",
+                effectiveRunId,
+                attemptIndex,
+                block.getNumber(),
+                corpusPath.toAbsolutePath()
+        );
+        return corpusPath;
     }
 
     private BlockExecutor buildExecutor(
             TrieEngineType engineType,
             boolean failOnMismatch,
             @Nullable String libraryPath) {
-        MutableTrieFactory mutableTrieFactory = new MutableTrieFactory(engineType, failOnMismatch, libraryPath);
+        return buildExecutor(engineType, failOnMismatch, libraryPath, TrieDifferentialRecorder.noop());
+    }
+
+    private BlockExecutor buildExecutor(
+            TrieEngineType engineType,
+            boolean failOnMismatch,
+            @Nullable String libraryPath,
+            TrieDifferentialRecorder recorder) {
+        MutableTrieFactory mutableTrieFactory = new MutableTrieFactory(engineType, failOnMismatch, libraryPath, recorder);
         RepositoryLocator repositoryLocator = new RepositoryLocator(
                 ctx.getTrieStore(),
                 ctx.getStateRootHandler(),

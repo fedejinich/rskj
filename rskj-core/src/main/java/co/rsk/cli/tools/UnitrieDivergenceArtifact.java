@@ -33,6 +33,8 @@ final class UnitrieDivergenceArtifact {
     private final TxInfo tx;
     private final ConfigInfo config;
     @Nullable
+    private final String corpusPath;
+    @Nullable
     private final ExceptionInfo exception;
 
     UnitrieDivergenceArtifact(
@@ -44,6 +46,7 @@ final class UnitrieDivergenceArtifact {
             TimingInfo timing,
             TxInfo tx,
             ConfigInfo config,
+            @Nullable String corpusPath,
             @Nullable ExceptionInfo exception) {
         this.reason = reason;
         this.runId = runId;
@@ -53,6 +56,7 @@ final class UnitrieDivergenceArtifact {
         this.timing = timing;
         this.tx = tx;
         this.config = config;
+        this.corpusPath = corpusPath;
         this.exception = exception;
     }
 
@@ -86,6 +90,11 @@ final class UnitrieDivergenceArtifact {
 
     ConfigInfo getConfig() {
         return config;
+    }
+
+    @Nullable
+    String getCorpusPath() {
+        return corpusPath;
     }
 
     @Nullable
