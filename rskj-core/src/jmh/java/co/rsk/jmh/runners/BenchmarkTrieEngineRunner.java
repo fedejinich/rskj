@@ -25,6 +25,7 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.runner.options.TimeValue;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -39,11 +40,15 @@ public class BenchmarkTrieEngineRunner {
     private static final String FAIL_ON_MISMATCH_PROPERTY = "unitrie.jmh.failOnMismatch";
     private static final String WARMUP_ITERATIONS_PROPERTY = "unitrie.jmh.warmupIterations";
     private static final String MEASUREMENT_ITERATIONS_PROPERTY = "unitrie.jmh.measurementIterations";
+    private static final String WARMUP_SECONDS_PROPERTY = "unitrie.jmh.warmupSeconds";
+    private static final String MEASUREMENT_SECONDS_PROPERTY = "unitrie.jmh.measurementSeconds";
     private static final String FORKS_PROPERTY = "unitrie.jmh.forks";
     private static final String ENGINES_ENV = "UNITRIE_JMH_ENGINES";
     private static final String FAIL_ON_MISMATCH_ENV = "UNITRIE_JMH_FAIL_ON_MISMATCH";
     private static final String WARMUP_ITERATIONS_ENV = "UNITRIE_JMH_WARMUP_ITERATIONS";
     private static final String MEASUREMENT_ITERATIONS_ENV = "UNITRIE_JMH_MEASUREMENT_ITERATIONS";
+    private static final String WARMUP_SECONDS_ENV = "UNITRIE_JMH_WARMUP_SECONDS";
+    private static final String MEASUREMENT_SECONDS_ENV = "UNITRIE_JMH_MEASUREMENT_SECONDS";
     private static final String FORKS_ENV = "UNITRIE_JMH_FORKS";
 
     public static void main(String[] args) throws RunnerException, IOException {
@@ -57,12 +62,16 @@ public class BenchmarkTrieEngineRunner {
         String failOnMismatch = resolveConfig(FAIL_ON_MISMATCH_PROPERTY, FAIL_ON_MISMATCH_ENV, "true");
         int warmupIterations = Integer.parseInt(resolveConfig(WARMUP_ITERATIONS_PROPERTY, WARMUP_ITERATIONS_ENV, "5"));
         int measurementIterations = Integer.parseInt(resolveConfig(MEASUREMENT_ITERATIONS_PROPERTY, MEASUREMENT_ITERATIONS_ENV, "15"));
+        int warmupSeconds = Integer.parseInt(resolveConfig(WARMUP_SECONDS_PROPERTY, WARMUP_SECONDS_ENV, "10"));
+        int measurementSeconds = Integer.parseInt(resolveConfig(MEASUREMENT_SECONDS_PROPERTY, MEASUREMENT_SECONDS_ENV, "10"));
         int forks = Integer.parseInt(resolveConfig(FORKS_PROPERTY, FORKS_ENV, "1"));
 
         Options options = new OptionsBuilder()
                 .include(TrieEngineBenchmark.class.getName())
                 .warmupIterations(warmupIterations)
+                .warmupTime(TimeValue.seconds(warmupSeconds))
                 .measurementIterations(measurementIterations)
+                .measurementTime(TimeValue.seconds(measurementSeconds))
                 .param("engine", engines)
                 .param("failOnMismatch", failOnMismatch)
                 .forks(forks)
