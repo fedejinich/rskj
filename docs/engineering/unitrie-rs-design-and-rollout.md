@@ -248,6 +248,12 @@ Default engines for comparison are `java,rust`. Override if needed:
 UNITRIE_JMH_ENGINES=java,rust ./gradlew :rskj-core:jmh -Pbenchmark=BenchmarkTrieEngineRunner
 ```
 
+If Rust JNI is not in the default loader path, provide it explicitly:
+```bash
+UNITRIE_JMH_RUST_LIBRARY_PATH=/absolute/path/to/libunitrie_rs_jni.dylib \
+./gradlew :rskj-core:jmh -Pbenchmark=BenchmarkTrieEngineRunner
+```
+
 #### Interpretation
 - `OK` means no warning threshold was crossed in the Java vs Rust comparison table.
 - `WARNING` means at least one conservative threshold was crossed; triage before optimization continues.
