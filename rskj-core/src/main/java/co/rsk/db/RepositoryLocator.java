@@ -23,6 +23,7 @@ import co.rsk.crypto.Keccak256;
 import co.rsk.trie.MutableTrie;
 import co.rsk.trie.Trie;
 import co.rsk.trie.TrieStore;
+import co.rsk.trie.engine.MutableTrieFactory;
 import org.ethereum.core.BlockHeader;
 import org.ethereum.core.Repository;
 import org.ethereum.crypto.Keccak256Helper;
@@ -39,10 +40,16 @@ public class RepositoryLocator {
 
     private final TrieStore trieStore;
     private final StateRootHandler stateRootHandler;
+    private final MutableTrieFactory mutableTrieFactory;
 
     public RepositoryLocator(TrieStore store, StateRootHandler stateRootHandler) {
+        this(store, stateRootHandler, MutableTrieFactory.javaDefault());
+    }
+
+    public RepositoryLocator(TrieStore store, StateRootHandler stateRootHandler, MutableTrieFactory mutableTrieFactory) {
         this.trieStore = store;
         this.stateRootHandler = stateRootHandler;
+        this.mutableTrieFactory = mutableTrieFactory;
     }
 
     /**
@@ -95,11 +102,11 @@ public class RepositoryLocator {
         Keccak256 stateRoot = stateRootHandler.translate(header);
 
         if (EMPTY_HASH.equals(stateRoot)) {
-            return Optional.of(new MutableTrieImpl(trieStore, new Trie(trieStore)));
+            return Optional.of(mutableTrieFactory.create(trieStore, new Trie(trieStore)));
         }
 
         Optional<Trie> trie = trieStore.retrieve(stateRoot.getBytes());
 
-        return trie.map(t -> new MutableTrieImpl(trieStore, t));
+        return trie.map(t -> mutableTrieFactory.create(trieStore, t));
     }
 }

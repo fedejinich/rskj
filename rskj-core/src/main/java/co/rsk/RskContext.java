@@ -92,6 +92,8 @@ import co.rsk.scoring.PunishmentParameters;
 import co.rsk.trie.MultiTrieStore;
 import co.rsk.trie.TrieStore;
 import co.rsk.trie.TrieStoreImpl;
+import co.rsk.trie.engine.MutableTrieFactory;
+import co.rsk.trie.engine.TrieEngineType;
 import co.rsk.util.RskCustomCache;
 import co.rsk.validators.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -1498,8 +1500,14 @@ public class RskContext implements NodeContext, NodeBootstrapper {
 
     protected synchronized RepositoryLocator buildRepositoryLocator() {
         checkIfNotClosed();
-
-        return new RepositoryLocator(getTrieStore(), getStateRootHandler());
+        RskSystemProperties properties = getRskSystemProperties();
+        TrieEngineType engineType = TrieEngineType.fromConfig(properties.getUnitrieEngine());
+        MutableTrieFactory mutableTrieFactory = new MutableTrieFactory(
+                engineType,
+                properties.isUnitrieRustFailOnMismatch(),
+                properties.getUnitrieRustLibraryPath()
+        );
+        return new RepositoryLocator(getTrieStore(), getStateRootHandler(), mutableTrieFactory);
     }
 
     protected synchronized org.ethereum.db.BlockStore buildBlockStore() {

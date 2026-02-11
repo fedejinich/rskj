@@ -63,6 +63,9 @@ public class RskSystemProperties extends SystemProperties {
     private static final String RPC_ETH_GET_LOGS_MAX_BLOCKS_TO_QUERY = "rpc.logs.maxBlocksToQuery";
     private static final String RPC_ETH_GET_LOGS_MAX_LOGS_TO_RETURN = "rpc.logs.maxLogsToReturn";
     public static final String TX_GAS_PRICE_CALCULATOR_TYPE = "transaction.gasPriceCalculatorType";
+    private static final String UNITRIE_ENGINE_CONFIG = "blockchain.unitrie.engine";
+    private static final String UNITRIE_RUST_FAIL_ON_MISMATCH_CONFIG = "blockchain.unitrie.rust.failOnMismatch";
+    private static final String UNITRIE_RUST_LIBRARY_PATH_CONFIG = "blockchain.unitrie.rust.libraryPath";
 
     private static final String RPC_GAS_PRICE_MULTIPLIER_CONFIG = "rpc.gasPriceMultiplier";
     private static final String DISCOVERY_BUCKET_SIZE = "peer.discovery.bucketSize";
@@ -240,6 +243,20 @@ public class RskSystemProperties extends SystemProperties {
 
     public GarbageCollectorConfig garbageCollectorConfig() {
         return GarbageCollectorConfig.fromConfig(configFromFiles.getConfig("blockchain.gc"));
+    }
+
+    public String getUnitrieEngine() {
+        return getString(UNITRIE_ENGINE_CONFIG, "java").trim().toLowerCase(Locale.ROOT);
+    }
+
+    public boolean isUnitrieRustFailOnMismatch() {
+        return getBoolean(UNITRIE_RUST_FAIL_ON_MISMATCH_CONFIG, true);
+    }
+
+    @Nullable
+    public String getUnitrieRustLibraryPath() {
+        String libraryPath = getString(UNITRIE_RUST_LIBRARY_PATH_CONFIG, "").trim();
+        return libraryPath.isEmpty() ? null : libraryPath;
     }
 
     public int flushNumberOfBlocks() {

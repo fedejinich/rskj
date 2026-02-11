@@ -85,6 +85,16 @@ public class TrieStoreImpl implements TrieStore {
         }
     }
 
+    @Override
+    public void saveRawNode(byte[] hash, byte[] serializedNode) {
+        this.store.put(hash, serializedNode);
+    }
+
+    @Override
+    public void saveRawValue(byte[] hash, byte[] value) {
+        this.store.put(hash, value);
+    }
+
     /**
      * @param isRootNode it is the root node of the trie
      */

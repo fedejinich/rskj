@@ -23,6 +23,18 @@ import java.util.Optional;
 public interface TrieStore {
     void save(Trie trie);
 
+    /**
+     * Saves a raw trie node payload by its hash.
+     * Intended for alternate engines that already produce canonical node bytes.
+     */
+    void saveRawNode(byte[] hash, byte[] serializedNode);
+
+    /**
+     * Saves an external value payload by its hash.
+     * Intended for alternate engines with out-of-line values.
+     */
+    void saveRawValue(byte[] hash, byte[] value);
+
     void flush();
 
     /**

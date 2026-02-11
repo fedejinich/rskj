@@ -62,6 +62,16 @@ public class MultiTrieStore implements TrieStore {
     }
 
     @Override
+    public void saveRawNode(byte[] hash, byte[] serializedNode) {
+        getCurrentStore().saveRawNode(hash, serializedNode);
+    }
+
+    @Override
+    public void saveRawValue(byte[] hash, byte[] value) {
+        getCurrentStore().saveRawValue(hash, value);
+    }
+
+    @Override
     public void saveDTO(TrieDTO trieDTO) {
         getCurrentStore().saveDTO(trieDTO);
     }
