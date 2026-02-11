@@ -29,7 +29,7 @@ import co.rsk.trie.TrieStoreImpl;
 import co.rsk.trie.engine.MutableTrieFactory;
 import co.rsk.trie.engine.TrieEngineType;
 import org.ethereum.datasource.HashMapDB;
-import org.ethereum.db.TrieKeyMapper;
+import org.ethereum.db.MutableRepository;
 import org.ethereum.vm.DataWord;
 import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Param;
@@ -58,6 +58,9 @@ public class TrieBenchmarkPlan {
     @Param({"true"})
     public boolean failOnMismatch;
 
+    @Param({""})
+    public String rustLibraryPath;
+
     @Param({"256"})
     public int workingSetSize;
 
@@ -67,7 +70,6 @@ public class TrieBenchmarkPlan {
     private static final Path MASSIVE_UPLOAD_PATH = Paths.get("rskj-core", "src", "test", "resources", "trie", "massive-upload.dmp");
     private static final Path MASSIVE_UPLOAD_FALLBACK_PATH = Paths.get("src", "test", "resources", "trie", "massive-upload.dmp");
 
-    private final TrieKeyMapper trieKeyMapper = new TrieKeyMapper();
     private final RskAddress storageAddress = new RskAddress(new byte[20]);
     private final List<byte[]> keys = new ArrayList<>();
     private final List<byte[]> values = new ArrayList<>();
@@ -95,10 +97,13 @@ public class TrieBenchmarkPlan {
     public void setupIteration() {
         measuredDataSource = new MeasuredKeyValueDataSource(new HashMapDB());
         trieStore = new TrieStoreImpl(measuredDataSource);
+        String configuredRustLibraryPath = rustLibraryPath == null || rustLibraryPath.isBlank()
+                ? null
+                : rustLibraryPath;
         mutableTrieFactory = new MutableTrieFactory(
                 TrieEngineType.fromConfig(engine),
                 failOnMismatch,
-                null
+                configuredRustLibraryPath
         );
         mutableTrie = mutableTrieFactory.create(trieStore, new Trie(trieStore));
         cursor = 0;
@@ -171,9 +176,10 @@ public class TrieBenchmarkPlan {
     }
 
     private void seedStorageSubtree() {
+        MutableRepository repository = new MutableRepository(mutableTrie);
         for (int i = 0; i < 64; i++) {
-            byte[] storageKey = trieKeyMapper.getAccountStorageKey(storageAddress, DataWord.valueOf(i));
-            mutableTrie.put(storageKey, values.get(i % values.size()));
+            DataWord storageSubKey = DataWord.valueOf(("storage-key-" + i).getBytes(StandardCharsets.UTF_8));
+            repository.addStorageBytes(storageAddress, storageSubKey, values.get(i % values.size()));
         }
     }
 

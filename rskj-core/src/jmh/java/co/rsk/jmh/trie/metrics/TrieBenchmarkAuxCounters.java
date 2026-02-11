@@ -19,11 +19,13 @@
 package co.rsk.jmh.trie.metrics;
 
 import org.openjdk.jmh.annotations.AuxCounters;
+import org.openjdk.jmh.annotations.Level;
 import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 
 @State(Scope.Thread)
-@AuxCounters(AuxCounters.Type.OPERATIONS)
+@AuxCounters(AuxCounters.Type.EVENTS)
 public class TrieBenchmarkAuxCounters {
 
     public long store_get_ops;
@@ -33,12 +35,22 @@ public class TrieBenchmarkAuxCounters {
     public long store_bytes_written_key;
     public long store_bytes_written_value;
 
+    @Setup(Level.Iteration)
+    public void reset() {
+        store_get_ops = 0;
+        store_put_ops = 0;
+        store_delete_ops = 0;
+        store_bytes_read = 0;
+        store_bytes_written_key = 0;
+        store_bytes_written_value = 0;
+    }
+
     public void record(TrieStoreMetricsDelta delta) {
-        store_get_ops = delta.getGetOps();
-        store_put_ops = delta.getPutOps();
-        store_delete_ops = delta.getDeleteOps();
-        store_bytes_read = delta.getBytesRead();
-        store_bytes_written_key = delta.getBytesWrittenKeys();
-        store_bytes_written_value = delta.getBytesWrittenValues();
+        store_get_ops += delta.getGetOps();
+        store_put_ops += delta.getPutOps();
+        store_delete_ops += delta.getDeleteOps();
+        store_bytes_read += delta.getBytesRead();
+        store_bytes_written_key += delta.getBytesWrittenKeys();
+        store_bytes_written_value += delta.getBytesWrittenValues();
     }
 }
