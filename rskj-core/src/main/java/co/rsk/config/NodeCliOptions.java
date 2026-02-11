@@ -18,6 +18,7 @@
 package co.rsk.config;
 
 import co.rsk.cli.OptionalizableCliArg;
+import co.rsk.trie.engine.TrieEngineType;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigObject;
 import com.typesafe.config.ConfigValue;
@@ -27,6 +28,7 @@ import org.ethereum.config.SystemProperties;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -90,6 +92,29 @@ public enum NodeCliOptions implements OptionalizableCliArg {
             } catch (Exception e) {
                 throw new RuntimeException("Error processing SnapBoot Nodes configuration. Ensure the URL format is 'enode://PUBKEY@HOST:PORT'.");
             }
+        }
+    },
+    UNITRIE_ENGINE("unitrie-engine", true) {
+        private static final String UNITRIE_ENGINE_CONFIG_PATH = "blockchain.unitrie.engine";
+
+        @Override
+        public Config withConfig(Config config, String configValue) {
+            String normalizedEngine = configValue.trim().toLowerCase(Locale.ROOT);
+            try {
+                TrieEngineType.fromConfig(normalizedEngine);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid unitrie engine: " + configValue + ". The valid options are <java | rust | rust-shadow>.");
+            }
+
+            return config.withValue(UNITRIE_ENGINE_CONFIG_PATH, ConfigValueFactory.fromAnyRef(normalizedEngine));
+        }
+    },
+    UNITRIE_RUST_LIBRARY_PATH("unitrie-rust-library-path", true) {
+        private static final String UNITRIE_RUST_LIBRARY_PATH_CONFIG_PATH = "blockchain.unitrie.rust.libraryPath";
+
+        @Override
+        public Config withConfig(Config config, String configValue) {
+            return config.withValue(UNITRIE_RUST_LIBRARY_PATH_CONFIG_PATH, ConfigValueFactory.fromAnyRef(configValue.trim()));
         }
     }
     ;
