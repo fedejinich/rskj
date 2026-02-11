@@ -164,6 +164,7 @@ import java.util.stream.Stream;
 public class RskContext implements NodeContext, NodeBootstrapper {
 
     private static final Logger logger = LoggerFactory.getLogger(RskContext.class);
+    private static final String MAINNET_NETWORK_NAME = "main";
 
     private static final String CACHE_FILE_NAME = "rskcache";
 
@@ -655,6 +656,7 @@ public class RskContext implements NodeContext, NodeBootstrapper {
 
         if (rskSystemProperties == null) {
             rskSystemProperties = buildRskSystemProperties();
+            warnIfExperimentalMainnetUnitrieEngine(rskSystemProperties);
 
             boolean acceptAnyHost = Optional.ofNullable(rskSystemProperties)
                     .map(SystemProperties::rpcHttpHost)
@@ -672,6 +674,26 @@ public class RskContext implements NodeContext, NodeBootstrapper {
         }
 
         return rskSystemProperties;
+    }
+
+    private void warnIfExperimentalMainnetUnitrieEngine(RskSystemProperties properties) {
+        TrieEngineType engineType;
+        try {
+            engineType = TrieEngineType.fromConfig(properties.getUnitrieEngine());
+        } catch (IllegalArgumentException ignored) {
+            return;
+        }
+
+        if (isExperimentalMainnetUnitrieEngine(properties.netName(), engineType)) {
+            logger.warn(
+                    "Starting node with experimental Unitrie engine '{}' on mainnet. Keep engine=java as production default unless parity validation is completed for this environment.",
+                    engineType.getConfigName()
+            );
+        }
+    }
+
+    static boolean isExperimentalMainnetUnitrieEngine(String networkName, TrieEngineType engineType) {
+        return MAINNET_NETWORK_NAME.equals(networkName) && engineType.usesRustBridge();
     }
 
     public synchronized PeerScoringManager getPeerScoringManager() {
