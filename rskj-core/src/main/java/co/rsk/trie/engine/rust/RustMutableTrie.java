@@ -22,6 +22,7 @@ import co.rsk.core.RskAddress;
 import co.rsk.core.types.ints.Uint24;
 import co.rsk.crypto.Keccak256;
 import co.rsk.db.MutableTrieImpl;
+import co.rsk.trie.IterationElement;
 import co.rsk.trie.MutableTrie;
 import co.rsk.trie.Trie;
 import co.rsk.trie.TrieStore;
@@ -33,28 +34,41 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 /**
- * MutableTrie implementation with optional rust JNI mirroring.
+ * MutableTrie implementation backed by unitrie-rs through JNI.
  *
- * The java implementation remains the source of truth in v1.
+ * In {@code engine=rust}, Rust is the source of truth and Java is used as a compatibility mirror for APIs that still
+ * depend on {@link Trie}.
+ *
+ * In {@code engine=rust-shadow}, Java remains the source of truth and Rust is used for deterministic checks.
  */
 public class RustMutableTrie implements MutableTrie {
 
     private static final Logger logger = LoggerFactory.getLogger(RustMutableTrie.class);
+    @Nullable
+    private static final Field TRIE_HASH_FIELD = findTrieHashField();
 
-    private final MutableTrie javaDelegate;
+    private final TrieStore trieStore;
     private final TrieEngineType engineType;
     private final boolean failOnMismatch;
+    private final RustTrieStoreAdapter storeAdapter;
+    @Nullable
+    private final MutableTrie javaDelegate;
+    private MutableTrie javaMirror;
     @Nullable
     private final RustUnitrieBridge bridge;
     private final long nativeHandle;
+    private final boolean rootComparisonEnabled;
 
     public RustMutableTrie(
             TrieStore trieStore,
@@ -62,47 +76,91 @@ public class RustMutableTrie implements MutableTrie {
             TrieEngineType engineType,
             boolean failOnMismatch,
             @Nullable String rustLibraryPath) {
-        this.javaDelegate = new MutableTrieImpl(trieStore, trie);
+        this.trieStore = Objects.requireNonNull(trieStore, "trieStore");
         this.engineType = Objects.requireNonNull(engineType, "engineType");
         this.failOnMismatch = failOnMismatch;
+        this.storeAdapter = new RustTrieStoreAdapter(trieStore);
+        this.javaDelegate = engineType == TrieEngineType.RUST_SHADOW ? new MutableTrieImpl(trieStore, trie) : null;
+        this.javaMirror = new MutableTrieImpl(trieStore, trie);
 
         RustUnitrieBridge loadedBridge = RustUnitrieBridge.load(rustLibraryPath);
-        if (loadedBridge.isAvailable()) {
-            this.bridge = loadedBridge;
-            this.nativeHandle = bridge.createTrie();
-        } else {
+        if (!loadedBridge.isAvailable()) {
             this.bridge = null;
             this.nativeHandle = 0L;
+            this.rootComparisonEnabled = false;
             if (engineType == TrieEngineType.RUST) {
                 throw new IllegalStateException("Rust unitrie engine selected but JNI bridge is unavailable");
             }
+            return;
+        }
+
+        this.bridge = loadedBridge;
+        InitializationResult initialization = initializeNativeTrie(trie);
+        this.nativeHandle = initialization.handle;
+        this.rootComparisonEnabled = initialization.rootComparisonEnabled;
+
+        if (engineType == TrieEngineType.RUST_SHADOW && rootComparisonEnabled) {
+            compareRustRoot("constructor");
         }
     }
 
     @Override
     public Trie getTrie() {
-        return javaDelegate.getTrie();
+        if (engineType == TrieEngineType.RUST_SHADOW && javaDelegate != null) {
+            return javaDelegate.getTrie();
+        }
+
+        if (engineType == TrieEngineType.RUST && bridge != null) {
+            Trie mirrorTrie = javaMirror.getTrie();
+            tryOverrideTrieHash(mirrorTrie, bridge.currentRootHash(nativeHandle));
+            return mirrorTrie;
+        }
+
+        return javaMirror.getTrie();
     }
 
     @Override
     public Keccak256 getHash() {
-        return javaDelegate.getHash();
+        if (engineType == TrieEngineType.RUST && bridge != null) {
+            return new Keccak256(bridge.currentRootHash(nativeHandle));
+        }
+
+        return javaDelegateOrMirror().getHash();
     }
 
     @Override
     public byte[] get(byte[] key) {
-        byte[] javaValue = javaDelegate.get(key);
-        warmUpRustValue(key, javaValue);
+        if (engineType == TrieEngineType.RUST && bridge != null) {
+            return bridge.get(nativeHandle, key);
+        }
+
+        byte[] javaValue = javaDelegateOrMirror().get(key);
         compareRustValue("get", key, javaValue);
         return javaValue;
     }
 
     @Override
     public void put(byte[] key, byte[] value) {
-        javaDelegate.put(key, value);
+        if (engineType == TrieEngineType.RUST && bridge != null) {
+            if (value == null) {
+                bridge.delete(nativeHandle, key);
+            } else {
+                bridge.put(nativeHandle, key, value);
+            }
+
+            javaMirror.put(key, value);
+            return;
+        }
+
+        MutableTrie javaSource = javaDelegateOrMirror();
+        javaSource.put(key, value);
         if (bridge != null) {
-            bridge.put(nativeHandle, key, value);
-            compareRustValue("put", key, javaDelegate.get(key));
+            if (value == null) {
+                bridge.delete(nativeHandle, key);
+            } else {
+                bridge.put(nativeHandle, key, value);
+            }
+            compareRustTransition("put", key, javaSource.get(key));
         }
     }
 
@@ -113,56 +171,131 @@ public class RustMutableTrie implements MutableTrie {
 
     @Override
     public void put(String key, byte[] value) {
-        javaDelegate.put(key, value);
-        if (bridge != null) {
-            byte[] encodedKey = key.getBytes(StandardCharsets.UTF_8);
-            bridge.put(nativeHandle, encodedKey, value);
-            compareRustValue("put(String)", encodedKey, javaDelegate.get(encodedKey));
-        }
+        byte[] encodedKey = key.getBytes(StandardCharsets.UTF_8);
+        put(encodedKey, value);
     }
 
     @Override
     public Uint24 getValueLength(byte[] key) {
-        return javaDelegate.getValueLength(key);
+        if (engineType == TrieEngineType.RUST && bridge != null) {
+            int valueLength = bridge.getValueLength(nativeHandle, key);
+            return valueLength < 0 ? Uint24.ZERO : new Uint24(valueLength);
+        }
+
+        Uint24 javaLength = javaDelegateOrMirror().getValueLength(key);
+        if (bridge != null) {
+            int rustLength = bridge.getValueLength(nativeHandle, key);
+            Uint24 normalizedRustLength = rustLength < 0 ? Uint24.ZERO : new Uint24(rustLength);
+            if (!javaLength.equals(normalizedRustLength)) {
+                onMismatch(String.format(
+                        "unitrie-rs mismatch in getValueLength for key=%s java=%s rust=%s",
+                        ByteUtil.toHexString(key),
+                        javaLength,
+                        normalizedRustLength
+                ));
+            }
+        }
+        return javaLength;
     }
 
     @Override
     public Optional<Keccak256> getValueHash(byte[] key) {
-        return javaDelegate.getValueHash(key);
+        if (engineType == TrieEngineType.RUST && bridge != null) {
+            byte[] valueHash = bridge.getValueHash(nativeHandle, key);
+            return valueHash == null ? Optional.empty() : Optional.of(new Keccak256(valueHash));
+        }
+
+        Optional<Keccak256> javaHash = javaDelegateOrMirror().getValueHash(key);
+        if (bridge != null) {
+            byte[] rustHash = bridge.getValueHash(nativeHandle, key);
+            byte[] javaHashBytes = javaHash.map(Keccak256::getBytes).orElse(null);
+            if (!Arrays.equals(javaHashBytes, rustHash)) {
+                onMismatch(String.format(
+                        "unitrie-rs mismatch in getValueHash for key=%s java=%s rust=%s",
+                        ByteUtil.toHexString(key),
+                        nullableHex(javaHashBytes),
+                        nullableHex(rustHash)
+                ));
+            }
+        }
+
+        return javaHash;
     }
 
     @Override
     public Iterator<DataWord> getStorageKeys(RskAddress addr) {
-        return javaDelegate.getStorageKeys(addr);
+        if (engineType == TrieEngineType.RUST && bridge != null) {
+            Iterator<byte[]> keys = bridge.getStorageKeys(nativeHandle, addr.getBytes());
+            return new Iterator<>() {
+                @Override
+                public boolean hasNext() {
+                    return keys.hasNext();
+                }
+
+                @Override
+                public DataWord next() {
+                    return DataWord.valueOf(keys.next());
+                }
+            };
+        }
+
+        return javaDelegateOrMirror().getStorageKeys(addr);
     }
 
     @Override
     public void deleteRecursive(byte[] key) {
-        javaDelegate.deleteRecursive(key);
+        if (engineType == TrieEngineType.RUST && bridge != null) {
+            bridge.deleteRecursive(nativeHandle, key);
+            javaMirror.deleteRecursive(key);
+            return;
+        }
+
+        MutableTrie javaSource = javaDelegateOrMirror();
+        javaSource.deleteRecursive(key);
         if (bridge != null) {
             bridge.deleteRecursive(nativeHandle, key);
-            compareRustValue("deleteRecursive", key, javaDelegate.get(key));
+            compareRustTransition("deleteRecursive", key, javaSource.get(key));
         }
     }
 
     @Override
     public void save() {
-        javaDelegate.save();
+        if (engineType == TrieEngineType.RUST && bridge != null) {
+            bridge.save(nativeHandle, storeAdapter);
+            reloadMirrorFromStore();
+            return;
+        }
+
+        MutableTrie javaSource = javaDelegateOrMirror();
+        javaSource.save();
+        if (bridge != null) {
+            bridge.save(nativeHandle, storeAdapter);
+            compareRustRoot("save");
+        }
     }
 
     @Override
     public void commit() {
-        javaDelegate.commit();
+        javaDelegateOrMirror().commit();
     }
 
     @Override
     public void rollback() {
-        javaDelegate.rollback();
+        javaDelegateOrMirror().rollback();
     }
 
     @Override
     public Set<ByteArrayWrapper> collectKeys(int size) {
-        return javaDelegate.collectKeys(size);
+        if (engineType == TrieEngineType.RUST && bridge != null) {
+            List<byte[]> rustKeys = bridge.collectKeys(nativeHandle, size);
+            Set<ByteArrayWrapper> result = new LinkedHashSet<>(rustKeys.size());
+            for (byte[] key : rustKeys) {
+                result.add(new ByteArrayWrapper(key));
+            }
+            return result;
+        }
+
+        return javaDelegateOrMirror().collectKeys(size);
     }
 
     @Override
@@ -176,15 +309,82 @@ public class RustMutableTrie implements MutableTrie {
         }
     }
 
-    private void warmUpRustValue(byte[] key, @Nullable byte[] javaValue) {
-        if (bridge == null || javaValue == null) {
+    private InitializationResult initializeNativeTrie(Trie trie) {
+        Objects.requireNonNull(bridge, "bridge");
+
+        if (engineType == TrieEngineType.RUST) {
+            return initializeRustSourceTrie(trie);
+        }
+
+        try {
+            long handle = bridge.createTrieFromRoot(trie.getHash().getBytes(), storeAdapter);
+            if (handle > 0) {
+                return new InitializationResult(handle, true);
+            }
+        } catch (RuntimeException e) {
+            logger.info("Could not initialize rust-shadow trie from persisted root, continuing with empty native trie: {}", e.getMessage());
+            logger.debug("Rust-shadow initialization fallback", e);
+        }
+
+        return new InitializationResult(bridge.createTrie(), false);
+    }
+
+    private InitializationResult initializeRustSourceTrie(Trie trie) {
+        Objects.requireNonNull(bridge, "bridge");
+
+        try {
+            long handle = bridge.createTrieFromRoot(trie.getHash().getBytes(), storeAdapter);
+            if (handle > 0) {
+                return new InitializationResult(handle, true);
+            }
+        } catch (RuntimeException e) {
+            logger.info("Could not initialize rust trie from persisted root, bootstrapping from Java trie snapshot: {}", e.getMessage());
+            logger.debug("Rust trie initialization fallback", e);
+        }
+
+        long handle = bridge.createTrie();
+        bootstrapRustFromJavaTrie(handle, trie);
+        return new InitializationResult(handle, true);
+    }
+
+    private void bootstrapRustFromJavaTrie(long handle, Trie trie) {
+        if (bridge == null) {
             return;
         }
 
-        byte[] rustValue = bridge.get(nativeHandle, key);
-        if (rustValue == null) {
-            bridge.put(nativeHandle, key, javaValue);
+        Iterator<IterationElement> iterator = trie.getPreOrderIterator();
+        while (iterator.hasNext()) {
+            IterationElement element = iterator.next();
+            byte[] value = element.getNode().getValue();
+            if (value == null || value.length == 0) {
+                continue;
+            }
+
+            byte[] key = element.getNodeKey().encode();
+            bridge.put(handle, key, value);
         }
+    }
+
+    private void reloadMirrorFromStore() {
+        if (bridge == null) {
+            return;
+        }
+
+        byte[] currentRoot = bridge.currentRootHash(nativeHandle);
+        trieStore.retrieve(currentRoot)
+                .ifPresentOrElse(
+                        trie -> javaMirror = new MutableTrieImpl(trieStore, trie),
+                        () -> logger.warn("Rust save completed but root {} could not be retrieved from TrieStore", ByteUtil.toHexString(currentRoot))
+                );
+    }
+
+    private MutableTrie javaDelegateOrMirror() {
+        return javaDelegate == null ? javaMirror : javaDelegate;
+    }
+
+    private void compareRustTransition(String operation, byte[] key, @Nullable byte[] javaValue) {
+        compareRustValue(operation, key, javaValue);
+        compareRustRoot(operation);
     }
 
     private void compareRustValue(String operation, byte[] key, @Nullable byte[] javaValue) {
@@ -197,14 +397,35 @@ public class RustMutableTrie implements MutableTrie {
             return;
         }
 
-        String message = String.format(
+        onMismatch(String.format(
                 "unitrie-rs mismatch in %s for key=%s java=%s rust=%s",
                 operation,
                 ByteUtil.toHexString(key),
                 nullableHex(javaValue),
                 nullableHex(rustValue)
-        );
+        ));
+    }
 
+    private void compareRustRoot(String operation) {
+        if (bridge == null || !rootComparisonEnabled) {
+            return;
+        }
+
+        byte[] rustRoot = bridge.currentRootHash(nativeHandle);
+        byte[] javaRoot = javaDelegateOrMirror().getHash().getBytes();
+        if (Arrays.equals(javaRoot, rustRoot)) {
+            return;
+        }
+
+        onMismatch(String.format(
+                "unitrie-rs root mismatch in %s javaRoot=%s rustRoot=%s",
+                operation,
+                ByteUtil.toHexString(javaRoot),
+                ByteUtil.toHexString(rustRoot)
+        ));
+    }
+
+    private void onMismatch(String message) {
         if (failOnMismatch) {
             throw new IllegalStateException(message);
         }
@@ -214,5 +435,41 @@ public class RustMutableTrie implements MutableTrie {
 
     private static String nullableHex(@Nullable byte[] value) {
         return value == null ? "null" : ByteUtil.toHexString(value);
+    }
+
+    @Nullable
+    private static Field findTrieHashField() {
+        try {
+            Field field = Trie.class.getDeclaredField("hash");
+            field.setAccessible(true);
+            return field;
+        } catch (NoSuchFieldException e) {
+            logger.warn("Could not resolve Trie.hash field for rust root reflection fallback");
+            logger.debug("Trie.hash reflection setup failure", e);
+            return null;
+        }
+    }
+
+    private static void tryOverrideTrieHash(Trie trie, byte[] rootHash) {
+        if (TRIE_HASH_FIELD == null) {
+            return;
+        }
+
+        try {
+            TRIE_HASH_FIELD.set(trie, new Keccak256(rootHash));
+        } catch (IllegalAccessException e) {
+            logger.warn("Could not override trie hash for rust-backed trie");
+            logger.debug("Trie.hash reflection write failure", e);
+        }
+    }
+
+    private static final class InitializationResult {
+        private final long handle;
+        private final boolean rootComparisonEnabled;
+
+        private InitializationResult(long handle, boolean rootComparisonEnabled) {
+            this.handle = handle;
+            this.rootComparisonEnabled = rootComparisonEnabled;
+        }
     }
 }

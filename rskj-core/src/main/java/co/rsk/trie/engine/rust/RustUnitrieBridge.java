@@ -22,6 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 public final class RustUnitrieBridge {
@@ -100,6 +104,10 @@ public final class RustUnitrieBridge {
         return nativeCreateTrie();
     }
 
+    public long createTrieFromRoot(byte[] rootHash, RustTrieStoreAdapter storeAdapter) {
+        return nativeCreateTrieFromRoot(rootHash, storeAdapter);
+    }
+
     public void destroyTrie(long handle) {
         nativeDestroyTrie(handle);
     }
@@ -121,11 +129,49 @@ public final class RustUnitrieBridge {
         nativeDeleteRecursive(handle, key);
     }
 
+    public void save(long handle, RustTrieStoreAdapter storeAdapter) {
+        nativeSave(handle, storeAdapter);
+    }
+
+    public int getValueLength(long handle, byte[] key) {
+        return nativeGetValueLength(handle, key);
+    }
+
+    @Nullable
+    public byte[] getValueHash(long handle, byte[] key) {
+        return nativeGetValueHash(handle, key);
+    }
+
+    public List<byte[]> collectKeys(long handle, int size) {
+        byte[][] keys = nativeCollectKeys(handle, size);
+        return arrayToList(keys);
+    }
+
+    public Iterator<byte[]> getStorageKeys(long handle, byte[] accountAddress) {
+        byte[][] keys = nativeGetStorageKeys(handle, accountAddress);
+        return arrayToList(keys).iterator();
+    }
+
     public byte[] rootHash(long handle) {
         return nativeRootHash(handle);
     }
 
+    public byte[] currentRootHash(long handle) {
+        return nativeCurrentRootHash(handle);
+    }
+
+    private static List<byte[]> arrayToList(@Nullable byte[][] values) {
+        if (values == null || values.length == 0) {
+            return Collections.emptyList();
+        }
+
+        List<byte[]> list = new ArrayList<>(values.length);
+        Collections.addAll(list, values);
+        return list;
+    }
+
     private static native long nativeCreateTrie();
+    private static native long nativeCreateTrieFromRoot(byte[] rootHash, RustTrieStoreAdapter storeAdapter);
 
     private static native void nativeDestroyTrie(long handle);
 
@@ -136,6 +182,17 @@ public final class RustUnitrieBridge {
     private static native void nativeDelete(long handle, byte[] key);
 
     private static native void nativeDeleteRecursive(long handle, byte[] key);
+    private static native void nativeSave(long handle, RustTrieStoreAdapter storeAdapter);
+
+    private static native int nativeGetValueLength(long handle, byte[] key);
+
+    private static native byte[] nativeGetValueHash(long handle, byte[] key);
+
+    private static native byte[][] nativeCollectKeys(long handle, int size);
+
+    private static native byte[][] nativeGetStorageKeys(long handle, byte[] accountAddress);
 
     private static native byte[] nativeRootHash(long handle);
+
+    private static native byte[] nativeCurrentRootHash(long handle);
 }

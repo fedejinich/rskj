@@ -1,7 +1,8 @@
 pub mod codec_orchid;
 pub mod codec_rskip107;
+pub mod core_trie;
 pub mod ffi;
 pub mod hash;
+pub mod node_ref;
 pub mod path;
-pub mod store;
-pub mod trie;
+pub mod store_adapter;
