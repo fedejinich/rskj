@@ -212,6 +212,89 @@ class RskSystemPropertiesTest {
     }
 
     @Test
+    void rskCliUnitrieOptions_ShouldSetUnitrieEngineAndLibraryPath() {
+        RskCli rskCli = new RskCli();
+        String[] args = {
+                "--unitrie-engine=rust",
+                "--unitrie-rust-library-path=/tmp/libunitrie_rs_jni.so"
+        };
+        rskCli.load(args);
+
+        RskSystemProperties rskSystemProperties = new RskSystemProperties(
+                new ConfigLoader(
+                        rskCli.getCliArgs()
+                )
+        );
+
+        Assertions.assertEquals("rust", rskSystemProperties.getUnitrieEngine());
+        Assertions.assertEquals("/tmp/libunitrie_rs_jni.so", rskSystemProperties.getUnitrieRustLibraryPath());
+    }
+
+    @Test
+    void rskCliUnitrieEngine_ShouldRejectInvalidValue() {
+        RskCli rskCli = new RskCli();
+        String[] args = {"--unitrie-engine=invalid"};
+        rskCli.load(args);
+
+        RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () ->
+                new RskSystemProperties(
+                        new ConfigLoader(
+                                rskCli.getCliArgs()
+                        )
+                )
+        );
+
+        Throwable rootCause = exception.getCause() == null ? exception : exception.getCause();
+        Assertions.assertTrue(rootCause.getMessage().contains("Invalid unitrie engine"));
+    }
+
+    @Test
+    void xArgumentsShouldOverrideDedicatedUnitrieOptions() {
+        RskCli rskCli = new RskCli();
+        String[] args = {
+                "--unitrie-engine=java",
+                "-Xblockchain.unitrie.engine=rust-shadow"
+        };
+        rskCli.load(args);
+
+        RskSystemProperties rskSystemProperties = new RskSystemProperties(
+                new ConfigLoader(
+                        rskCli.getCliArgs()
+                )
+        );
+
+        Assertions.assertEquals("rust-shadow", rskSystemProperties.getUnitrieEngine());
+    }
+
+    @Test
+    void systemPropertyUnitrieEngine_ShouldStillBeSupported() {
+        String propertyName = "blockchain.unitrie.engine";
+        String previousValue = System.getProperty(propertyName);
+        System.setProperty(propertyName, "rust");
+        ConfigFactory.invalidateCaches();
+
+        try {
+            RskCli rskCli = new RskCli();
+            rskCli.load(new String[]{});
+
+            RskSystemProperties rskSystemProperties = new RskSystemProperties(
+                    new ConfigLoader(
+                            rskCli.getCliArgs()
+                    )
+            );
+
+            Assertions.assertEquals("rust", rskSystemProperties.getUnitrieEngine());
+        } finally {
+            if (previousValue == null) {
+                System.clearProperty(propertyName);
+            } else {
+                System.setProperty(propertyName, previousValue);
+            }
+            ConfigFactory.invalidateCaches();
+        }
+    }
+
+    @Test
     void testGetRpcModulesWithList() {
         TestSystemProperties testSystemProperties = new TestSystemProperties(rawConfig ->
                 ConfigFactory.parseString("{" +

@@ -71,4 +71,21 @@ public class RskCliTest {
         assertEquals(1, parsedArgs.getParamValueMap().size());
     }
 
+    @Test
+    void shouldParseUnitrieDedicatedOptions() {
+        RskCli rskCli = new RskCli();
+        String[] args = {
+                "--main",
+                "--unitrie-engine=rust",
+                "--unitrie-rust-library-path=/tmp/libunitrie_rs_jni.so"
+        };
+
+        rskCli.load(args);
+        CliArgs<NodeCliOptions, NodeCliFlags> parsedArgs = rskCli.getCliArgs();
+
+        assertEquals("rust", parsedArgs.getOptions().get(NodeCliOptions.UNITRIE_ENGINE));
+        assertEquals("/tmp/libunitrie_rs_jni.so", parsedArgs.getOptions().get(NodeCliOptions.UNITRIE_RUST_LIBRARY_PATH));
+        assertTrue(parsedArgs.getFlags().contains(NodeCliFlags.NETWORK_MAINNET));
+    }
+
 }

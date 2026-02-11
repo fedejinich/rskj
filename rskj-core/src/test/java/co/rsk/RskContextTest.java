@@ -27,6 +27,7 @@ import co.rsk.net.discovery.KnownPeersHandler;
 import co.rsk.trie.MultiTrieStore;
 import co.rsk.trie.TrieStore;
 import co.rsk.trie.TrieStoreImpl;
+import co.rsk.trie.engine.TrieEngineType;
 import org.ethereum.config.Constants;
 import org.ethereum.config.blockchain.upgrades.ActivationConfig;
 import org.ethereum.config.blockchain.upgrades.ConsensusRule;
@@ -288,6 +289,19 @@ class RskContextTest {
         assertNotNull(initialBootNodes);
         assertEquals(3, initialBootNodes.size(), "Initial nodes should be 3");
         assertEquals(initialBootNodes.stream().distinct().count(), initialBootNodes.size(), "Initial nodes should not have duplicates");
+    }
+
+    @Test
+    void mainnetRustUnitrieEngineShouldBeMarkedAsExperimental() {
+        assertTrue(RskContext.isExperimentalMainnetUnitrieEngine("main", TrieEngineType.RUST));
+        assertTrue(RskContext.isExperimentalMainnetUnitrieEngine("main", TrieEngineType.RUST_SHADOW));
+    }
+
+    @Test
+    void nonMainnetOrJavaUnitrieEngineShouldNotBeMarkedAsExperimental() {
+        assertFalse(RskContext.isExperimentalMainnetUnitrieEngine("main", TrieEngineType.JAVA));
+        assertFalse(RskContext.isExperimentalMainnetUnitrieEngine("testnet", TrieEngineType.RUST));
+        assertFalse(RskContext.isExperimentalMainnetUnitrieEngine("regtest", TrieEngineType.RUST_SHADOW));
     }
 
     private RskContext makeRskContext() {
