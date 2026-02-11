@@ -18,6 +18,7 @@
 
 package co.rsk.jmh.runners;
 
+import co.rsk.jmh.trie.metrics.TrieBenchmarkReportAnalyzer;
 import co.rsk.jmh.trie.TrieEngineBenchmark;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
@@ -29,22 +30,63 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class BenchmarkTrieEngineRunner {
 
-    public static void main(String[] args) throws RunnerException {
-        Path reportPath = Paths.get(System.getProperty("user.dir"), "build", "reports", "jmh", "result_trie_engine.csv");
+    private static final String ENGINES_PROPERTY = "unitrie.jmh.engines";
+    private static final String FAIL_ON_MISMATCH_PROPERTY = "unitrie.jmh.failOnMismatch";
+    private static final String WARMUP_ITERATIONS_PROPERTY = "unitrie.jmh.warmupIterations";
+    private static final String MEASUREMENT_ITERATIONS_PROPERTY = "unitrie.jmh.measurementIterations";
+    private static final String FORKS_PROPERTY = "unitrie.jmh.forks";
+
+    public static void main(String[] args) throws RunnerException, IOException {
+        Path reportsDir = Paths.get(System.getProperty("user.dir"), "build", "reports", "jmh");
+        Path reportPath = reportsDir.resolve("result_trie_engine.csv");
+        Path summaryPath = reportsDir.resolve("result_trie_engine_summary.json");
+        Path comparisonPath = reportsDir.resolve("result_trie_engine_comparison.md");
         createReportDirectory(reportPath);
+
+        String[] engines = resolveEngines();
+        String failOnMismatch = System.getProperty(FAIL_ON_MISMATCH_PROPERTY, "true");
+        int warmupIterations = Integer.parseInt(System.getProperty(WARMUP_ITERATIONS_PROPERTY, "5"));
+        int measurementIterations = Integer.parseInt(System.getProperty(MEASUREMENT_ITERATIONS_PROPERTY, "15"));
+        int forks = Integer.parseInt(System.getProperty(FORKS_PROPERTY, "1"));
 
         Options options = new OptionsBuilder()
                 .include(TrieEngineBenchmark.class.getName())
-                .forks(1)
+                .warmupIterations(warmupIterations)
+                .measurementIterations(measurementIterations)
+                .param("engine", engines)
+                .param("failOnMismatch", failOnMismatch)
+                .forks(forks)
+                .addProfiler("gc")
                 .result(reportPath.toString())
                 .resultFormat(ResultFormatType.CSV)
                 .shouldFailOnError(true)
                 .build();
 
-        new Runner(options).run();
+        Collection<org.openjdk.jmh.results.RunResult> runResults = new Runner(options).run();
+
+        TrieBenchmarkReportAnalyzer analyzer = new TrieBenchmarkReportAnalyzer();
+        TrieBenchmarkReportAnalyzer.AnalysisReport report = analyzer.analyze(
+                runResults,
+                TrieBenchmarkReportAnalyzer.RunMetadata.capture(resolveGitCommit())
+        );
+        report.write(summaryPath, comparisonPath);
+
+        System.out.printf("JMH raw results: %s%n", reportPath);
+        System.out.printf("JMH summary: %s%n", summaryPath);
+        System.out.printf("JMH comparison: %s%n", comparisonPath);
+        if (report.getWarnings().isEmpty()) {
+            System.out.println("Trie benchmark comparison status: OK");
+        } else {
+            System.out.println("Trie benchmark comparison status: WARNING");
+            for (String warning : report.getWarnings()) {
+                System.out.printf("  - %s%n", warning);
+            }
+        }
     }
 
     private static void createReportDirectory(Path reportPath) {
@@ -52,6 +94,37 @@ public class BenchmarkTrieEngineRunner {
             Files.createDirectories(reportPath.getParent());
         } catch (IOException e) {
             throw new IllegalStateException("Cannot create JMH report directory", e);
+        }
+    }
+
+    private static String[] resolveEngines() {
+        String configured = System.getProperty(ENGINES_PROPERTY, "java,rust");
+        String[] values = Arrays.stream(configured.split(","))
+                .map(String::trim)
+                .filter(value -> !value.isEmpty())
+                .toArray(String[]::new);
+
+        return values.length == 0 ? new String[]{"java", "rust"} : values;
+    }
+
+    private static String resolveGitCommit() {
+        try {
+            Process process = new ProcessBuilder("git", "rev-parse", "--short", "HEAD")
+                    .redirectErrorStream(true)
+                    .start();
+            byte[] output = process.getInputStream().readAllBytes();
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                return "unknown";
+            }
+
+            String commit = new String(output).trim();
+            return commit.isEmpty() ? "unknown" : commit;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return "unknown";
+        } catch (IOException e) {
+            return "unknown";
         }
     }
 }
