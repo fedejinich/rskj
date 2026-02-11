@@ -86,6 +86,12 @@ public class RskCli implements Runnable {
     @CommandLine.Option(names = {"--snap-nodes"}, description = "Set snapboot nodes")
     private List<String> snapBootNodes;
 
+    @CommandLine.Option(names = {"--unitrie-engine"}, description = "Select unitrie engine. Valid options are <java | rust | rust-shadow>")
+    private String unitrieEngine;
+
+    @CommandLine.Option(names = {"--unitrie-rust-library-path"}, description = "Set absolute path to Rust unitrie JNI library")
+    private String unitrieRustLibraryPath;
+
     private boolean help;
     private boolean version;
 
@@ -171,6 +177,14 @@ public class RskCli implements Runnable {
 
         if (snapBootNodes != null) {
             activatedOptions.put(NodeCliOptions.SNAP_NODES, String.join(",", snapBootNodes));
+        }
+
+        if (unitrieEngine != null) {
+            activatedOptions.put(NodeCliOptions.UNITRIE_ENGINE, unitrieEngine);
+        }
+
+        if (unitrieRustLibraryPath != null) {
+            activatedOptions.put(NodeCliOptions.UNITRIE_RUST_LIBRARY_PATH, unitrieRustLibraryPath);
         }
 
         cliArgs = CliArgs.of(activatedOptions, activatedFlags, paramValueMap);
