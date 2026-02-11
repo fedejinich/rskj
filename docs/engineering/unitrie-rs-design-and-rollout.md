@@ -1,4 +1,4 @@
-# Unitrie-rs Design and Rollout (V3 MVP)
+# Unitrie-rs Design and Rollout (V4 Optimization Program)
 
 ## 1. Problem Statement
 `unitrie` is consensus-critical in RSKj. Any semantic divergence between implementations can change state roots and cause chain split.
@@ -49,6 +49,10 @@ Crate path: `/Users/void_rsk/.codex/worktrees/35ae/rskj/unitrie-rs`
 
 ### Modules
 - `core_trie`: trie core behavior, path-compressed structure materialization, persisted-root loading, and save compatibility.
+- `next/core_trie`: next-generation mutable trie facade with incremental dirty tracking.
+- `next/node_arena`: stable node ids and dirty-node set for incremental persistence strategy.
+- `next/hash_cache`: root-hash cache invalidation/update support.
+- `next/persistence`: incremental save orchestration.
 - `node_ref`: Java-compatible node and reference types (`TrieNode`, `NodeReference`, `SharedPath`, `ValueRef`, `CodecMode`).
 - `codec_rskip107`: RSKIP107 exact encode/decode boundary.
 - `codec_orchid`: Orchid compatibility encode/decode boundary.
@@ -76,6 +80,8 @@ Java class: `co.rsk.trie.engine.rust.RustUnitrieBridge`
 - `getStorageKeys`
 - `rootHash`
 - `currentRootHash`
+- `getPerfCounters`
+- `resetPerfCounters`
 
 ### Memory and ownership
 - Java owns input/output JNI arrays.
@@ -99,6 +105,7 @@ Config:
 - `blockchain.unitrie.engine = java | rust | rust-shadow`
 - `blockchain.unitrie.rust.failOnMismatch = true | false`
 - `blockchain.unitrie.rust.libraryPath = "<optional absolute path>"`
+- `blockchain.unitrie.rust.impl = legacy-v1 | next`
 
 ### Validation run tuning
 - `blockchain.unitrie.validationRun.defaultBlockCount = 50` (fast local default)
@@ -266,9 +273,11 @@ UNITRIE_JMH_FORKS=1 \
 ./gradlew :rskj-core:jmh -Pbenchmark=BenchmarkTrieEngineRunner
 ```
 
-Default engines for comparison are `java,rust`. Override if needed:
+Default engines for comparison are `java,rust` and default Rust implementations are `legacy-v1,next`. Override if needed:
 ```bash
-UNITRIE_JMH_ENGINES=java,rust ./gradlew :rskj-core:jmh -Pbenchmark=BenchmarkTrieEngineRunner
+UNITRIE_JMH_ENGINES=java,rust \
+UNITRIE_JMH_RUST_IMPLEMENTATIONS=legacy-v1,next \
+./gradlew :rskj-core:jmh -Pbenchmark=BenchmarkTrieEngineRunner
 ```
 
 If Rust JNI is not in the default loader path, provide it explicitly:
@@ -307,3 +316,32 @@ Fuzzing is intentionally deferred from this phase, but design leaves hooks for:
 - persistence/reload ordering mutators
 
 Findings should be promoted into deterministic regression vectors.
+
+## 14. V4 Optimization Program (Legacy Frozen + Next Core)
+### Immutable legacy baseline
+The V1 Rust implementation is preserved in:
+`/Users/void_rsk/.codex/worktrees/35ae/rskj/unitrie-rs-legacy-v1`
+
+Policy:
+1. `unitrie-rs-legacy-v1` is immutable and CI-enforced on pull requests.
+2. Active optimization work continues in `unitrie-rs`.
+3. Legacy remains the baseline for A/B and regression comparison.
+
+### Implementation selector
+Rust runtime variant is selected with:
+- `blockchain.unitrie.rust.impl = "legacy-v1" | "next"`
+
+Default remains `legacy-v1` for safety.
+
+### Optimization gate policy
+`engine=java` remains production default until both gates are satisfied:
+1. Functional gate:
+   - Validation Run (On-Demand), 500 blocks, `repeatRuns=2`, zero divergence, zero JNI errors.
+2. Performance gate:
+   - `rust(next)` must outperform Java on median deep benchmark runs according to V4 target policy.
+
+### Replacement decision policy
+Replacement candidacy requires:
+1. consensus parity sustained in bounded differential runs,
+2. performance superiority over Java in agreed benchmark workloads,
+3. rollback-safe operation by configuration (`engine=java`).
