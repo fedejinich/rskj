@@ -18,6 +18,9 @@
 
 package co.rsk.jmh.trie;
 
+import co.rsk.jmh.trie.metrics.MeasuredKeyValueDataSource;
+import co.rsk.jmh.trie.metrics.TrieStoreMetricsDelta;
+import co.rsk.jmh.trie.metrics.TrieStoreMetricsSnapshot;
 import co.rsk.core.RskAddress;
 import co.rsk.trie.MutableTrie;
 import co.rsk.trie.Trie;
@@ -49,7 +52,7 @@ import java.util.Optional;
 @State(Scope.Thread)
 public class TrieBenchmarkPlan {
 
-    @Param({"java", "rust-shadow"})
+    @Param({"java", "rust"})
     public String engine;
 
     @Param({"true"})
@@ -70,6 +73,7 @@ public class TrieBenchmarkPlan {
     private final List<byte[]> values = new ArrayList<>();
     private final List<byte[]> longValues = new ArrayList<>();
 
+    private MeasuredKeyValueDataSource measuredDataSource;
     private TrieStore trieStore;
     private MutableTrieFactory mutableTrieFactory;
     private MutableTrie mutableTrie;
@@ -89,7 +93,8 @@ public class TrieBenchmarkPlan {
 
     @Setup(Level.Iteration)
     public void setupIteration() {
-        trieStore = new TrieStoreImpl(new HashMapDB());
+        measuredDataSource = new MeasuredKeyValueDataSource(new HashMapDB());
+        trieStore = new TrieStoreImpl(measuredDataSource);
         mutableTrieFactory = new MutableTrieFactory(
                 TrieEngineType.fromConfig(engine),
                 failOnMismatch,
@@ -110,6 +115,14 @@ public class TrieBenchmarkPlan {
 
     public MutableTrie mutableTrie() {
         return mutableTrie;
+    }
+
+    public TrieStoreMetricsSnapshot snapshotStoreMetrics() {
+        return measuredDataSource.snapshot();
+    }
+
+    public TrieStoreMetricsDelta diffFrom(TrieStoreMetricsSnapshot baseline) {
+        return measuredDataSource.diffFrom(baseline);
     }
 
     public byte[] nextKey() {
