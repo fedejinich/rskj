@@ -302,7 +302,7 @@ fn to_long_array(env: &mut JNIEnv, values: &[jlong], error_context: &str) -> Opt
 }
 
 fn with_trie_mut<T>(handle: jlong, f: impl FnOnce(&mut TrieHandle) -> T) -> Result<T, String> {
-    let mut trie_handle = match TRIES.get_mut(&(handle as i64)) {
+    let mut trie_handle = match TRIES.get_mut(&handle) {
         Some(trie_handle) => trie_handle,
         None => {
             return Err(format!("unknown trie handle {handle}"));
@@ -512,7 +512,7 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeDest
         return;
     }
 
-    TRIES.remove(&(handle as i64));
+    TRIES.remove(&handle);
 }
 
 #[no_mangle]
