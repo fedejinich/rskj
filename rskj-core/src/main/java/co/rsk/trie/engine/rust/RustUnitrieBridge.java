@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public final class RustUnitrieBridge {
 
@@ -31,6 +32,8 @@ public final class RustUnitrieBridge {
     private static final Object LOAD_LOCK = new Object();
     private static volatile boolean loadAttempted;
     private static volatile boolean available;
+    @Nullable
+    private static volatile String attemptedLibraryPath;
 
     private RustUnitrieBridge() {
     }
@@ -41,12 +44,12 @@ public final class RustUnitrieBridge {
     }
 
     private static void ensureLoaded(@Nullable String libraryPath) {
-        if (loadAttempted) {
+        if (!shouldAttemptLoad(libraryPath)) {
             return;
         }
 
         synchronized (LOAD_LOCK) {
-            if (loadAttempted) {
+            if (!shouldAttemptLoad(libraryPath)) {
                 return;
             }
 
@@ -64,7 +67,28 @@ public final class RustUnitrieBridge {
                 logger.debug("JNI loading error", e);
             } finally {
                 loadAttempted = true;
+                attemptedLibraryPath = libraryPath;
             }
+        }
+    }
+
+    private static boolean shouldAttemptLoad(@Nullable String libraryPath) {
+        if (!loadAttempted) {
+            return true;
+        }
+
+        if (available) {
+            return false;
+        }
+
+        return !Objects.equals(attemptedLibraryPath, libraryPath);
+    }
+
+    static void resetForTesting() {
+        synchronized (LOAD_LOCK) {
+            loadAttempted = false;
+            available = false;
+            attemptedLibraryPath = null;
         }
     }
 

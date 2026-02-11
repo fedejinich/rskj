@@ -22,10 +22,8 @@ import co.rsk.core.RskAddress;
 import co.rsk.core.types.ints.Uint24;
 import co.rsk.crypto.Keccak256;
 import co.rsk.db.MutableTrieImpl;
-import co.rsk.trie.IterationElement;
 import co.rsk.trie.MutableTrie;
 import co.rsk.trie.Trie;
-import co.rsk.trie.TrieKeySlice;
 import co.rsk.trie.TrieStore;
 import co.rsk.trie.engine.TrieEngineType;
 import org.ethereum.db.ByteArrayWrapper;
@@ -35,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
@@ -71,32 +70,12 @@ public class RustMutableTrie implements MutableTrie {
         if (loadedBridge.isAvailable()) {
             this.bridge = loadedBridge;
             this.nativeHandle = bridge.createTrie();
-            bootstrapFromTrie(trie);
         } else {
             this.bridge = null;
             this.nativeHandle = 0L;
             if (engineType == TrieEngineType.RUST) {
                 throw new IllegalStateException("Rust unitrie engine selected but JNI bridge is unavailable");
             }
-        }
-    }
-
-    private void bootstrapFromTrie(Trie trie) {
-        if (bridge == null) {
-            return;
-        }
-
-        Iterator<IterationElement> iterator = trie.getPreOrderIterator();
-        while (iterator.hasNext()) {
-            IterationElement element = iterator.next();
-            Trie node = element.getNode();
-            if (node.getValueLength().compareTo(Uint24.ZERO) == 0) {
-                continue;
-            }
-
-            TrieKeySlice nodeKey = element.getNodeKey();
-            byte[] key = nodeKey.encode();
-            bridge.put(nativeHandle, key, node.getValue());
         }
     }
 
@@ -113,6 +92,7 @@ public class RustMutableTrie implements MutableTrie {
     @Override
     public byte[] get(byte[] key) {
         byte[] javaValue = javaDelegate.get(key);
+        warmUpRustValue(key, javaValue);
         compareRustValue("get", key, javaValue);
         return javaValue;
     }
@@ -134,6 +114,11 @@ public class RustMutableTrie implements MutableTrie {
     @Override
     public void put(String key, byte[] value) {
         javaDelegate.put(key, value);
+        if (bridge != null) {
+            byte[] encodedKey = key.getBytes(StandardCharsets.UTF_8);
+            bridge.put(nativeHandle, encodedKey, value);
+            compareRustValue("put(String)", encodedKey, javaDelegate.get(encodedKey));
+        }
     }
 
     @Override
@@ -180,8 +165,30 @@ public class RustMutableTrie implements MutableTrie {
         return javaDelegate.collectKeys(size);
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        try {
+            if (bridge != null && nativeHandle != 0L) {
+                bridge.destroyTrie(nativeHandle);
+            }
+        } finally {
+            super.finalize();
+        }
+    }
+
+    private void warmUpRustValue(byte[] key, @Nullable byte[] javaValue) {
+        if (bridge == null || javaValue == null) {
+            return;
+        }
+
+        byte[] rustValue = bridge.get(nativeHandle, key);
+        if (rustValue == null) {
+            bridge.put(nativeHandle, key, javaValue);
+        }
+    }
+
     private void compareRustValue(String operation, byte[] key, @Nullable byte[] javaValue) {
-        if (bridge == null || engineType == TrieEngineType.RUST) {
+        if (bridge == null) {
             return;
         }
 

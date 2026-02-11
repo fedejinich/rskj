@@ -19,18 +19,26 @@
 package co.rsk.db;
 
 import co.rsk.crypto.Keccak256;
+import co.rsk.trie.MutableTrie;
 import co.rsk.trie.Trie;
 import co.rsk.trie.TrieStore;
+import co.rsk.trie.engine.MutableTrieFactory;
 import org.ethereum.TestUtils;
 import org.ethereum.core.BlockHeader;
+import org.ethereum.crypto.Keccak256Helper;
+import org.ethereum.util.RLP;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.ethereum.util.ByteUtil.EMPTY_BYTE_ARRAY;
 
 class RepositoryLocatorTest {
 
@@ -86,5 +94,22 @@ class RepositoryLocatorTest {
 
         Optional<RepositorySnapshot> result = target.findSnapshotAt(header);
         assertTrue(result.isPresent());
+    }
+
+    @Test
+    void usesMutableTrieFactoryForEmptyStateRoots() {
+        MutableTrieFactory mutableTrieFactory = mock(MutableTrieFactory.class);
+        MutableTrie mutableTrie = mock(MutableTrie.class);
+        when(mutableTrieFactory.create(eq(trieStore), any(Trie.class))).thenReturn(mutableTrie);
+
+        RepositoryLocator repositoryLocator = new RepositoryLocator(trieStore, stateRootHandler, mutableTrieFactory);
+        BlockHeader header = mock(BlockHeader.class);
+        Keccak256 emptyRoot = new Keccak256(Keccak256Helper.keccak256(RLP.encodeElement(EMPTY_BYTE_ARRAY)));
+        when(stateRootHandler.translate(header)).thenReturn(emptyRoot);
+
+        Optional<RepositorySnapshot> snapshot = repositoryLocator.findSnapshotAt(header);
+
+        assertTrue(snapshot.isPresent());
+        verify(mutableTrieFactory).create(eq(trieStore), any(Trie.class));
     }
 }
