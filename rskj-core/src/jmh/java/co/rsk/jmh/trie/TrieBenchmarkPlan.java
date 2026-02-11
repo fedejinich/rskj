@@ -28,6 +28,7 @@ import co.rsk.trie.TrieStore;
 import co.rsk.trie.TrieStoreImpl;
 import co.rsk.trie.engine.MutableTrieFactory;
 import co.rsk.trie.engine.TrieEngineType;
+import co.rsk.trie.engine.rust.RustUnitrieImplementation;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.db.MutableRepository;
 import org.ethereum.vm.DataWord;
@@ -60,6 +61,9 @@ public class TrieBenchmarkPlan {
 
     @Param({""})
     public String rustLibraryPath;
+
+    @Param({"legacy-v1"})
+    public String rustImplementation;
 
     @Param({"256"})
     public int workingSetSize;
@@ -103,7 +107,8 @@ public class TrieBenchmarkPlan {
         mutableTrieFactory = new MutableTrieFactory(
                 TrieEngineType.fromConfig(engine),
                 failOnMismatch,
-                configuredRustLibraryPath
+                configuredRustLibraryPath,
+                RustUnitrieImplementation.fromConfig(rustImplementation)
         );
         mutableTrie = mutableTrieFactory.create(trieStore, new Trie(trieStore));
         cursor = 0;

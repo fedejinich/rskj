@@ -62,7 +62,7 @@ public final class TrieBenchmarkReportAnalyzer {
         for (RunResult runResult : runResults) {
             BenchmarkParams params = runResult.getParams();
             String workload = simpleBenchmarkName(params.getBenchmark());
-            String engine = Optional.ofNullable(params.getParam("engine")).orElse("unknown");
+            String engine = resolveEngineLabel(params);
 
             EngineMetrics metrics = grouped
                     .computeIfAbsent(workload, ignored -> new TreeMap<>())
@@ -84,11 +84,13 @@ public final class TrieBenchmarkReportAnalyzer {
                 workloadResults.add(metrics.toSummaryMap());
             }
 
-            Map<String, Object> comparisonRow = compareWorkload(workload, byEngine);
-            comparison.add(comparisonRow);
-            @SuppressWarnings("unchecked")
-            List<String> rowWarnings = (List<String>) comparisonRow.get("warnings");
-            warnings.addAll(rowWarnings);
+            List<Map<String, Object>> workloadComparisonRows = compareWorkload(workload, byEngine);
+            comparison.addAll(workloadComparisonRows);
+            for (Map<String, Object> row : workloadComparisonRows) {
+                @SuppressWarnings("unchecked")
+                List<String> rowWarnings = (List<String>) row.get("warnings");
+                warnings.addAll(rowWarnings);
+            }
         }
 
         Map<String, Object> summary = buildSummary(metadata, workloadResults, comparison, warnings);
@@ -102,6 +104,7 @@ public final class TrieBenchmarkReportAnalyzer {
 
         modeMetrics.score = primaryResult.getScore();
         modeMetrics.scoreUnit = primaryResult.getScoreUnit();
+        modeMetrics.sampleCount = primaryResult.getSampleCount();
 
         if (mode == Mode.AverageTime) {
             metrics.avgMicros = toMicros(primaryResult.getScore(), primaryResult.getScoreUnit());
@@ -167,84 +170,101 @@ public final class TrieBenchmarkReportAnalyzer {
 
     private static Double findSecondaryMetricBySuffix(EngineMetrics metrics, String suffix) {
         if (metrics.modes.containsKey(Mode.AverageTime.name())) {
-            Double fromAverageTime = metrics.modes.get(Mode.AverageTime.name()).findSecondaryBySuffix(suffix);
+            Double fromAverageTime = metrics.modes.get(Mode.AverageTime.name()).findSecondaryBySuffix(suffix, false);
             if (fromAverageTime != null) {
                 return fromAverageTime;
             }
         }
 
         if (metrics.modes.containsKey(Mode.SampleTime.name())) {
-            Double fromSampleTime = metrics.modes.get(Mode.SampleTime.name()).findSecondaryBySuffix(suffix);
+            Double fromSampleTime = metrics.modes.get(Mode.SampleTime.name()).findSecondaryBySuffix(suffix, true);
             if (fromSampleTime != null) {
                 return fromSampleTime;
             }
         }
 
         if (metrics.modes.containsKey(Mode.Throughput.name())) {
-            return metrics.modes.get(Mode.Throughput.name()).findSecondaryBySuffix(suffix);
+            return metrics.modes.get(Mode.Throughput.name()).findSecondaryBySuffix(suffix, false);
         }
 
         return null;
     }
 
-    private static Map<String, Object> compareWorkload(String workload, Map<String, EngineMetrics> byEngine) {
-        Map<String, Object> comparison = new LinkedHashMap<>();
-        comparison.put("benchmark", workload);
-
+    private static List<Map<String, Object>> compareWorkload(String workload, Map<String, EngineMetrics> byEngine) {
+        List<Map<String, Object>> rows = new ArrayList<>();
         EngineMetrics java = byEngine.get("java");
-        EngineMetrics rust = byEngine.get("rust");
-
-        List<String> warnings = new ArrayList<>();
-
-        Double avgDeltaPct = percentWorseLowerIsBetter(java == null ? null : java.avgMicros, rust == null ? null : rust.avgMicros);
-        Double p95DeltaPct = percentWorseLowerIsBetter(java == null ? null : java.p95Micros, rust == null ? null : rust.p95Micros);
-        Double allocDeltaPct = percentWorseLowerIsBetter(
-                java == null ? null : java.gcAllocRateNormBytesPerOp,
-                rust == null ? null : rust.gcAllocRateNormBytesPerOp
-        );
-        Double bytesValueDeltaPct = percentWorseLowerIsBetter(
-                java == null ? null : java.storeBytesWrittenValuePerOp,
-                rust == null ? null : rust.storeBytesWrittenValuePerOp
-        );
-        Double bytesReadDeltaPct = percentWorseLowerIsBetter(
-                java == null ? null : java.storeBytesReadPerOp,
-                rust == null ? null : rust.storeBytesReadPerOp
-        );
-        Double throughputDropPct = percentDropHigherIsBetter(
-                java == null ? null : java.throughputOpsPerSec,
-                rust == null ? null : rust.throughputOpsPerSec
-        );
-
-        if (avgDeltaPct != null && avgDeltaPct > AVG_REGRESSION_WARNING_THRESHOLD_PCT) {
-            warnings.add(String.format(Locale.ROOT, "avg worsened %.2f%% (threshold %.2f%%)", avgDeltaPct, AVG_REGRESSION_WARNING_THRESHOLD_PCT));
+        if (java == null) {
+            return rows;
         }
 
-        if (p95DeltaPct != null && p95DeltaPct > P95_REGRESSION_WARNING_THRESHOLD_PCT) {
-            warnings.add(String.format(Locale.ROOT, "p95 worsened %.2f%% (threshold %.2f%%)", p95DeltaPct, P95_REGRESSION_WARNING_THRESHOLD_PCT));
+        List<String> candidates = byEngine.keySet().stream()
+                .filter(engine -> engine.startsWith("rust"))
+                .sorted()
+                .toList();
+
+        for (String candidateLabel : candidates) {
+            EngineMetrics rust = byEngine.get(candidateLabel);
+            if (rust == null) {
+                continue;
+            }
+
+            Map<String, Object> comparison = new LinkedHashMap<>();
+            comparison.put("benchmark", workload);
+            comparison.put("candidate", candidateLabel);
+
+            List<String> warnings = new ArrayList<>();
+
+            Double avgDeltaPct = percentWorseLowerIsBetter(java.avgMicros, rust.avgMicros);
+            Double p95DeltaPct = percentWorseLowerIsBetter(java.p95Micros, rust.p95Micros);
+            Double allocDeltaPct = percentWorseLowerIsBetter(
+                    java.gcAllocRateNormBytesPerOp,
+                    rust.gcAllocRateNormBytesPerOp
+            );
+            Double bytesValueDeltaPct = percentWorseLowerIsBetter(
+                    java.storeBytesWrittenValuePerOp,
+                    rust.storeBytesWrittenValuePerOp
+            );
+            Double bytesReadDeltaPct = percentWorseLowerIsBetter(
+                    java.storeBytesReadPerOp,
+                    rust.storeBytesReadPerOp
+            );
+            Double throughputDropPct = percentDropHigherIsBetter(
+                    java.throughputOpsPerSec,
+                    rust.throughputOpsPerSec
+            );
+
+            if (avgDeltaPct != null && avgDeltaPct > AVG_REGRESSION_WARNING_THRESHOLD_PCT) {
+                warnings.add(String.format(Locale.ROOT, "avg worsened %.2f%% (threshold %.2f%%)", avgDeltaPct, AVG_REGRESSION_WARNING_THRESHOLD_PCT));
+            }
+
+            if (p95DeltaPct != null && p95DeltaPct > P95_REGRESSION_WARNING_THRESHOLD_PCT) {
+                warnings.add(String.format(Locale.ROOT, "p95 worsened %.2f%% (threshold %.2f%%)", p95DeltaPct, P95_REGRESSION_WARNING_THRESHOLD_PCT));
+            }
+
+            if (allocDeltaPct != null && allocDeltaPct > ALLOC_REGRESSION_WARNING_THRESHOLD_PCT) {
+                warnings.add(String.format(Locale.ROOT, "alloc/op worsened %.2f%% (threshold %.2f%%)", allocDeltaPct, ALLOC_REGRESSION_WARNING_THRESHOLD_PCT));
+            }
+
+            if (bytesValueDeltaPct != null && bytesValueDeltaPct > VALUE_WRITE_REGRESSION_WARNING_THRESHOLD_PCT) {
+                warnings.add(String.format(Locale.ROOT, "value-bytes-write/op worsened %.2f%% (threshold %.2f%%)", bytesValueDeltaPct, VALUE_WRITE_REGRESSION_WARNING_THRESHOLD_PCT));
+            }
+
+            if (throughputDropPct != null && throughputDropPct > THROUGHPUT_DROP_WARNING_THRESHOLD_PCT) {
+                warnings.add(String.format(Locale.ROOT, "throughput dropped %.2f%% (threshold %.2f%%)", throughputDropPct, THROUGHPUT_DROP_WARNING_THRESHOLD_PCT));
+            }
+
+            comparison.put("status", warnings.isEmpty() ? "OK" : "WARNING");
+            comparison.put("avgDeltaPct", avgDeltaPct);
+            comparison.put("p95DeltaPct", p95DeltaPct);
+            comparison.put("throughputDropPct", throughputDropPct);
+            comparison.put("allocDeltaPct", allocDeltaPct);
+            comparison.put("bytesWrittenValueDeltaPct", bytesValueDeltaPct);
+            comparison.put("bytesReadDeltaPct", bytesReadDeltaPct);
+            comparison.put("warnings", warnings);
+            rows.add(comparison);
         }
 
-        if (allocDeltaPct != null && allocDeltaPct > ALLOC_REGRESSION_WARNING_THRESHOLD_PCT) {
-            warnings.add(String.format(Locale.ROOT, "alloc/op worsened %.2f%% (threshold %.2f%%)", allocDeltaPct, ALLOC_REGRESSION_WARNING_THRESHOLD_PCT));
-        }
-
-        if (bytesValueDeltaPct != null && bytesValueDeltaPct > VALUE_WRITE_REGRESSION_WARNING_THRESHOLD_PCT) {
-            warnings.add(String.format(Locale.ROOT, "value-bytes-write/op worsened %.2f%% (threshold %.2f%%)", bytesValueDeltaPct, VALUE_WRITE_REGRESSION_WARNING_THRESHOLD_PCT));
-        }
-
-        if (throughputDropPct != null && throughputDropPct > THROUGHPUT_DROP_WARNING_THRESHOLD_PCT) {
-            warnings.add(String.format(Locale.ROOT, "throughput dropped %.2f%% (threshold %.2f%%)", throughputDropPct, THROUGHPUT_DROP_WARNING_THRESHOLD_PCT));
-        }
-
-        comparison.put("status", warnings.isEmpty() ? "OK" : "WARNING");
-        comparison.put("avgDeltaPct", avgDeltaPct);
-        comparison.put("p95DeltaPct", p95DeltaPct);
-        comparison.put("throughputDropPct", throughputDropPct);
-        comparison.put("allocDeltaPct", allocDeltaPct);
-        comparison.put("bytesWrittenValueDeltaPct", bytesValueDeltaPct);
-        comparison.put("bytesReadDeltaPct", bytesReadDeltaPct);
-        comparison.put("warnings", warnings);
-
-        return comparison;
+        return rows;
     }
 
     private static Double percentWorseLowerIsBetter(Double baselineJava, Double candidateRust) {
@@ -324,6 +344,19 @@ public final class TrieBenchmarkReportAnalyzer {
         return separator < 0 ? benchmark : benchmark.substring(separator + 1);
     }
 
+    private static String resolveEngineLabel(BenchmarkParams params) {
+        String engine = Optional.ofNullable(params.getParam("engine")).orElse("unknown");
+        if (!"rust".equals(engine)) {
+            return engine;
+        }
+
+        String rustImplementation = Optional.ofNullable(params.getParam("rustImplementation"))
+                .orElse("legacy-v1")
+                .trim()
+                .toLowerCase(Locale.ROOT);
+        return "rust(" + rustImplementation + ")";
+    }
+
     private static Map<String, Object> buildSummary(
             RunMetadata metadata,
             List<Map<String, Object>> workloadResults,
@@ -358,14 +391,15 @@ public final class TrieBenchmarkReportAnalyzer {
         output.append("JVM: ").append(metadata.jvm).append('\n');
         output.append("Host: ").append(metadata.host).append("\n\n");
 
-        output.append("| Workload | Status | Avg Δ% | P95 Δ% | Throughput drop % | Alloc Δ% | Value bytes write Δ% | Read bytes Δ% | Warnings |\n");
-        output.append("|---|---|---:|---:|---:|---:|---:|---:|---|\n");
+        output.append("| Workload | Candidate | Status | Avg Δ% | P95 Δ% | Throughput drop % | Alloc Δ% | Value bytes write Δ% | Read bytes Δ% | Warnings |\n");
+        output.append("|---|---|---|---:|---:|---:|---:|---:|---:|---|\n");
 
         for (Map<String, Object> row : comparisonRows) {
             @SuppressWarnings("unchecked")
             List<String> warnings = (List<String>) row.get("warnings");
             output
                     .append("| ").append(row.get("benchmark"))
+                    .append(" | ").append(row.getOrDefault("candidate", "rust"))
                     .append(" | ").append(row.get("status"))
                     .append(" | ").append(formatPercent(row.get("avgDeltaPct")))
                     .append(" | ").append(formatPercent(row.get("p95DeltaPct")))
@@ -494,6 +528,7 @@ public final class TrieBenchmarkReportAnalyzer {
     private static final class ModeMetrics {
         private Double score;
         private String scoreUnit;
+        private long sampleCount;
         private Double p50;
         private Double p95;
         private Double p99;
@@ -501,14 +536,20 @@ public final class TrieBenchmarkReportAnalyzer {
         private final Map<String, Double> secondary = new LinkedHashMap<>();
         private final Map<String, String> secondaryUnits = new LinkedHashMap<>();
 
-        private Double findSecondaryBySuffix(String suffix) {
+        private Double findSecondaryBySuffix(String suffix, boolean normalizeCountMetrics) {
             for (Map.Entry<String, Double> entry : secondary.entrySet()) {
                 String key = entry.getKey();
                 if (key.equals(suffix)
                         || key.endsWith('.' + suffix)
                         || key.endsWith(':' + suffix)
                         || key.contains(suffix)) {
-                    return entry.getValue();
+                    Double value = entry.getValue();
+                    String unit = secondaryUnits.get(key);
+                    if (normalizeCountMetrics && "#".equals(unit) && sampleCount > 0) {
+                        return value / sampleCount;
+                    }
+
+                    return value;
                 }
             }
 
@@ -519,6 +560,7 @@ public final class TrieBenchmarkReportAnalyzer {
             Map<String, Object> output = new LinkedHashMap<>();
             output.put("score", score);
             output.put("scoreUnit", scoreUnit);
+            output.put("sampleCount", sampleCount);
             output.put("p50", p50);
             output.put("p95", p95);
             output.put("p99", p99);

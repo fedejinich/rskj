@@ -39,6 +39,7 @@ public class BenchmarkTrieEngineRunner {
     private static final String ENGINES_PROPERTY = "unitrie.jmh.engines";
     private static final String FAIL_ON_MISMATCH_PROPERTY = "unitrie.jmh.failOnMismatch";
     private static final String RUST_LIBRARY_PATH_PROPERTY = "unitrie.jmh.rustLibraryPath";
+    private static final String RUST_IMPLEMENTATIONS_PROPERTY = "unitrie.jmh.rustImplementations";
     private static final String WARMUP_ITERATIONS_PROPERTY = "unitrie.jmh.warmupIterations";
     private static final String MEASUREMENT_ITERATIONS_PROPERTY = "unitrie.jmh.measurementIterations";
     private static final String WARMUP_SECONDS_PROPERTY = "unitrie.jmh.warmupSeconds";
@@ -47,6 +48,7 @@ public class BenchmarkTrieEngineRunner {
     private static final String ENGINES_ENV = "UNITRIE_JMH_ENGINES";
     private static final String FAIL_ON_MISMATCH_ENV = "UNITRIE_JMH_FAIL_ON_MISMATCH";
     private static final String RUST_LIBRARY_PATH_ENV = "UNITRIE_JMH_RUST_LIBRARY_PATH";
+    private static final String RUST_IMPLEMENTATIONS_ENV = "UNITRIE_JMH_RUST_IMPLEMENTATIONS";
     private static final String WARMUP_ITERATIONS_ENV = "UNITRIE_JMH_WARMUP_ITERATIONS";
     private static final String MEASUREMENT_ITERATIONS_ENV = "UNITRIE_JMH_MEASUREMENT_ITERATIONS";
     private static final String WARMUP_SECONDS_ENV = "UNITRIE_JMH_WARMUP_SECONDS";
@@ -63,6 +65,7 @@ public class BenchmarkTrieEngineRunner {
         String[] engines = resolveEngines();
         String failOnMismatch = resolveConfig(FAIL_ON_MISMATCH_PROPERTY, FAIL_ON_MISMATCH_ENV, "true");
         String rustLibraryPath = resolveConfig(RUST_LIBRARY_PATH_PROPERTY, RUST_LIBRARY_PATH_ENV, "");
+        String[] rustImplementations = resolveRustImplementations();
         int warmupIterations = Integer.parseInt(resolveConfig(WARMUP_ITERATIONS_PROPERTY, WARMUP_ITERATIONS_ENV, "5"));
         int measurementIterations = Integer.parseInt(resolveConfig(MEASUREMENT_ITERATIONS_PROPERTY, MEASUREMENT_ITERATIONS_ENV, "15"));
         int warmupSeconds = Integer.parseInt(resolveConfig(WARMUP_SECONDS_PROPERTY, WARMUP_SECONDS_ENV, "10"));
@@ -78,6 +81,7 @@ public class BenchmarkTrieEngineRunner {
                 .param("engine", engines)
                 .param("failOnMismatch", failOnMismatch)
                 .param("rustLibraryPath", rustLibraryPath)
+                .param("rustImplementation", rustImplementations)
                 .forks(forks)
                 .addProfiler("gc")
                 .result(reportPath.toString())
@@ -123,6 +127,16 @@ public class BenchmarkTrieEngineRunner {
                 .toArray(String[]::new);
 
         return values.length == 0 ? new String[]{"java", "rust"} : values;
+    }
+
+    private static String[] resolveRustImplementations() {
+        String configured = resolveConfig(RUST_IMPLEMENTATIONS_PROPERTY, RUST_IMPLEMENTATIONS_ENV, "legacy-v1,next");
+        String[] values = Arrays.stream(configured.split(","))
+                .map(String::trim)
+                .filter(value -> !value.isEmpty())
+                .toArray(String[]::new);
+
+        return values.length == 0 ? new String[]{"legacy-v1", "next"} : values;
     }
 
     private static String resolveConfig(String propertyName, String envVarName, String defaultValue) {
