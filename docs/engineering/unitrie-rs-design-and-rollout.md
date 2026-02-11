@@ -185,8 +185,74 @@ Workloads:
 - storage key iteration
 - dataset replay (`massive-upload.dmp`)
 
-Gate policy:
-- No material regression beyond agreed threshold on the benchmark corpus.
+### Benchmark Metrics Baseline for Rust Optimization
+This benchmark suite is the performance observability baseline for `unitrie-rs` optimization.
+It is intentionally separate from consensus parity gating.
+
+#### Collected metrics
+- Latency:
+  - `AverageTime` (mean) in microseconds per operation.
+  - `SampleTime` percentiles (`p50`, `p95`, `p99`) in microseconds per operation.
+- Throughput:
+  - `Throughput` converted to operations per second.
+- Memory/GC:
+  - `gc.alloc.rate.norm` (bytes allocated per operation).
+  - `gc.alloc.rate`, `gc.count`, `gc.time` from JMH GC profiler.
+- Trie store I/O counters (per operation):
+  - `store_get_ops`
+  - `store_put_ops`
+  - `store_delete_ops`
+  - `store_bytes_read`
+  - `store_bytes_written_key`
+  - `store_bytes_written_value`
+
+#### Artifacts
+The runner produces:
+- `build/reports/jmh/result_trie_engine.csv` (raw JMH output)
+- `build/reports/jmh/result_trie_engine_summary.json` (machine-readable summary)
+- `build/reports/jmh/result_trie_engine_comparison.md` (human-readable Java vs Rust delta report)
+
+#### Non-blocking warning policy (conservative)
+Warnings are emitted (exit code remains success) when Rust regresses vs Java beyond:
+- avg latency: `> 5%`
+- p95 latency: `> 10%`
+- alloc/op: `> 15%`
+- value-bytes-written/op: `> 15%`
+- throughput drop: `> 5%`
+
+This stage is intentionally alert-only for performance. It does not block parity validation flows.
+
+#### Runbook commands
+Fast local sample:
+```bash
+UNITRIE_JMH_WARMUP_ITERATIONS=1 \
+UNITRIE_JMH_MEASUREMENT_ITERATIONS=2 \
+UNITRIE_JMH_FORKS=1 \
+./gradlew :rskj-core:jmh -Pbenchmark=BenchmarkTrieEngineRunner
+```
+
+Deep local sample:
+```bash
+UNITRIE_JMH_WARMUP_ITERATIONS=5 \
+UNITRIE_JMH_MEASUREMENT_ITERATIONS=15 \
+UNITRIE_JMH_FORKS=1 \
+./gradlew :rskj-core:jmh -Pbenchmark=BenchmarkTrieEngineRunner
+```
+
+Default engines for comparison are `java,rust`. Override if needed:
+```bash
+UNITRIE_JMH_ENGINES=java,rust ./gradlew :rskj-core:jmh -Pbenchmark=BenchmarkTrieEngineRunner
+```
+
+#### Interpretation
+- `OK` means no warning threshold was crossed in the Java vs Rust comparison table.
+- `WARNING` means at least one conservative threshold was crossed; triage before optimization continues.
+- A benchmark warning is a performance signal, not a consensus verdict.
+
+#### Consensus clarification
+Benchmark parity and state-root parity are different gates:
+- Performance benchmark gate: this JMH suite (alert-only in this phase).
+- Consensus/parity gate: Validation Run (On-Demand) block replay with fail-fast divergence artifacts.
 
 ## 12. Rollout and Rollback
 ### Rollout stages
