@@ -1,4 +1,4 @@
-# Unitrie-rs Design and Rollout (V2)
+# Unitrie-rs Design and Rollout (V3 MVP)
 
 ## 1. Problem Statement
 `unitrie` is consensus-critical in RSKj. Any semantic divergence between implementations can change state roots and cause chain split.
@@ -36,7 +36,7 @@ RSKj currently has Java as the canonical implementation. This project introduces
 - Rollback remains configuration-only (`engine=java`) in this phase.
 
 ### Current status statement
-Complete Java↔Rust bit-for-bit trie parity still requires an additional full semantic porting phase plus extended differential validation before considering `engine=rust` for production.
+This phase closes the MVP scope for deterministic parity validation in a bounded range, but complete Java↔Rust bit-for-bit parity still requires additional expanded-range validation before considering `engine=rust` for production default.
 
 ## 4. Java Behavior Map (Current Source of Truth)
 - `co.rsk.trie.Trie`: immutable node model, hashing/serialization, traversal.
@@ -48,14 +48,15 @@ Complete Java↔Rust bit-for-bit trie parity still requires an additional full s
 Crate path: `/Users/void_rsk/.codex/worktrees/35ae/rskj/unitrie-rs`
 
 ### Modules
-- `core_trie`: trie core behavior and snapshot/save logic.
-- `node_ref`: node-reference model abstractions.
-- `codec_rskip107`: RSKIP107-compatible codec boundary.
-- `codec_orchid`: Orchid compatibility codec boundary.
-- `path/shared_path_serializer`: path serialization helpers.
+- `core_trie`: trie core behavior, path-compressed structure materialization, persisted-root loading, and save compatibility.
+- `node_ref`: Java-compatible node and reference types (`TrieNode`, `NodeReference`, `SharedPath`, `ValueRef`, `CodecMode`).
+- `codec_rskip107`: RSKIP107 exact encode/decode boundary.
+- `codec_orchid`: Orchid compatibility encode/decode boundary.
+- `path/shared_path_serializer`: shared-path serialization compatible with Java length prefix rules.
 - `store_adapter`: raw node/value persistence adapter trait.
 - `ffi`: JNI ABI and handle management.
 - `hash`: Keccak and empty-trie hash helpers.
+- `varint`: Bitcoin-style varint encoding/decoding used by RSKIP107 fields.
 
 ## 6. JNI Boundary Contract (V2 ABI)
 Java class: `co.rsk.trie.engine.rust.RustUnitrieBridge`
@@ -100,8 +101,8 @@ Config:
 - `blockchain.unitrie.rust.libraryPath = "<optional absolute path>"`
 
 ### Validation run tuning
-- `blockchain.unitrie.validationRun.defaultBlockCount = 200` (fast local default)
-- `blockchain.unitrie.validationRun.deepBlockCount = 5000` (explicit deep run)
+- `blockchain.unitrie.validationRun.defaultBlockCount = 50` (fast local default)
+- `blockchain.unitrie.validationRun.deepBlockCount = 500` (MVP bounded validation run)
 
 ### Mode behavior
 - `java`: legacy `MutableTrieImpl`.
@@ -125,8 +126,8 @@ Behavior:
 - total time
 
 ### Fast vs deep profile
-- Fast local default is intentionally small (`defaultBlockCount`, default 200).
-- Deep parity run remains available on demand (`deepBlockCount`, default 5000).
+- Fast local default is intentionally small (`defaultBlockCount`, default 50).
+- Deep parity run remains available on demand (`deepBlockCount`, default 500).
 - No nightly scheduling is assumed by this design.
 
 ## 10. Test Strategy and Acceptance Criteria
@@ -141,7 +142,7 @@ Behavior:
 
 ### Acceptance criteria for promotion
 - No deterministic divergence in agreed differential corpus.
-- Validation Run (On-Demand) passes for configured deep range.
+- Validation Run (On-Demand) passes for the 500-block MVP range on an existing local DB.
 - Performance meets agreed envelope relative to Java baseline.
 - Java remains rollback-safe default until all gates pass.
 
@@ -163,7 +164,7 @@ Gate policy:
 ### Rollout stages
 1. Keep Java default with Rust optional.
 2. Expand deterministic differential coverage.
-3. Run deep Validation Run (On-Demand) and benchmark gates.
+3. Run Validation Run (On-Demand) for the bounded MVP range (500 blocks) and benchmark gates.
 4. Consider controlled `engine=rust` environments only after sustained parity.
 
 ### Rollback

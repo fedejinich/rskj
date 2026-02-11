@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -239,7 +240,23 @@ public class RustMutableTrie implements MutableTrie {
             };
         }
 
-        return javaDelegateOrMirror().getStorageKeys(addr);
+        Iterator<DataWord> javaKeysIterator = javaDelegateOrMirror().getStorageKeys(addr);
+        if (bridge == null) {
+            return javaKeysIterator;
+        }
+
+        List<byte[]> javaKeys = consumeStorageKeys(javaKeysIterator);
+        List<byte[]> rustKeys = consumeStorageKeys(bridge.getStorageKeys(nativeHandle, addr.getBytes()));
+        if (!byteListEquals(javaKeys, rustKeys)) {
+            onMismatch(String.format(
+                    "unitrie-rs mismatch in getStorageKeys for account=%s javaCount=%s rustCount=%s",
+                    ByteUtil.toHexString(addr.getBytes()),
+                    javaKeys.size(),
+                    rustKeys.size()
+            ));
+        }
+
+        return toDataWordIterator(javaKeys);
     }
 
     @Override
@@ -295,7 +312,25 @@ public class RustMutableTrie implements MutableTrie {
             return result;
         }
 
-        return javaDelegateOrMirror().collectKeys(size);
+        Set<ByteArrayWrapper> javaKeys = javaDelegateOrMirror().collectKeys(size);
+        if (bridge != null) {
+            List<byte[]> rustKeys = bridge.collectKeys(nativeHandle, size);
+            Set<ByteArrayWrapper> rustKeySet = new LinkedHashSet<>(rustKeys.size());
+            for (byte[] key : rustKeys) {
+                rustKeySet.add(new ByteArrayWrapper(key));
+            }
+
+            if (!javaKeys.equals(rustKeySet)) {
+                onMismatch(String.format(
+                        "unitrie-rs mismatch in collectKeys for size=%s javaCount=%s rustCount=%s",
+                        size,
+                        javaKeys.size(),
+                        rustKeySet.size()
+                ));
+            }
+        }
+
+        return javaKeys;
     }
 
     @Override
@@ -435,6 +470,39 @@ public class RustMutableTrie implements MutableTrie {
 
     private static String nullableHex(@Nullable byte[] value) {
         return value == null ? "null" : ByteUtil.toHexString(value);
+    }
+
+    private static List<byte[]> consumeStorageKeys(Iterator<?> iterator) {
+        List<byte[]> keys = new ArrayList<>();
+        while (iterator.hasNext()) {
+            Object next = iterator.next();
+            if (next instanceof DataWord) {
+                keys.add(((DataWord) next).getData());
+            } else if (next instanceof byte[]) {
+                keys.add(DataWord.valueOf((byte[]) next).getData());
+            } else {
+                throw new IllegalStateException("Unexpected storage key iterator payload type");
+            }
+        }
+        return keys;
+    }
+
+    private static Iterator<DataWord> toDataWordIterator(List<byte[]> values) {
+        return values.stream().map(DataWord::valueOf).iterator();
+    }
+
+    private static boolean byteListEquals(List<byte[]> left, List<byte[]> right) {
+        if (left.size() != right.size()) {
+            return false;
+        }
+
+        for (int index = 0; index < left.size(); index++) {
+            if (!Arrays.equals(left.get(index), right.get(index))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Nullable

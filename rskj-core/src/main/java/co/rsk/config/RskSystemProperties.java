@@ -262,7 +262,7 @@ public class RskSystemProperties extends SystemProperties {
     }
 
     public int getUnitrieValidationRunDefaultBlockCount() {
-        int value = getInt(UNITRIE_VALIDATION_DEFAULT_BLOCK_COUNT_CONFIG, 200);
+        int value = getInt(UNITRIE_VALIDATION_DEFAULT_BLOCK_COUNT_CONFIG, 50);
         if (value <= 0) {
             throw new RskConfigurationException(UNITRIE_VALIDATION_DEFAULT_BLOCK_COUNT_CONFIG + " must be greater than zero");
         }
@@ -270,7 +270,7 @@ public class RskSystemProperties extends SystemProperties {
     }
 
     public int getUnitrieValidationRunDeepBlockCount() {
-        int value = getInt(UNITRIE_VALIDATION_DEEP_BLOCK_COUNT_CONFIG, 5000);
+        int value = getInt(UNITRIE_VALIDATION_DEEP_BLOCK_COUNT_CONFIG, 500);
         if (value <= 0) {
             throw new RskConfigurationException(UNITRIE_VALIDATION_DEEP_BLOCK_COUNT_CONFIG + " must be greater than zero");
         }

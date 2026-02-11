@@ -35,8 +35,8 @@ class UnitrieConfigTest {
         assertEquals("java", properties.getUnitrieEngine());
         assertTrue(properties.isUnitrieRustFailOnMismatch());
         assertNull(properties.getUnitrieRustLibraryPath());
-        assertEquals(200, properties.getUnitrieValidationRunDefaultBlockCount());
-        assertEquals(5000, properties.getUnitrieValidationRunDeepBlockCount());
+        assertEquals(50, properties.getUnitrieValidationRunDefaultBlockCount());
+        assertEquals(500, properties.getUnitrieValidationRunDeepBlockCount());
     }
 
     @Test
