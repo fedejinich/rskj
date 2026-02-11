@@ -125,6 +125,34 @@ Behavior:
 - ms/block
 - total time
 
+### MVP Gate Procedure (500 blocks, 2 clean runs)
+Gate status for this phase is considered **MVP reliable** only when:
+1. The exact same 500-block range is executed with `--repeatRuns 2`.
+2. Both attempts finish with zero divergences and zero JNI exceptions.
+3. If divergence appears, triage artifacts and corpus are generated and replayed before retrying.
+
+Runbook commands:
+1. Fast local check (uses `defaultBlockCount`):
+   `./gradlew :rskj-core:run --args='unitrie-validation-run --fromBlock <N>'`
+2. Deep 500-block check:
+   `./gradlew :rskj-core:run --args='unitrie-validation-run --fromBlock <N> --deep --failFast true'`
+3. Sustained gate (official):
+   `./gradlew :rskj-core:run --args='unitrie-validation-run --fromBlock <N> --deep --repeatRuns 2 --failFast true --artifactLevel extended --captureCorpusOnMismatch true'`
+4. Optional deterministic run id:
+   append `--runId unitrie-v3-<tag>`.
+
+Artifact interpretation:
+1. `run-<runId>-attempt-<i>/run-manifest.json`: attempt metadata and environment.
+2. `mismatch-block-<n>.txt`: human triage summary.
+3. `mismatch-block-<n>.json`: machine-readable divergence artifact.
+4. `corpus-block-<n>-<shortHash>.jsonl`: auto-generated differential corpus when mismatch is detected.
+
+Corpus promotion workflow:
+1. Move generated JSONL corpus into `rskj-core/src/test/resources/trie/differential/`.
+2. Add/adjust replay assertions in `UnitrieDifferentialCorpusReplayTest`.
+3. Re-run replay test locally.
+4. Retry the 500-block sustained gate only after replay is deterministic.
+
 ### Fast vs deep profile
 - Fast local default is intentionally small (`defaultBlockCount`, default 50).
 - Deep parity run remains available on demand (`deepBlockCount`, default 500).
