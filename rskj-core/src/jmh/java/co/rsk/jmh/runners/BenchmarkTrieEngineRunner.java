@@ -40,6 +40,11 @@ public class BenchmarkTrieEngineRunner {
     private static final String WARMUP_ITERATIONS_PROPERTY = "unitrie.jmh.warmupIterations";
     private static final String MEASUREMENT_ITERATIONS_PROPERTY = "unitrie.jmh.measurementIterations";
     private static final String FORKS_PROPERTY = "unitrie.jmh.forks";
+    private static final String ENGINES_ENV = "UNITRIE_JMH_ENGINES";
+    private static final String FAIL_ON_MISMATCH_ENV = "UNITRIE_JMH_FAIL_ON_MISMATCH";
+    private static final String WARMUP_ITERATIONS_ENV = "UNITRIE_JMH_WARMUP_ITERATIONS";
+    private static final String MEASUREMENT_ITERATIONS_ENV = "UNITRIE_JMH_MEASUREMENT_ITERATIONS";
+    private static final String FORKS_ENV = "UNITRIE_JMH_FORKS";
 
     public static void main(String[] args) throws RunnerException, IOException {
         Path reportsDir = Paths.get(System.getProperty("user.dir"), "build", "reports", "jmh");
@@ -49,10 +54,10 @@ public class BenchmarkTrieEngineRunner {
         createReportDirectory(reportPath);
 
         String[] engines = resolveEngines();
-        String failOnMismatch = System.getProperty(FAIL_ON_MISMATCH_PROPERTY, "true");
-        int warmupIterations = Integer.parseInt(System.getProperty(WARMUP_ITERATIONS_PROPERTY, "5"));
-        int measurementIterations = Integer.parseInt(System.getProperty(MEASUREMENT_ITERATIONS_PROPERTY, "15"));
-        int forks = Integer.parseInt(System.getProperty(FORKS_PROPERTY, "1"));
+        String failOnMismatch = resolveConfig(FAIL_ON_MISMATCH_PROPERTY, FAIL_ON_MISMATCH_ENV, "true");
+        int warmupIterations = Integer.parseInt(resolveConfig(WARMUP_ITERATIONS_PROPERTY, WARMUP_ITERATIONS_ENV, "5"));
+        int measurementIterations = Integer.parseInt(resolveConfig(MEASUREMENT_ITERATIONS_PROPERTY, MEASUREMENT_ITERATIONS_ENV, "15"));
+        int forks = Integer.parseInt(resolveConfig(FORKS_PROPERTY, FORKS_ENV, "1"));
 
         Options options = new OptionsBuilder()
                 .include(TrieEngineBenchmark.class.getName())
@@ -98,13 +103,27 @@ public class BenchmarkTrieEngineRunner {
     }
 
     private static String[] resolveEngines() {
-        String configured = System.getProperty(ENGINES_PROPERTY, "java,rust");
+        String configured = resolveConfig(ENGINES_PROPERTY, ENGINES_ENV, "java,rust");
         String[] values = Arrays.stream(configured.split(","))
                 .map(String::trim)
                 .filter(value -> !value.isEmpty())
                 .toArray(String[]::new);
 
         return values.length == 0 ? new String[]{"java", "rust"} : values;
+    }
+
+    private static String resolveConfig(String propertyName, String envVarName, String defaultValue) {
+        String fromProperty = System.getProperty(propertyName);
+        if (fromProperty != null && !fromProperty.isBlank()) {
+            return fromProperty;
+        }
+
+        String fromEnv = System.getenv(envVarName);
+        if (fromEnv != null && !fromEnv.isBlank()) {
+            return fromEnv;
+        }
+
+        return defaultValue;
     }
 
     private static String resolveGitCommit() {
