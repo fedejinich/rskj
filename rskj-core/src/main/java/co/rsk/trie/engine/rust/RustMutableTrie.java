@@ -63,10 +63,13 @@ public class RustMutableTrie implements MutableTrie {
     private final TrieStore trieStore;
     private final TrieEngineType engineType;
     private final boolean failOnMismatch;
+    private final RustUnitrieImplementation rustImplementation;
     private final RustTrieStoreAdapter storeAdapter;
     @Nullable
     private final MutableTrie javaDelegate;
     private MutableTrie javaMirror;
+    private final boolean maintainJavaMirrorOnRust;
+    private boolean mirrorDirty;
     @Nullable
     private final RustUnitrieBridge bridge;
     private final long nativeHandle;
@@ -85,6 +88,7 @@ public class RustMutableTrie implements MutableTrie {
                 engineType,
                 failOnMismatch,
                 rustLibraryPath,
+                RustUnitrieImplementation.LEGACY_V1,
                 TrieDifferentialRecorder.noop()
         );
     }
@@ -95,14 +99,18 @@ public class RustMutableTrie implements MutableTrie {
             TrieEngineType engineType,
             boolean failOnMismatch,
             @Nullable String rustLibraryPath,
+            RustUnitrieImplementation rustImplementation,
             TrieDifferentialRecorder differentialRecorder) {
         this.trieStore = Objects.requireNonNull(trieStore, "trieStore");
         this.engineType = Objects.requireNonNull(engineType, "engineType");
         this.failOnMismatch = failOnMismatch;
+        this.rustImplementation = Objects.requireNonNull(rustImplementation, "rustImplementation");
         this.differentialRecorder = Objects.requireNonNull(differentialRecorder, "differentialRecorder");
         this.storeAdapter = new RustTrieStoreAdapter(trieStore);
         this.javaDelegate = engineType == TrieEngineType.RUST_SHADOW ? new MutableTrieImpl(trieStore, trie) : null;
         this.javaMirror = new MutableTrieImpl(trieStore, trie);
+        this.maintainJavaMirrorOnRust = rustImplementation != RustUnitrieImplementation.NEXT;
+        this.mirrorDirty = false;
 
         RustUnitrieBridge loadedBridge = RustUnitrieBridge.load(rustLibraryPath);
         if (!loadedBridge.isAvailable()) {
@@ -132,6 +140,9 @@ public class RustMutableTrie implements MutableTrie {
         }
 
         if (engineType == TrieEngineType.RUST && bridge != null) {
+            if (!maintainJavaMirrorOnRust && mirrorDirty) {
+                reloadMirrorFromStore();
+            }
             Trie mirrorTrie = javaMirror.getTrie();
             tryOverrideTrieHash(mirrorTrie, bridge.currentRootHash(nativeHandle));
             return mirrorTrie;
@@ -174,7 +185,11 @@ public class RustMutableTrie implements MutableTrie {
                 recordDifferentialOperation("put", key, value, value.length, null, null, null);
             }
 
-            javaMirror.put(key, value);
+            if (maintainJavaMirrorOnRust) {
+                javaMirror.put(key, value);
+            } else {
+                mirrorDirty = true;
+            }
             return;
         }
 
@@ -296,7 +311,11 @@ public class RustMutableTrie implements MutableTrie {
     public void deleteRecursive(byte[] key) {
         if (engineType == TrieEngineType.RUST && bridge != null) {
             bridge.deleteRecursive(nativeHandle, key);
-            javaMirror.deleteRecursive(key);
+            if (maintainJavaMirrorOnRust) {
+                javaMirror.deleteRecursive(key);
+            } else {
+                mirrorDirty = true;
+            }
             recordDifferentialOperation("deleteRecursive", key, null, null, null, null, null);
             return;
         }
@@ -314,7 +333,11 @@ public class RustMutableTrie implements MutableTrie {
     public void save() {
         if (engineType == TrieEngineType.RUST && bridge != null) {
             bridge.save(nativeHandle, storeAdapter);
-            reloadMirrorFromStore();
+            if (maintainJavaMirrorOnRust) {
+                reloadMirrorFromStore();
+            } else {
+                mirrorDirty = true;
+            }
             recordDifferentialOperation("save", null, null, null, null, null, null);
             return;
         }
@@ -391,7 +414,11 @@ public class RustMutableTrie implements MutableTrie {
         }
 
         try {
-            long handle = bridge.createTrieFromRoot(trie.getHash().getBytes(), storeAdapter);
+            long handle = bridge.createTrieFromRoot(
+                    trie.getHash().getBytes(),
+                    storeAdapter,
+                    rustImplementation.getConfigName()
+            );
             if (handle > 0) {
                 return new InitializationResult(handle, true);
             }
@@ -400,14 +427,18 @@ public class RustMutableTrie implements MutableTrie {
             logger.debug("Rust-shadow initialization fallback", e);
         }
 
-        return new InitializationResult(bridge.createTrie(), false);
+        return new InitializationResult(bridge.createTrie(rustImplementation.getConfigName()), false);
     }
 
     private InitializationResult initializeRustSourceTrie(Trie trie) {
         Objects.requireNonNull(bridge, "bridge");
 
         try {
-            long handle = bridge.createTrieFromRoot(trie.getHash().getBytes(), storeAdapter);
+            long handle = bridge.createTrieFromRoot(
+                    trie.getHash().getBytes(),
+                    storeAdapter,
+                    rustImplementation.getConfigName()
+            );
             if (handle > 0) {
                 return new InitializationResult(handle, true);
             }
@@ -416,7 +447,7 @@ public class RustMutableTrie implements MutableTrie {
             logger.debug("Rust trie initialization fallback", e);
         }
 
-        long handle = bridge.createTrie();
+        long handle = bridge.createTrie(rustImplementation.getConfigName());
         bootstrapRustFromJavaTrie(handle, trie);
         return new InitializationResult(handle, true);
     }
@@ -439,17 +470,21 @@ public class RustMutableTrie implements MutableTrie {
         }
     }
 
-    private void reloadMirrorFromStore() {
+    private boolean reloadMirrorFromStore() {
         if (bridge == null) {
-            return;
+            return false;
         }
 
         byte[] currentRoot = bridge.currentRootHash(nativeHandle);
-        trieStore.retrieve(currentRoot)
-                .ifPresentOrElse(
-                        trie -> javaMirror = new MutableTrieImpl(trieStore, trie),
-                        () -> logger.warn("Rust save completed but root {} could not be retrieved from TrieStore", ByteUtil.toHexString(currentRoot))
-                );
+        Optional<Trie> maybeTrie = trieStore.retrieve(currentRoot);
+        if (maybeTrie.isPresent()) {
+            javaMirror = new MutableTrieImpl(trieStore, maybeTrie.get());
+            mirrorDirty = false;
+            return true;
+        }
+
+        logger.warn("Rust save completed but root {} could not be retrieved from TrieStore", ByteUtil.toHexString(currentRoot));
+        return false;
     }
 
     private MutableTrie javaDelegateOrMirror() {

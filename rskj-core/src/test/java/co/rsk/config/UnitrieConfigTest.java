@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UnitrieConfigTest {
@@ -35,6 +36,7 @@ class UnitrieConfigTest {
         assertEquals("java", properties.getUnitrieEngine());
         assertTrue(properties.isUnitrieRustFailOnMismatch());
         assertNull(properties.getUnitrieRustLibraryPath());
+        assertEquals("legacy-v1", properties.getUnitrieRustImplementation());
         assertEquals(50, properties.getUnitrieValidationRunDefaultBlockCount());
         assertEquals(500, properties.getUnitrieValidationRunDeepBlockCount());
     }
@@ -46,6 +48,7 @@ class UnitrieConfigTest {
                         "blockchain.unitrie.engine = \"rust-shadow\"\n" +
                         "blockchain.unitrie.rust.failOnMismatch = false\n" +
                         "blockchain.unitrie.rust.libraryPath = \"/tmp/libunitrie_rs_jni.dylib\"\n" +
+                        "blockchain.unitrie.rust.impl = \"next\"\n" +
                         "blockchain.unitrie.validationRun.defaultBlockCount = 120\n" +
                         "blockchain.unitrie.validationRun.deepBlockCount = 1500\n"
                 ).withFallback(base)
@@ -54,7 +57,17 @@ class UnitrieConfigTest {
         assertEquals("rust-shadow", properties.getUnitrieEngine());
         assertFalse(properties.isUnitrieRustFailOnMismatch());
         assertEquals("/tmp/libunitrie_rs_jni.dylib", properties.getUnitrieRustLibraryPath());
+        assertEquals("next", properties.getUnitrieRustImplementation());
         assertEquals(120, properties.getUnitrieValidationRunDefaultBlockCount());
         assertEquals(1500, properties.getUnitrieValidationRunDeepBlockCount());
+    }
+
+    @Test
+    void rejectsUnknownRustImplementationValue() {
+        TestSystemProperties properties = new TestSystemProperties(base ->
+                ConfigFactory.parseString("blockchain.unitrie.rust.impl = \"unknown\"").withFallback(base)
+        );
+
+        assertThrows(IllegalArgumentException.class, properties::getUnitrieRustImplementation);
     }
 }

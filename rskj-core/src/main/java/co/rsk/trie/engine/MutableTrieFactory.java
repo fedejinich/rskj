@@ -23,6 +23,7 @@ import co.rsk.trie.MutableTrie;
 import co.rsk.trie.Trie;
 import co.rsk.trie.TrieStore;
 import co.rsk.trie.engine.rust.RustMutableTrie;
+import co.rsk.trie.engine.rust.RustUnitrieImplementation;
 import co.rsk.trie.engine.rust.diagnostics.TrieDifferentialRecorder;
 
 import javax.annotation.Nullable;
@@ -34,28 +35,51 @@ public class MutableTrieFactory {
     private final boolean rustFailOnMismatch;
     @Nullable
     private final String rustLibraryPath;
+    private final RustUnitrieImplementation rustImplementation;
     private final TrieDifferentialRecorder differentialRecorder;
 
     public MutableTrieFactory(
             TrieEngineType engineType,
             boolean rustFailOnMismatch,
             @Nullable String rustLibraryPath) {
-        this(engineType, rustFailOnMismatch, rustLibraryPath, TrieDifferentialRecorder.noop());
+        this(
+                engineType,
+                rustFailOnMismatch,
+                rustLibraryPath,
+                RustUnitrieImplementation.LEGACY_V1,
+                TrieDifferentialRecorder.noop()
+        );
     }
 
     public MutableTrieFactory(
             TrieEngineType engineType,
             boolean rustFailOnMismatch,
             @Nullable String rustLibraryPath,
+            RustUnitrieImplementation rustImplementation) {
+        this(engineType, rustFailOnMismatch, rustLibraryPath, rustImplementation, TrieDifferentialRecorder.noop());
+    }
+
+    public MutableTrieFactory(
+            TrieEngineType engineType,
+            boolean rustFailOnMismatch,
+            @Nullable String rustLibraryPath,
+            RustUnitrieImplementation rustImplementation,
             TrieDifferentialRecorder differentialRecorder) {
         this.engineType = Objects.requireNonNull(engineType, "engineType");
         this.rustFailOnMismatch = rustFailOnMismatch;
         this.rustLibraryPath = rustLibraryPath;
+        this.rustImplementation = Objects.requireNonNull(rustImplementation, "rustImplementation");
         this.differentialRecorder = Objects.requireNonNull(differentialRecorder, "differentialRecorder");
     }
 
     public static MutableTrieFactory javaDefault() {
-        return new MutableTrieFactory(TrieEngineType.JAVA, true, null);
+        return new MutableTrieFactory(
+                TrieEngineType.JAVA,
+                true,
+                null,
+                RustUnitrieImplementation.LEGACY_V1,
+                TrieDifferentialRecorder.noop()
+        );
     }
 
     public MutableTrie create(TrieStore trieStore, Trie trie) {
@@ -69,6 +93,7 @@ public class MutableTrieFactory {
                 engineType,
                 rustFailOnMismatch,
                 rustLibraryPath,
+                rustImplementation,
                 differentialRecorder
         );
     }

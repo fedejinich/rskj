@@ -21,6 +21,7 @@ package co.rsk.config;
 import co.rsk.core.RskAddress;
 import co.rsk.net.discovery.table.KademliaOptions;
 import co.rsk.rpc.ModuleDescription;
+import co.rsk.trie.engine.rust.RustUnitrieImplementation;
 import com.google.common.annotations.VisibleForTesting;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigObject;
@@ -66,6 +67,7 @@ public class RskSystemProperties extends SystemProperties {
     private static final String UNITRIE_ENGINE_CONFIG = "blockchain.unitrie.engine";
     private static final String UNITRIE_RUST_FAIL_ON_MISMATCH_CONFIG = "blockchain.unitrie.rust.failOnMismatch";
     private static final String UNITRIE_RUST_LIBRARY_PATH_CONFIG = "blockchain.unitrie.rust.libraryPath";
+    private static final String UNITRIE_RUST_IMPLEMENTATION_CONFIG = "blockchain.unitrie.rust.impl";
     private static final String UNITRIE_VALIDATION_DEFAULT_BLOCK_COUNT_CONFIG = "blockchain.unitrie.validationRun.defaultBlockCount";
     private static final String UNITRIE_VALIDATION_DEEP_BLOCK_COUNT_CONFIG = "blockchain.unitrie.validationRun.deepBlockCount";
 
@@ -259,6 +261,14 @@ public class RskSystemProperties extends SystemProperties {
     public String getUnitrieRustLibraryPath() {
         String libraryPath = getString(UNITRIE_RUST_LIBRARY_PATH_CONFIG, "").trim();
         return libraryPath.isEmpty() ? null : libraryPath;
+    }
+
+    public String getUnitrieRustImplementation() {
+        String configuredValue = getString(
+                UNITRIE_RUST_IMPLEMENTATION_CONFIG,
+                RustUnitrieImplementation.LEGACY_V1.getConfigName()
+        );
+        return RustUnitrieImplementation.fromConfig(configuredValue).getConfigName();
     }
 
     public int getUnitrieValidationRunDefaultBlockCount() {

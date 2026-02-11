@@ -23,6 +23,7 @@ import co.rsk.core.bc.BlockResult;
 import co.rsk.db.RepositoryLocator;
 import co.rsk.trie.engine.MutableTrieFactory;
 import co.rsk.trie.engine.TrieEngineType;
+import co.rsk.trie.engine.rust.RustUnitrieImplementation;
 import co.rsk.trie.engine.rust.diagnostics.JsonlTrieDifferentialRecorder;
 import co.rsk.trie.engine.rust.diagnostics.TrieDifferentialRecorder;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -602,7 +603,13 @@ public class UnitrieValidationRunOnDemand extends PicoCliToolRskContextAware {
             boolean failOnMismatch,
             @Nullable String libraryPath,
             TrieDifferentialRecorder recorder) {
-        MutableTrieFactory mutableTrieFactory = new MutableTrieFactory(engineType, failOnMismatch, libraryPath, recorder);
+        MutableTrieFactory mutableTrieFactory = new MutableTrieFactory(
+                engineType,
+                failOnMismatch,
+                libraryPath,
+                RustUnitrieImplementation.fromConfig(ctx.getRskSystemProperties().getUnitrieRustImplementation()),
+                recorder
+        );
         RepositoryLocator repositoryLocator = new RepositoryLocator(
                 ctx.getTrieStore(),
                 ctx.getStateRootHandler(),

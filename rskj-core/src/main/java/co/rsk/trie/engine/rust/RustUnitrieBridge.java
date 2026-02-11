@@ -100,12 +100,12 @@ public final class RustUnitrieBridge {
         return available;
     }
 
-    public long createTrie() {
-        return nativeCreateTrie();
+    public long createTrie(String implementation) {
+        return nativeCreateTrie(implementation);
     }
 
-    public long createTrieFromRoot(byte[] rootHash, RustTrieStoreAdapter storeAdapter) {
-        return nativeCreateTrieFromRoot(rootHash, storeAdapter);
+    public long createTrieFromRoot(byte[] rootHash, RustTrieStoreAdapter storeAdapter, String implementation) {
+        return nativeCreateTrieFromRoot(rootHash, storeAdapter, implementation);
     }
 
     public void destroyTrie(long handle) {
@@ -160,6 +160,27 @@ public final class RustUnitrieBridge {
         return nativeCurrentRootHash(handle);
     }
 
+    public RustUnitriePerfCounters getPerfCounters(long handle) {
+        long[] rawCounters = nativeGetPerfCounters(handle);
+        if (rawCounters == null || rawCounters.length < 7) {
+            return RustUnitriePerfCounters.empty();
+        }
+
+        return new RustUnitriePerfCounters(
+                rawCounters[0],
+                rawCounters[1],
+                rawCounters[2],
+                rawCounters[3],
+                rawCounters[4],
+                rawCounters[5],
+                rawCounters[6]
+        );
+    }
+
+    public void resetPerfCounters(long handle) {
+        nativeResetPerfCounters(handle);
+    }
+
     private static List<byte[]> arrayToList(@Nullable byte[][] values) {
         if (values == null || values.length == 0) {
             return Collections.emptyList();
@@ -170,8 +191,8 @@ public final class RustUnitrieBridge {
         return list;
     }
 
-    private static native long nativeCreateTrie();
-    private static native long nativeCreateTrieFromRoot(byte[] rootHash, RustTrieStoreAdapter storeAdapter);
+    private static native long nativeCreateTrie(String implementation);
+    private static native long nativeCreateTrieFromRoot(byte[] rootHash, RustTrieStoreAdapter storeAdapter, String implementation);
 
     private static native void nativeDestroyTrie(long handle);
 
@@ -195,4 +216,8 @@ public final class RustUnitrieBridge {
     private static native byte[] nativeRootHash(long handle);
 
     private static native byte[] nativeCurrentRootHash(long handle);
+
+    private static native long[] nativeGetPerfCounters(long handle);
+
+    private static native void nativeResetPerfCounters(long handle);
 }

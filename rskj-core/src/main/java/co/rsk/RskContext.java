@@ -94,6 +94,7 @@ import co.rsk.trie.TrieStore;
 import co.rsk.trie.TrieStoreImpl;
 import co.rsk.trie.engine.MutableTrieFactory;
 import co.rsk.trie.engine.TrieEngineType;
+import co.rsk.trie.engine.rust.RustUnitrieImplementation;
 import co.rsk.util.RskCustomCache;
 import co.rsk.validators.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -1527,7 +1528,8 @@ public class RskContext implements NodeContext, NodeBootstrapper {
         MutableTrieFactory mutableTrieFactory = new MutableTrieFactory(
                 engineType,
                 properties.isUnitrieRustFailOnMismatch(),
-                properties.getUnitrieRustLibraryPath()
+                properties.getUnitrieRustLibraryPath(),
+                RustUnitrieImplementation.fromConfig(properties.getUnitrieRustImplementation())
         );
         return new RepositoryLocator(getTrieStore(), getStateRootHandler(), mutableTrieFactory);
     }
