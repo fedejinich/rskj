@@ -18,6 +18,9 @@
 
 package co.rsk.jmh.trie;
 
+import co.rsk.jmh.trie.metrics.TrieBenchmarkAuxCounters;
+import co.rsk.jmh.trie.metrics.TrieStoreMetricsDelta;
+import co.rsk.jmh.trie.metrics.TrieStoreMetricsSnapshot;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Measurement;
@@ -28,7 +31,7 @@ import org.openjdk.jmh.annotations.Warmup;
 
 import java.util.concurrent.TimeUnit;
 
-@BenchmarkMode({Mode.AverageTime})
+@BenchmarkMode({Mode.AverageTime, Mode.SampleTime, Mode.Throughput})
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @Warmup(iterations = 5)
 @Measurement(iterations = 15)
@@ -36,39 +39,55 @@ import java.util.concurrent.TimeUnit;
 public class TrieEngineBenchmark {
 
     @Benchmark
-    public int putGetDeleteMix(TrieBenchmarkPlan plan) {
+    public int putGetDeleteMix(TrieBenchmarkPlan plan, TrieBenchmarkAuxCounters counters) {
+        TrieStoreMetricsSnapshot baseline = plan.snapshotStoreMetrics();
         byte[] key = plan.nextKey();
         byte[] value = plan.nextValue();
         plan.mutableTrie().put(key, value);
         byte[] loaded = plan.mutableTrie().get(key);
         plan.mutableTrie().deleteRecursive(key);
+        TrieStoreMetricsDelta delta = plan.diffFrom(baseline);
+        counters.record(delta);
         return loaded == null ? 0 : loaded.length;
     }
 
     @Benchmark
-    public int longValueHeavyPaths(TrieBenchmarkPlan plan) {
+    public int longValueHeavyPaths(TrieBenchmarkPlan plan, TrieBenchmarkAuxCounters counters) {
+        TrieStoreMetricsSnapshot baseline = plan.snapshotStoreMetrics();
         byte[] key = plan.nextKey();
         byte[] value = plan.nextLongValue();
         plan.mutableTrie().put(key, value);
         byte[] loaded = plan.mutableTrie().get(key);
+        TrieStoreMetricsDelta delta = plan.diffFrom(baseline);
+        counters.record(delta);
         return loaded == null ? 0 : loaded.length;
     }
 
     @Benchmark
-    public int saveReloadCycle(TrieBenchmarkPlan plan) {
+    public int saveReloadCycle(TrieBenchmarkPlan plan, TrieBenchmarkAuxCounters counters) {
+        TrieStoreMetricsSnapshot baseline = plan.snapshotStoreMetrics();
         plan.mutableTrie().put(plan.nextKey(), plan.nextValue());
         plan.saveAndReload();
+        TrieStoreMetricsDelta delta = plan.diffFrom(baseline);
+        counters.record(delta);
         return plan.mutableTrie().getHash().getBytes().length;
     }
 
     @Benchmark
-    public int accountStorageKeyIteration(TrieBenchmarkPlan plan) {
-        return plan.iterateStorageKeys();
+    public int accountStorageKeyIteration(TrieBenchmarkPlan plan, TrieBenchmarkAuxCounters counters) {
+        TrieStoreMetricsSnapshot baseline = plan.snapshotStoreMetrics();
+        int count = plan.iterateStorageKeys();
+        TrieStoreMetricsDelta delta = plan.diffFrom(baseline);
+        counters.record(delta);
+        return count;
     }
 
     @Benchmark
-    public int datasetDrivenMassiveUpload(TrieBenchmarkPlan plan) {
+    public int datasetDrivenMassiveUpload(TrieBenchmarkPlan plan, TrieBenchmarkAuxCounters counters) {
+        TrieStoreMetricsSnapshot baseline = plan.snapshotStoreMetrics();
         plan.replayMassiveUploadDataset();
+        TrieStoreMetricsDelta delta = plan.diffFrom(baseline);
+        counters.record(delta);
         return plan.mutableTrie().getHash().getBytes().length;
     }
 }
