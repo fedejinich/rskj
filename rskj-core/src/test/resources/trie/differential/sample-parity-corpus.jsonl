@@ -1,0 +1,6 @@
+{"stepIndex":0,"op":"put","keyHex":"aa","valueHex":"01","valueLen":1}
+{"stepIndex":1,"op":"get","keyHex":"aa","valueHex":"01","valueLen":1}
+{"stepIndex":2,"op":"getValueLength","keyHex":"aa","valueLen":1}
+{"stepIndex":3,"op":"getValueHash","keyHex":"aa","valueHash":"5fe7f977e71dba2ea1a68e21057bfe6c0b4f65f3f9784f62b5f6f6f942b7d0f2"}
+{"stepIndex":4,"op":"collectKeys","size":1}
+{"stepIndex":5,"op":"save"}
