@@ -520,19 +520,24 @@ public class RustMutableTrie implements MutableTrie {
             return;
         }
 
-        byte[] javaRoot = javaDelegateOrMirror().getHash().getBytes();
-        byte[] rustRoot = bridge.currentRootHash(nativeHandle);
-        differentialRecorder.recordOperation(
-                operation,
-                key,
-                value,
-                valueLength,
-                valueHash,
-                size,
-                javaRoot,
-                rustRoot,
-                mismatchMessage
-        );
+        try {
+            byte[] javaRoot = javaDelegateOrMirror().getHash().getBytes();
+            byte[] rustRoot = bridge.currentRootHash(nativeHandle);
+            differentialRecorder.recordOperation(
+                    operation,
+                    key,
+                    value,
+                    valueLength,
+                    valueHash,
+                    size,
+                    javaRoot,
+                    rustRoot,
+                    mismatchMessage
+            );
+        } catch (RuntimeException ex) {
+            logger.warn("Could not record trie differential operation {}", operation);
+            logger.debug("Trie differential recorder failure", ex);
+        }
     }
 
     private static String nullableHex(@Nullable byte[] value) {
