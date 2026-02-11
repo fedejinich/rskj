@@ -70,6 +70,35 @@ This specifies the value of `rpc.providers.web.cors` to control `cors configurat
 
 > Example: `java -cp rsk-core-<VERSION>.jar co.rsk.start -rpccors *`
 
+### Unitrie engine selection
+
+You can select which `unitrie` engine the node uses at startup with dedicated CLI parameters:
+
+- `--unitrie-engine=<java|rust|rust-shadow>`
+- `--unitrie-rust-library-path=<absolute path>`
+
+Examples on Mainnet:
+
+```shell
+java -cp rskj-core-<VERSION>.jar co.rsk.Start --main --unitrie-engine=java
+```
+
+```shell
+java -cp rskj-core-<VERSION>.jar co.rsk.Start --main --unitrie-engine=rust
+```
+
+```shell
+java -cp rskj-core-<VERSION>.jar co.rsk.Start --main --unitrie-engine=rust-shadow
+```
+
+If your Rust JNI library is outside the default loader path:
+
+```shell
+java -cp rskj-core-<VERSION>.jar co.rsk.Start --main --unitrie-engine=rust --unitrie-rust-library-path=/abs/path/libunitrie_rs_jni.so
+```
+
+When `rust` or `rust-shadow` is used on Mainnet, RSKj logs a strong warning indicating this is still an experimental mode and `java` remains the production default.
+
 ## Command Line Tools
 
 It worth highlight that for some commands below that interacts with the database, you might and should set the network flag desired, like
@@ -463,6 +492,9 @@ Besides the parameters and flags, it's also possible to configure the node over 
 
 Most of the configurable options or settings for RSKj are available
 in "config". See [config reference](/node-operators/setup/configuration/reference/) for more details.
+
+You can also override any configuration value with `-Xkey=value` arguments (for example, `-Xblockchain.unitrie.engine=rust`).  
+If both a dedicated CLI option and `-X` set the same key, `-X` takes precedence.
 
 ## Reference implementation
 

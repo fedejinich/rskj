@@ -109,6 +109,29 @@ Config:
 - `rust`: Rust-backed mutable trie path via JNI.
 - `rust-shadow`: Java source of truth, deterministic Rust checks, configurable fail-fast.
 
+### Mainnet startup in controlled environments
+Dedicated node CLI options are available for explicit engine selection:
+- `--unitrie-engine=<java|rust|rust-shadow>`
+- `--unitrie-rust-library-path=<absolute path>`
+
+Mainnet examples:
+```bash
+java -cp rskj-core-<VERSION>.jar co.rsk.Start --main --unitrie-engine=java
+java -cp rskj-core-<VERSION>.jar co.rsk.Start --main --unitrie-engine=rust
+java -cp rskj-core-<VERSION>.jar co.rsk.Start --main --unitrie-engine=rust-shadow
+```
+
+With explicit JNI library path:
+```bash
+java -cp rskj-core-<VERSION>.jar co.rsk.Start --main --unitrie-engine=rust --unitrie-rust-library-path=/abs/path/libunitrie_rs_jni.so
+```
+
+Operational notes:
+1. `engine=java` remains the production default.
+2. Starting mainnet with `rust` or `rust-shadow` logs an explicit warning that the mode is experimental.
+3. `-Xblockchain.unitrie.*` and `-Dblockchain.unitrie.*` remain supported for backward compatibility.
+4. If both dedicated CLI options and `-X` set the same unitrie key, `-X` takes precedence.
+
 ## 9. Validation Run (On-Demand)
 Official gate name: **Validation Run (On-Demand)**.
 
