@@ -1,4 +1,3 @@
-use crate::codec_rskip107::Rskip107Codec;
 use crate::core_trie::Unitrie;
 use crate::store_adapter::RawStoreAdapter;
 use jni::objects::{JByteArray, JClass, JObject, JValue};
@@ -151,6 +150,10 @@ impl<'a, 'b> RawStoreAdapter for JavaRawStoreAdapter<'a, 'b> {
             &[JValue::Object(&hash_object), JValue::Object(&value_object)],
         );
     }
+
+    fn load_raw_value(&mut self, hash: &[u8]) -> Option<Vec<u8>> {
+        self.load_raw_node(hash)
+    }
 }
 
 fn bytes_vec_to_jobject_array(env: &mut JNIEnv, values: Vec<Vec<u8>>) -> Option<jobjectArray> {
@@ -225,32 +228,12 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeCrea
         Err(_) => return 0,
     };
 
-    let serialized_node = match adapter.load_raw_node(&root_hash) {
-        Some(node) => node,
-        None => {
-            throw_illegal_argument(
-                &mut env,
-                "root hash was not found in store adapter while creating trie",
-            );
-            return 0;
-        }
-    };
-
-    let decoded_payload = Rskip107Codec::decode_node(&serialized_node);
-    if decoded_payload.is_empty() {
-        throw_illegal_argument(
-            &mut env,
-            "root node payload is not in unitrie-rs format and cannot be loaded",
-        );
-        return 0;
-    }
-
-    let trie = match Unitrie::from_snapshot_payload(&decoded_payload) {
+    let trie = match Unitrie::from_persisted_root(&root_hash, &mut adapter) {
         Ok(trie) => trie,
         Err(err) => {
             throw_illegal_argument(
                 &mut env,
-                format!("invalid unitrie-rs snapshot payload: {err}"),
+                format!("could not create trie from persisted root: {err}"),
             );
             return 0;
         }
@@ -375,7 +358,7 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeSave
     handle: jlong,
     store_adapter: JObject<'a>,
 ) {
-    let trie_snapshot = match with_trie_mut(&mut env, handle, |trie| trie.clone()) {
+    let mut trie_snapshot = match with_trie_mut(&mut env, handle, |trie| trie.clone()) {
         Some(trie_snapshot) => trie_snapshot,
         None => return,
     };

@@ -1,15 +1,36 @@
-use crate::codec_rskip107::Rskip107Codec;
+use crate::codec_orchid::OrchidCodec;
+use crate::codec_rskip107::{ChildEncoding, Rskip107Codec};
 use crate::hash::{empty_trie_hash, keccak256};
-use crate::node_ref::NodeReference;
+use crate::node_ref::{
+    NodeReference, SharedPath, TrieNode, ValueRef, HASH_SIZE, LONG_VALUE_THRESHOLD,
+    MAX_EMBEDDED_NODE_SIZE_IN_BYTES,
+};
+use crate::path::shared_path_serializer;
 use crate::store_adapter::RawStoreAdapter;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashMap};
 
-const LONG_VALUE_THRESHOLD: usize = 32;
-const SNAPSHOT_VERSION: u8 = 1;
+const SECURE_KEY_SIZE: usize = 10;
+const DOMAIN_PREFIX: [u8; 1] = [0x00];
+const STORAGE_PREFIX: [u8; 1] = [0x00];
+
+#[derive(Debug, Clone)]
+struct MaterializedTrie {
+    root_node: Option<TrieNode>,
+    root_hash: [u8; HASH_SIZE],
+}
+
+#[derive(Debug, Clone)]
+struct NodeMetadata {
+    hash: [u8; HASH_SIZE],
+    serialized: Vec<u8>,
+    reference_size: u64,
+    embeddable: bool,
+}
 
 #[derive(Debug, Default, Clone)]
 pub struct Unitrie {
     entries: BTreeMap<Vec<u8>, Vec<u8>>,
+    materialized: Option<MaterializedTrie>,
 }
 
 impl Unitrie {
@@ -17,16 +38,54 @@ impl Unitrie {
         Self::default()
     }
 
+    pub fn from_persisted_root<T: RawStoreAdapter>(
+        root_hash: &[u8],
+        store: &mut T,
+    ) -> Result<Self, String> {
+        if root_hash.len() != HASH_SIZE {
+            return Err(format!(
+                "root hash must be {HASH_SIZE} bytes, got {}",
+                root_hash.len()
+            ));
+        }
+
+        let mut fixed_root = [0u8; HASH_SIZE];
+        fixed_root.copy_from_slice(root_hash);
+        if fixed_root == empty_trie_hash() {
+            return Ok(Self::new());
+        }
+
+        let root_payload = store
+            .load_raw_node(root_hash)
+            .ok_or_else(|| "root hash not found in store adapter".to_string())?;
+        let root_node = decode_persisted_node(&root_payload)?;
+
+        let mut node_cache = HashMap::new();
+        let mut entries = BTreeMap::new();
+        collect_entries_from_node(&root_node, Vec::new(), store, &mut node_cache, &mut entries)?;
+
+        Ok(Self {
+            entries,
+            materialized: None,
+        })
+    }
+
     pub fn get(&self, key: &[u8]) -> Option<Vec<u8>> {
         self.entries.get(key).cloned()
     }
 
     pub fn put(&mut self, key: Vec<u8>, value: Vec<u8>) {
-        self.entries.insert(key, value);
+        if value.is_empty() {
+            self.entries.remove(&key);
+        } else {
+            self.entries.insert(key, value);
+        }
+        self.materialized = None;
     }
 
     pub fn delete(&mut self, key: &[u8]) {
         self.entries.remove(key);
+        self.materialized = None;
     }
 
     pub fn delete_recursive(&mut self, prefix: &[u8]) {
@@ -37,148 +96,434 @@ impl Unitrie {
             .cloned()
             .collect();
 
+        if keys_to_delete.is_empty() {
+            return;
+        }
+
         for key in keys_to_delete {
             self.entries.remove(&key);
         }
+
+        self.materialized = None;
     }
 
     pub fn get_value_length(&self, key: &[u8]) -> Option<usize> {
         self.entries.get(key).map(Vec::len)
     }
 
-    pub fn get_value_hash(&self, key: &[u8]) -> Option<[u8; 32]> {
+    pub fn get_value_hash(&self, key: &[u8]) -> Option<[u8; HASH_SIZE]> {
         self.entries.get(key).map(|value| keccak256(value))
     }
 
-    pub fn collect_keys(&self, size: usize) -> Vec<Vec<u8>> {
-        self.entries.keys().take(size).cloned().collect()
+    // Matches Java semantics: collect keys with exactly `byte_size` bytes.
+    // Integer.MAX_VALUE (from JNI) means collect all keys.
+    pub fn collect_keys(&self, byte_size: usize) -> Vec<Vec<u8>> {
+        let collect_all = byte_size == i32::MAX as usize;
+        self.entries
+            .keys()
+            .filter(|key| collect_all || key.len() == byte_size)
+            .cloned()
+            .collect()
     }
 
+    // Matches MutableTrieImpl storage key extraction:
+    // accountStoragePrefixKey = [0x00] + secure(addr)[0..10] + addr + [0x00]
+    // storage key payload starts after the secure subkey prefix (10 bytes).
     pub fn get_storage_keys(&self, account_address: &[u8]) -> Vec<Vec<u8>> {
+        let account_storage_prefix_key = account_storage_prefix_key(account_address);
+
         self.entries
             .keys()
             .filter_map(|key| {
-                if key.starts_with(account_address) && key.len() >= account_address.len() + 32 {
-                    Some(key[key.len() - 32..].to_vec())
-                } else {
-                    None
+                if !key.starts_with(&account_storage_prefix_key) {
+                    return None;
                 }
+
+                let storage_key_payload = &key[account_storage_prefix_key.len()..];
+                if storage_key_payload.len() < SECURE_KEY_SIZE {
+                    return None;
+                }
+
+                Some(storage_key_payload[SECURE_KEY_SIZE..].to_vec())
             })
             .collect()
     }
 
-    pub fn root_hash(&self) -> [u8; 32] {
-        if self.entries.is_empty() {
-            return empty_trie_hash();
-        }
-
-        keccak256(&self.encoded_entries())
+    pub fn root_hash(&mut self) -> [u8; HASH_SIZE] {
+        self.materialize().root_hash
     }
 
-    pub fn current_root_hash(&self) -> [u8; 32] {
+    pub fn current_root_hash(&mut self) -> [u8; HASH_SIZE] {
         self.root_hash()
     }
 
-    pub fn snapshot_payload(&self) -> Vec<u8> {
-        let mut payload = Vec::new();
-        payload.push(SNAPSHOT_VERSION);
-        payload.extend_from_slice(&self.encoded_entries());
-        payload
-    }
-
-    pub fn from_snapshot_payload(payload: &[u8]) -> Result<Self, String> {
-        if payload.is_empty() {
-            return Err("snapshot payload is empty".to_string());
+    pub fn save_to_store<T: RawStoreAdapter>(&mut self, store: &mut T) {
+        if self.entries.is_empty() {
+            let empty_node_serialized = Rskip107Codec::encode_node(
+                &TrieNode::empty(),
+                &ChildEncoding::Empty,
+                &ChildEncoding::Empty,
+                None,
+            )
+            .expect("empty trie node encoding should never fail");
+            let empty_hash = empty_trie_hash();
+            store.save_raw_node(&empty_hash, &empty_node_serialized);
+            self.materialized = Some(MaterializedTrie {
+                root_node: None,
+                root_hash: empty_hash,
+            });
+            return;
         }
 
-        if payload[0] != SNAPSHOT_VERSION {
-            return Err(format!("unsupported snapshot version {}", payload[0]));
-        }
+        let root_node = self
+            .materialize()
+            .root_node
+            .as_ref()
+            .expect("non-empty trie must have root node")
+            .clone();
 
-        let entries = decode_entries(&payload[1..])?;
-        Ok(Self { entries })
+        let root_metadata = persist_node_recursive(&root_node, store, true)
+            .expect("persisting node generated from in-memory entries should not fail");
+        self.materialized = Some(MaterializedTrie {
+            root_node: Some(root_node),
+            root_hash: root_metadata.hash,
+        });
     }
 
-    pub fn save_to_store<T: RawStoreAdapter>(&self, store: &mut T) {
-        let root_hash = self.root_hash();
-        let snapshot_payload = self.snapshot_payload();
-        let serialized_node = Rskip107Codec::encode_node(&snapshot_payload);
+    fn materialize(&mut self) -> &MaterializedTrie {
+        if self.materialized.is_none() {
+            let root_node = build_root_node(&self.entries);
+            let root_hash = match root_node.as_ref() {
+                None => empty_trie_hash(),
+                Some(node) => {
+                    compute_node_metadata(node)
+                        .expect("materialized node generated from entries should be encodable")
+                        .hash
+                }
+            };
 
-        store.save_raw_node(&root_hash, &serialized_node);
+            self.materialized = Some(MaterializedTrie {
+                root_node,
+                root_hash,
+            });
+        }
 
-        for value in self.entries.values() {
-            if value.len() > LONG_VALUE_THRESHOLD {
-                let value_hash = keccak256(value);
-                store.save_raw_value(&value_hash, value);
+        self.materialized.as_ref().expect("materialized trie")
+    }
+}
+
+fn decode_persisted_node(payload: &[u8]) -> Result<TrieNode, String> {
+    if OrchidCodec::is_orchid_message(payload) {
+        return OrchidCodec::decode_node(payload);
+    }
+
+    Rskip107Codec::decode_node(payload)
+}
+
+fn collect_entries_from_node<T: RawStoreAdapter>(
+    node: &TrieNode,
+    prefix_bits: Vec<u8>,
+    store: &mut T,
+    node_cache: &mut HashMap<[u8; HASH_SIZE], TrieNode>,
+    entries: &mut BTreeMap<Vec<u8>, Vec<u8>>,
+) -> Result<(), String> {
+    let mut full_bits = prefix_bits;
+    full_bits.extend_from_slice(node.shared_path.as_bits());
+
+    if node.value.has_value() {
+        let value = resolve_node_value(&node.value, store)?;
+        entries.insert(shared_path_serializer::encode(&full_bits), value);
+    }
+
+    collect_child_entries(&node.left, 0, &full_bits, store, node_cache, entries)?;
+    collect_child_entries(&node.right, 1, &full_bits, store, node_cache, entries)?;
+    Ok(())
+}
+
+fn collect_child_entries<T: RawStoreAdapter>(
+    reference: &NodeReference,
+    implicit_bit: u8,
+    parent_bits: &[u8],
+    store: &mut T,
+    node_cache: &mut HashMap<[u8; HASH_SIZE], TrieNode>,
+    entries: &mut BTreeMap<Vec<u8>, Vec<u8>>,
+) -> Result<(), String> {
+    let child = match reference {
+        NodeReference::Empty => return Ok(()),
+        NodeReference::Embedded(node) => node.as_ref().clone(),
+        NodeReference::Hashed(hash) => load_node_by_hash(hash, store, node_cache)?,
+    };
+
+    let mut child_prefix = parent_bits.to_vec();
+    child_prefix.push(implicit_bit);
+    collect_entries_from_node(&child, child_prefix, store, node_cache, entries)
+}
+
+fn load_node_by_hash<T: RawStoreAdapter>(
+    hash: &[u8; HASH_SIZE],
+    store: &mut T,
+    node_cache: &mut HashMap<[u8; HASH_SIZE], TrieNode>,
+) -> Result<TrieNode, String> {
+    if let Some(node) = node_cache.get(hash) {
+        return Ok(node.clone());
+    }
+
+    let payload = store
+        .load_raw_node(hash)
+        .ok_or_else(|| format!("referenced node {} was not found in store", hex(hash)))?;
+    let node = decode_persisted_node(&payload)?;
+    node_cache.insert(*hash, node.clone());
+    Ok(node)
+}
+
+fn resolve_node_value<T: RawStoreAdapter>(
+    value: &ValueRef,
+    store: &mut T,
+) -> Result<Vec<u8>, String> {
+    match value {
+        ValueRef::Empty => Ok(Vec::new()),
+        ValueRef::Inline(bytes) => Ok(bytes.clone()),
+        ValueRef::Hashed { hash, .. } => store
+            .load_raw_value(hash)
+            .ok_or_else(|| format!("long value {} was not found in store", hex(hash))),
+    }
+}
+
+fn build_root_node(entries: &BTreeMap<Vec<u8>, Vec<u8>>) -> Option<TrieNode> {
+    if entries.is_empty() {
+        return None;
+    }
+
+    let bit_entries: Vec<(Vec<u8>, Vec<u8>)> = entries
+        .iter()
+        .map(|(key, value)| {
+            (
+                shared_path_serializer::decode(key, key.len() * 8),
+                value.clone(),
+            )
+        })
+        .collect();
+
+    Some(build_node(bit_entries, 0))
+}
+
+fn build_node(entries: Vec<(Vec<u8>, Vec<u8>)>, depth: usize) -> TrieNode {
+    let shared_len = longest_common_suffix_length(&entries, depth);
+    let node_depth = depth + shared_len;
+
+    let shared_path_bits = entries
+        .first()
+        .map(|(bits, _)| bits[depth..node_depth].to_vec())
+        .unwrap_or_default();
+
+    let mut value: Option<Vec<u8>> = None;
+    let mut left_entries = Vec::new();
+    let mut right_entries = Vec::new();
+
+    for (bits, node_value) in entries {
+        if bits.len() == node_depth {
+            value = Some(node_value);
+            continue;
+        }
+
+        let next_bit = bits[node_depth];
+        if next_bit == 0 {
+            left_entries.push((bits, node_value));
+        } else {
+            right_entries.push((bits, node_value));
+        }
+    }
+
+    let left_reference = if left_entries.is_empty() {
+        NodeReference::empty()
+    } else {
+        NodeReference::embedded(build_node(left_entries, node_depth + 1))
+    };
+
+    let right_reference = if right_entries.is_empty() {
+        NodeReference::empty()
+    } else {
+        NodeReference::embedded(build_node(right_entries, node_depth + 1))
+    };
+
+    TrieNode::new(
+        SharedPath::from_bits(shared_path_bits).expect("generated path bits must be binary"),
+        ValueRef::inline(value.unwrap_or_default()),
+        left_reference,
+        right_reference,
+    )
+}
+
+fn longest_common_suffix_length(entries: &[(Vec<u8>, Vec<u8>)], depth: usize) -> usize {
+    if entries.is_empty() {
+        return 0;
+    }
+
+    let first = &entries[0].0;
+    if depth >= first.len() {
+        return 0;
+    }
+
+    let max_common_len = entries
+        .iter()
+        .map(|(bits, _)| bits.len().saturating_sub(depth))
+        .min()
+        .unwrap_or(0);
+
+    for idx in 0..max_common_len {
+        let bit = first[depth + idx];
+        if entries.iter().any(|(bits, _)| bits[depth + idx] != bit) {
+            return idx;
+        }
+    }
+
+    max_common_len
+}
+
+fn compute_node_metadata(node: &TrieNode) -> Result<NodeMetadata, String> {
+    let (left_encoding, left_size) = compute_child_encoding(&node.left)?;
+    let (right_encoding, right_size) = compute_child_encoding(&node.right)?;
+
+    let children_size = if node.is_terminal() {
+        None
+    } else {
+        Some(left_size + right_size)
+    };
+
+    let serialized =
+        Rskip107Codec::encode_node(node, &left_encoding, &right_encoding, children_size)?;
+    let hash = keccak256(&serialized);
+    let external_value_size = if node.has_long_value() {
+        node.value_length() as u64
+    } else {
+        0
+    };
+
+    let reference_size = children_size.unwrap_or(0) + external_value_size + serialized.len() as u64;
+
+    Ok(NodeMetadata {
+        hash,
+        serialized: serialized.clone(),
+        reference_size,
+        embeddable: node.is_terminal() && serialized.len() <= MAX_EMBEDDED_NODE_SIZE_IN_BYTES,
+    })
+}
+
+fn compute_child_encoding(reference: &NodeReference) -> Result<(ChildEncoding, u64), String> {
+    match reference {
+        NodeReference::Empty => Ok((ChildEncoding::Empty, 0)),
+        NodeReference::Embedded(child) => {
+            let metadata = compute_node_metadata(child)?;
+            if metadata.embeddable {
+                Ok((
+                    ChildEncoding::Embedded(metadata.serialized),
+                    metadata.reference_size,
+                ))
+            } else {
+                Ok((
+                    ChildEncoding::Hashed(metadata.hash),
+                    metadata.reference_size,
+                ))
             }
         }
-    }
-
-    pub fn children_size_estimate(&self) -> usize {
-        // This mirrors the "child reference size" notion from Java in a simplified form.
-        self.entries.len() * NodeReference::HASH_REFERENCE_SIZE
-    }
-
-    fn encoded_entries(&self) -> Vec<u8> {
-        let mut payload = Vec::new();
-        payload.extend_from_slice(&(self.entries.len() as u32).to_be_bytes());
-        for (key, value) in &self.entries {
-            append_length_prefixed(&mut payload, key);
-            append_length_prefixed(&mut payload, value);
+        NodeReference::Hashed(_) => {
+            Err("cannot compute node metadata with unresolved hashed node reference".to_string())
         }
-        payload
     }
 }
 
-fn append_length_prefixed(output: &mut Vec<u8>, bytes: &[u8]) {
-    output.extend_from_slice(&(bytes.len() as u32).to_be_bytes());
-    output.extend_from_slice(bytes);
+fn persist_node_recursive<T: RawStoreAdapter>(
+    node: &TrieNode,
+    store: &mut T,
+    is_root: bool,
+) -> Result<NodeMetadata, String> {
+    let (left_encoding, left_size) = persist_child_reference(&node.left, store)?;
+    let (right_encoding, right_size) = persist_child_reference(&node.right, store)?;
+
+    let children_size = if node.is_terminal() {
+        None
+    } else {
+        Some(left_size + right_size)
+    };
+    let serialized =
+        Rskip107Codec::encode_node(node, &left_encoding, &right_encoding, children_size)?;
+    let hash = keccak256(&serialized);
+
+    if let Some(inline_value) = node.value.inline_bytes() {
+        if inline_value.len() > LONG_VALUE_THRESHOLD {
+            let value_hash = keccak256(inline_value);
+            store.save_raw_value(&value_hash, inline_value);
+        }
+    }
+
+    let embeddable = node.is_terminal() && serialized.len() <= MAX_EMBEDDED_NODE_SIZE_IN_BYTES;
+    if is_root || !embeddable {
+        store.save_raw_node(&hash, &serialized);
+    }
+
+    let external_value_size = if node.has_long_value() {
+        node.value_length() as u64
+    } else {
+        0
+    };
+    let reference_size = children_size.unwrap_or(0) + external_value_size + serialized.len() as u64;
+
+    Ok(NodeMetadata {
+        hash,
+        serialized,
+        reference_size,
+        embeddable,
+    })
 }
 
-fn decode_entries(payload: &[u8]) -> Result<BTreeMap<Vec<u8>, Vec<u8>>, String> {
-    if payload.len() < 4 {
-        return Err("snapshot payload is truncated".to_string());
+fn persist_child_reference<T: RawStoreAdapter>(
+    reference: &NodeReference,
+    store: &mut T,
+) -> Result<(ChildEncoding, u64), String> {
+    match reference {
+        NodeReference::Empty => Ok((ChildEncoding::Empty, 0)),
+        NodeReference::Embedded(child) => {
+            let child_metadata = persist_node_recursive(child, store, false)?;
+            if child_metadata.embeddable {
+                Ok((
+                    ChildEncoding::Embedded(child_metadata.serialized),
+                    child_metadata.reference_size,
+                ))
+            } else {
+                Ok((
+                    ChildEncoding::Hashed(child_metadata.hash),
+                    child_metadata.reference_size,
+                ))
+            }
+        }
+        NodeReference::Hashed(hash) => Ok((ChildEncoding::Hashed(*hash), 0)),
     }
-
-    let mut cursor = 0usize;
-    let total_entries = read_u32(payload, &mut cursor)? as usize;
-    let mut entries = BTreeMap::new();
-
-    for _ in 0..total_entries {
-        let key = read_blob(payload, &mut cursor)?;
-        let value = read_blob(payload, &mut cursor)?;
-        entries.insert(key, value);
-    }
-
-    if cursor != payload.len() {
-        return Err("snapshot payload has trailing bytes".to_string());
-    }
-
-    Ok(entries)
 }
 
-fn read_u32(payload: &[u8], cursor: &mut usize) -> Result<u32, String> {
-    let end = *cursor + 4;
-    if end > payload.len() {
-        return Err("snapshot payload is truncated".to_string());
-    }
-
-    let mut bytes = [0u8; 4];
-    bytes.copy_from_slice(&payload[*cursor..end]);
-    *cursor = end;
-    Ok(u32::from_be_bytes(bytes))
+fn account_storage_prefix_key(account_address: &[u8]) -> Vec<u8> {
+    let mut key = Vec::with_capacity(
+        DOMAIN_PREFIX.len() + SECURE_KEY_SIZE + account_address.len() + STORAGE_PREFIX.len(),
+    );
+    key.extend_from_slice(&DOMAIN_PREFIX);
+    key.extend_from_slice(&secure_key_prefix(account_address));
+    key.extend_from_slice(account_address);
+    key.extend_from_slice(&STORAGE_PREFIX);
+    key
 }
 
-fn read_blob(payload: &[u8], cursor: &mut usize) -> Result<Vec<u8>, String> {
-    let length = read_u32(payload, cursor)? as usize;
-    let end = *cursor + length;
-    if end > payload.len() {
-        return Err("snapshot payload is truncated".to_string());
-    }
+fn secure_key_prefix(key: &[u8]) -> [u8; SECURE_KEY_SIZE] {
+    let hash = keccak256(key);
+    let mut prefix = [0u8; SECURE_KEY_SIZE];
+    prefix.copy_from_slice(&hash[..SECURE_KEY_SIZE]);
+    prefix
+}
 
-    let value = payload[*cursor..end].to_vec();
-    *cursor = end;
-    Ok(value)
+fn hex(bytes: &[u8]) -> String {
+    let mut output = String::with_capacity(bytes.len() * 2);
+    for byte in bytes {
+        output.push_str(&format!("{:02x}", byte));
+    }
+    output
 }
 
 #[cfg(test)]
@@ -195,6 +540,14 @@ mod tests {
     }
 
     impl RawStoreAdapter for InMemoryStore {
+        fn load_raw_node(&mut self, hash: &[u8]) -> Option<Vec<u8>> {
+            self.nodes.get(hash).cloned()
+        }
+
+        fn load_raw_value(&mut self, hash: &[u8]) -> Option<Vec<u8>> {
+            self.values.get(hash).cloned()
+        }
+
         fn save_raw_node(&mut self, hash: &[u8], serialized_node: &[u8]) {
             self.nodes.insert(hash.to_vec(), serialized_node.to_vec());
         }
@@ -230,7 +583,7 @@ mod tests {
 
     #[test]
     fn empty_root_hash_matches_expected_semantics() {
-        let trie = Unitrie::new();
+        let mut trie = Unitrie::new();
         assert_eq!(trie.root_hash(), empty_trie_hash());
     }
 
@@ -248,29 +601,37 @@ mod tests {
     }
 
     #[test]
-    fn snapshot_round_trip() {
+    fn collect_keys_matches_java_contract_by_key_length() {
         let mut trie = Unitrie::new();
-        trie.put(b"a".to_vec(), b"1".to_vec());
-        trie.put(b"b".to_vec(), b"2".to_vec());
+        trie.put(vec![0x01], vec![0xaa]);
+        trie.put(vec![0x02], vec![0xbb]);
+        trie.put(vec![0x03, 0x04], vec![0xcc]);
 
-        let snapshot = trie.snapshot_payload();
-        let loaded = Unitrie::from_snapshot_payload(&snapshot).expect("snapshot should decode");
-
-        assert_eq!(loaded.get(b"a").as_deref(), Some(b"1".as_slice()));
-        assert_eq!(loaded.get(b"b").as_deref(), Some(b"2".as_slice()));
-        assert_eq!(loaded.root_hash(), trie.root_hash());
+        let single_byte_keys = trie.collect_keys(1);
+        assert_eq!(single_byte_keys.len(), 2);
+        let all_keys = trie.collect_keys(i32::MAX as usize);
+        assert_eq!(all_keys.len(), 3);
     }
 
     #[test]
-    fn save_to_store_persists_node_and_long_values() {
+    fn save_and_load_from_persisted_root_round_trip() {
         let mut trie = Unitrie::new();
-        trie.put(b"short".to_vec(), vec![1; 32]);
-        trie.put(b"long".to_vec(), vec![2; 40]);
+        trie.put(vec![0xaa], vec![0x01, 0x02, 0x03]);
+        trie.put(vec![0xab], vec![0x09; 40]);
 
+        let root_hash = trie.root_hash();
         let mut store = InMemoryStore::default();
         trie.save_to_store(&mut store);
 
-        assert_eq!(store.nodes.len(), 1);
-        assert_eq!(store.values.len(), 1);
+        let mut loaded = Unitrie::from_persisted_root(&root_hash, &mut store).unwrap();
+        assert_eq!(
+            loaded.get(&[0xaa]).as_deref(),
+            Some([0x01, 0x02, 0x03].as_ref())
+        );
+        assert_eq!(
+            loaded.get(&[0xab]).as_deref(),
+            Some(vec![0x09; 40].as_slice())
+        );
+        assert_eq!(loaded.root_hash(), root_hash);
     }
 }

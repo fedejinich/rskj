@@ -3,6 +3,10 @@ pub trait RawStoreAdapter {
         None
     }
 
+    fn load_raw_value(&mut self, hash: &[u8]) -> Option<Vec<u8>> {
+        self.load_raw_node(hash)
+    }
+
     fn save_raw_node(&mut self, hash: &[u8], serialized_node: &[u8]);
 
     fn save_raw_value(&mut self, hash: &[u8], value: &[u8]);

@@ -6,3 +6,4 @@ pub mod hash;
 pub mod node_ref;
 pub mod path;
 pub mod store_adapter;
+pub mod varint;
