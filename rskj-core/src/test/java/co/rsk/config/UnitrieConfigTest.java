@@ -35,6 +35,8 @@ class UnitrieConfigTest {
         assertEquals("java", properties.getUnitrieEngine());
         assertTrue(properties.isUnitrieRustFailOnMismatch());
         assertNull(properties.getUnitrieRustLibraryPath());
+        assertEquals(200, properties.getUnitrieValidationRunDefaultBlockCount());
+        assertEquals(5000, properties.getUnitrieValidationRunDeepBlockCount());
     }
 
     @Test
@@ -43,12 +45,16 @@ class UnitrieConfigTest {
                 ConfigFactory.parseString(
                         "blockchain.unitrie.engine = \"rust-shadow\"\n" +
                         "blockchain.unitrie.rust.failOnMismatch = false\n" +
-                        "blockchain.unitrie.rust.libraryPath = \"/tmp/libunitrie_rs_jni.dylib\"\n"
+                        "blockchain.unitrie.rust.libraryPath = \"/tmp/libunitrie_rs_jni.dylib\"\n" +
+                        "blockchain.unitrie.validationRun.defaultBlockCount = 120\n" +
+                        "blockchain.unitrie.validationRun.deepBlockCount = 1500\n"
                 ).withFallback(base)
         );
 
         assertEquals("rust-shadow", properties.getUnitrieEngine());
         assertFalse(properties.isUnitrieRustFailOnMismatch());
         assertEquals("/tmp/libunitrie_rs_jni.dylib", properties.getUnitrieRustLibraryPath());
+        assertEquals(120, properties.getUnitrieValidationRunDefaultBlockCount());
+        assertEquals(1500, properties.getUnitrieValidationRunDeepBlockCount());
     }
 }

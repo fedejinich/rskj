@@ -66,6 +66,8 @@ public class RskSystemProperties extends SystemProperties {
     private static final String UNITRIE_ENGINE_CONFIG = "blockchain.unitrie.engine";
     private static final String UNITRIE_RUST_FAIL_ON_MISMATCH_CONFIG = "blockchain.unitrie.rust.failOnMismatch";
     private static final String UNITRIE_RUST_LIBRARY_PATH_CONFIG = "blockchain.unitrie.rust.libraryPath";
+    private static final String UNITRIE_VALIDATION_DEFAULT_BLOCK_COUNT_CONFIG = "blockchain.unitrie.validationRun.defaultBlockCount";
+    private static final String UNITRIE_VALIDATION_DEEP_BLOCK_COUNT_CONFIG = "blockchain.unitrie.validationRun.deepBlockCount";
 
     private static final String RPC_GAS_PRICE_MULTIPLIER_CONFIG = "rpc.gasPriceMultiplier";
     private static final String DISCOVERY_BUCKET_SIZE = "peer.discovery.bucketSize";
@@ -257,6 +259,22 @@ public class RskSystemProperties extends SystemProperties {
     public String getUnitrieRustLibraryPath() {
         String libraryPath = getString(UNITRIE_RUST_LIBRARY_PATH_CONFIG, "").trim();
         return libraryPath.isEmpty() ? null : libraryPath;
+    }
+
+    public int getUnitrieValidationRunDefaultBlockCount() {
+        int value = getInt(UNITRIE_VALIDATION_DEFAULT_BLOCK_COUNT_CONFIG, 200);
+        if (value <= 0) {
+            throw new RskConfigurationException(UNITRIE_VALIDATION_DEFAULT_BLOCK_COUNT_CONFIG + " must be greater than zero");
+        }
+        return value;
+    }
+
+    public int getUnitrieValidationRunDeepBlockCount() {
+        int value = getInt(UNITRIE_VALIDATION_DEEP_BLOCK_COUNT_CONFIG, 5000);
+        if (value <= 0) {
+            throw new RskConfigurationException(UNITRIE_VALIDATION_DEEP_BLOCK_COUNT_CONFIG + " must be greater than zero");
+        }
+        return value;
     }
 
     public int flushNumberOfBlocks() {
