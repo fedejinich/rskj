@@ -10,6 +10,7 @@ name = "unitrie_rs_jni"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
+dashmap = "6.1"
 jni = "0.21"
 once_cell = "1.20"
 tiny-keccak = { version = "2", features = ["keccak"] }
