@@ -113,8 +113,7 @@ impl Unitrie {
             removed
         } else {
             // Prefix made of 0xff bytes has no finite upper bound; everything in tail matches.
-            let removed = !tail.is_empty();
-            removed
+            !tail.is_empty()
         };
 
         if !removed_any {

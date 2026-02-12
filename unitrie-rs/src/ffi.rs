@@ -59,14 +59,14 @@ impl PerfCounters {
 #[derive(Debug)]
 enum TrieRuntime {
     Legacy(Unitrie),
-    Next(NextUnitrie),
+    Next(Box<NextUnitrie>),
 }
 
 impl TrieRuntime {
     fn new(implementation: RuntimeImplementation) -> Self {
         match implementation {
             RuntimeImplementation::LegacyV1 => Self::Legacy(Unitrie::new()),
-            RuntimeImplementation::Next => Self::Next(NextUnitrie::new()),
+            RuntimeImplementation::Next => Self::Next(Box::new(NextUnitrie::new())),
         }
     }
 
@@ -80,7 +80,9 @@ impl TrieRuntime {
                 Unitrie::from_persisted_root(root_hash, store).map(Self::Legacy)
             }
             RuntimeImplementation::Next => {
-                NextUnitrie::from_persisted_root(root_hash, store).map(Self::Next)
+                NextUnitrie::from_persisted_root(root_hash, store)
+                    .map(Box::new)
+                    .map(Self::Next)
             }
         }
     }
