@@ -272,19 +272,9 @@ public class RustMutableTrie implements MutableTrie {
     @Override
     public Iterator<DataWord> getStorageKeys(RskAddress addr) {
         if (engineType == TrieEngineType.RUST && bridge != null) {
-            Iterator<byte[]> keys = bridge.getStorageKeys(nativeHandle, addr.getBytes());
+            List<byte[]> rustKeys = loadStorageKeysFromBridge(addr.getBytes());
             recordDifferentialOperation("getStorageKeys", addr.getBytes(), null, null, null, null, null);
-            return new Iterator<>() {
-                @Override
-                public boolean hasNext() {
-                    return keys.hasNext();
-                }
-
-                @Override
-                public DataWord next() {
-                    return DataWord.valueOf(keys.next());
-                }
-            };
+            return toDataWordIterator(rustKeys);
         }
 
         Iterator<DataWord> javaKeysIterator = javaDelegateOrMirror().getStorageKeys(addr);
@@ -293,7 +283,7 @@ public class RustMutableTrie implements MutableTrie {
         }
 
         List<byte[]> javaKeys = consumeStorageKeys(javaKeysIterator);
-        List<byte[]> rustKeys = consumeStorageKeys(bridge.getStorageKeys(nativeHandle, addr.getBytes()));
+        List<byte[]> rustKeys = loadStorageKeysFromBridge(addr.getBytes());
         if (!byteListEquals(javaKeys, rustKeys)) {
             onMismatch(String.format(
                     "unitrie-rs mismatch in getStorageKeys for account=%s javaCount=%s rustCount=%s",
@@ -305,6 +295,20 @@ public class RustMutableTrie implements MutableTrie {
         recordDifferentialOperation("getStorageKeys", addr.getBytes(), null, null, null, null, null);
 
         return toDataWordIterator(javaKeys);
+    }
+
+    private List<byte[]> loadStorageKeysFromBridge(byte[] accountAddress) {
+        if (bridge == null) {
+            return List.of();
+        }
+
+        try {
+            return consumeStorageKeys(bridge.getStorageKeysPackedDecoded(nativeHandle, accountAddress));
+        } catch (RuntimeException ex) {
+            logger.warn("Could not decode packed storage keys from rust bridge; falling back to legacy path: {}", ex.getMessage());
+            logger.debug("Packed storage keys decode failure", ex);
+            return consumeStorageKeys(bridge.getStorageKeys(nativeHandle, accountAddress));
+        }
     }
 
     @Override
