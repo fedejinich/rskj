@@ -133,7 +133,7 @@ impl TrieRuntime {
         }
     }
 
-    fn get_storage_keys(&self, account_address: &[u8]) -> Vec<Vec<u8>> {
+    fn get_storage_keys(&mut self, account_address: &[u8]) -> Vec<Vec<u8>> {
         match self {
             Self::Legacy(trie) => trie.get_storage_keys(account_address),
             Self::Next(trie) => trie.get_storage_keys(account_address),
