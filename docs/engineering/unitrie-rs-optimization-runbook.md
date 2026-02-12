@@ -10,6 +10,18 @@ Rust variants:
 - `legacy-v1` (frozen baseline)
 - `next` (active optimization target)
 
+## 1.1 V4.1 sprint target
+Current sprint objective for `rust(next)`:
+1. Reach at least `2/5` benchmark wins against Java.
+2. Stretch objective: `3/5` wins.
+3. Mandatory kept win: `datasetDrivenMassiveUpload`.
+4. Primary target workloads: `putGetDeleteMix` and `accountStorageKeyIteration`.
+
+Workload win definition:
+1. `avg_time` (Rust) < `avg_time` (Java)
+2. `p95` (Rust) <= `p95` (Java) * `1.02`
+3. `throughput` (Rust) > `throughput` (Java)
+
 ## 2. Baseline and immutability
 1. Legacy snapshot path:
    - `/Users/void_rsk/.codex/worktrees/35ae/rskj/unitrie-rs-legacy-v1`
@@ -39,7 +51,7 @@ UNITRIE_JMH_WARMUP_SECONDS=1 \
 UNITRIE_JMH_MEASUREMENT_SECONDS=1 \
 UNITRIE_JMH_FORKS=1 \
 UNITRIE_JMH_ENGINES=java,rust \
-UNITRIE_JMH_RUST_IMPLEMENTATIONS=legacy-v1,next \
+UNITRIE_JMH_RUST_IMPLEMENTATIONS=next \
 ./gradlew :rskj-core:jmh -Pbenchmark=BenchmarkTrieEngineRunner
 ```
 
@@ -51,8 +63,29 @@ UNITRIE_JMH_WARMUP_SECONDS=10 \
 UNITRIE_JMH_MEASUREMENT_SECONDS=10 \
 UNITRIE_JMH_FORKS=1 \
 UNITRIE_JMH_ENGINES=java,rust \
-UNITRIE_JMH_RUST_IMPLEMENTATIONS=legacy-v1,next \
+UNITRIE_JMH_RUST_IMPLEMENTATIONS=next \
 ./gradlew :rskj-core:jmh -Pbenchmark=BenchmarkTrieEngineRunner
+```
+
+## Deep decision run (3 attempts, median)
+```bash
+mkdir -p rskj-core/build/reports/jmh/deep-runs
+
+for i in 1 2 3; do
+  UNITRIE_JMH_WARMUP_ITERATIONS=5 \
+  UNITRIE_JMH_MEASUREMENT_ITERATIONS=15 \
+  UNITRIE_JMH_WARMUP_SECONDS=10 \
+  UNITRIE_JMH_MEASUREMENT_SECONDS=10 \
+  UNITRIE_JMH_FORKS=1 \
+  UNITRIE_JMH_ENGINES=java,rust \
+  UNITRIE_JMH_RUST_IMPLEMENTATIONS=next \
+  ./gradlew :rskj-core:jmh -Pbenchmark=BenchmarkTrieEngineRunner
+
+  cp rskj-core/build/reports/jmh/result_trie_engine_summary.json \
+     rskj-core/build/reports/jmh/deep-runs/result_trie_engine_summary_run${i}.json
+  cp rskj-core/build/reports/jmh/result_trie_engine_comparison.md \
+     rskj-core/build/reports/jmh/deep-runs/result_trie_engine_comparison_run${i}.md
+done
 ```
 
 If JNI library is not discoverable:
@@ -71,6 +104,7 @@ Interpretation rules:
 1. `summary.json` is machine-readable source of truth.
 2. `comparison.md` highlights Java deltas per Rust candidate (`legacy-v1`, `next`).
 3. Warnings are non-blocking signals for triage, not consensus verdicts.
+4. For V4.1 decisions, use median across 3 deep runs stored under `deep-runs/`.
 
 ## 6. Parity gate (separate from benchmark)
 Performance is not enough. Before considering promotion:

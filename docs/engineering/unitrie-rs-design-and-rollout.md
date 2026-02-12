@@ -345,3 +345,38 @@ Replacement candidacy requires:
 1. consensus parity sustained in bounded differential runs,
 2. performance superiority over Java in agreed benchmark workloads,
 3. rollback-safe operation by configuration (`engine=java`).
+
+## 15. V4.1 Optimization Sprint (2-3/5 wins target)
+### Goal
+Raise `rust(next)` from one benchmark win to at least two wins (stretch: three) while preserving consensus behavior.
+
+Primary target workloads:
+1. `putGetDeleteMix`
+2. `accountStorageKeyIteration`
+
+Mandatory retained win:
+1. `datasetDrivenMassiveUpload`
+
+### Implemented optimization scope
+1. `deleteRecursive` optimized to remove a lexicographic prefix range instead of scanning every key.
+2. JNI `nativeGet` uses borrowed value access to avoid an intermediate Rust `Vec` clone.
+3. `next` includes storage-iteration cache by `(accountAddress, mutationGeneration)`.
+4. JNI packed storage key path added:
+   - Rust encodes keys as `varint(count)` + `varint(len) + bytes`.
+   - Java bridge decodes packed payload with strict validation.
+   - RustMutableTrie uses packed path with automatic fallback to legacy array path.
+
+### Evaluation protocol
+1. Fast validation loop:
+   - warmup `1`, measurement `2`, seconds `1`.
+2. Deep decision loop:
+   - warmup `5`, measurement `15`, seconds `10`.
+   - execute three runs and use median for promotion decisions.
+3. Functional guardrail remains mandatory:
+   - Validation Run (On-Demand), `500` blocks, `repeatRuns=2`, fail-fast on divergence.
+
+### Workload win criteria
+A workload is considered a win for Rust when all are true:
+1. `avg_time` Rust < Java
+2. `p95` Rust <= Java * `1.02`
+3. `throughput` Rust > Java
