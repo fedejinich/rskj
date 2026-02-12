@@ -84,10 +84,10 @@ impl TrieRuntime {
         }
     }
 
-    fn get(&self, key: &[u8]) -> Option<Vec<u8>> {
+    fn get_ref(&self, key: &[u8]) -> Option<&[u8]> {
         match self {
-            Self::Legacy(trie) => trie.get(key),
-            Self::Next(trie) => trie.get(key),
+            Self::Legacy(trie) => trie.get_ref(key),
+            Self::Next(trie) => trie.get_ref(key),
         }
     }
 
@@ -527,7 +527,10 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeGet(
         Err(_) => return std::ptr::null_mut(),
     };
 
-    let value = match with_trie_mut(handle, |trie| trie.runtime.get(&key)) {
+    let value = match with_trie_mut(handle, |trie| match trie.runtime.get_ref(&key) {
+        Some(value) => to_byte_array(&mut env, value, "value"),
+        None => Some(std::ptr::null_mut()),
+    }) {
         Ok(value) => value,
         Err(err) => {
             throw_illegal_argument(&mut env, err);
@@ -535,10 +538,7 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeGet(
         }
     };
 
-    match value {
-        Some(value) => to_byte_array(&mut env, &value, "value").unwrap_or(std::ptr::null_mut()),
-        None => std::ptr::null_mut(),
-    }
+    value.unwrap_or(std::ptr::null_mut())
 }
 
 #[no_mangle]

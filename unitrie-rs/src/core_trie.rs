@@ -74,6 +74,10 @@ impl Unitrie {
         self.entries.get(key).cloned()
     }
 
+    pub fn get_ref(&self, key: &[u8]) -> Option<&[u8]> {
+        self.entries.get(key).map(Vec::as_slice)
+    }
+
     pub fn put(&mut self, key: Vec<u8>, value: Vec<u8>) {
         if value.is_empty() {
             self.entries.remove(&key);

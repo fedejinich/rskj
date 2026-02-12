@@ -35,6 +35,10 @@ impl NextUnitrie {
         self.inner.get(key)
     }
 
+    pub fn get_ref(&self, key: &[u8]) -> Option<&[u8]> {
+        self.inner.get_ref(key)
+    }
+
     pub fn put(&mut self, key: Vec<u8>, value: Vec<u8>) {
         self.node_arena.mark_dirty_key(&key);
         self.hash_cache.invalidate();
