@@ -1,0 +1,603 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-02-12T00:00:00Z",
+  "sourceOfTruth": "java-unitrie",
+  "specs": [
+    {
+      "specId": "SPEC-TRIE-PUT-SPLIT-COALESCE-001",
+      "specClass": "trie",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 438,
+          "symbol": "put(byte[] key, byte[] value)"
+        },
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 827,
+          "symbol": "internalPut"
+        },
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 915,
+          "symbol": "split"
+        }
+      ],
+      "javaBehavior": "Path-compressed binary trie mutation with exact split/coalesce transitions and deterministic root impact.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.TrieKeyValueTest",
+          "co.rsk.trie.TrieDeleteTest",
+          "co.rsk.trie.engine.rust.UnitrieDifferentialCorpusReplayTest"
+        ],
+        "requiredCorpus": [
+          "rskj-core/src/test/resources/trie/differential/sample-parity-corpus.jsonl"
+        ]
+      },
+      "status": "partial"
+    },
+    {
+      "specId": "SPEC-TRIE-DELETE-RECURSIVE-PREFIX-001",
+      "specClass": "trie",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 475,
+          "symbol": "deleteRecursive(byte[] key)"
+        }
+      ],
+      "javaBehavior": "Recursive deletion removes all keys under a prefix while preserving node canonicalization semantics.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.TrieDeleteTest",
+          "co.rsk.trie.engine.rust.UnitrieDifferentialCorpusReplayTest"
+        ],
+        "requiredCorpus": [
+          "rskj-core/src/test/resources/trie/differential/sample-parity-corpus.jsonl"
+        ]
+      },
+      "status": "partial"
+    },
+    {
+      "specId": "SPEC-TRIE-GET-FIND-001",
+      "specClass": "trie",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 650,
+          "symbol": "find(byte[] key)"
+        },
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 407,
+          "symbol": "get(byte[] key)"
+        }
+      ],
+      "javaBehavior": "Lookup semantics for key traversal and absent-key handling must match Java exactly.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.TrieKeyValueTest",
+          "co.rsk.trie.engine.rust.UnitrieDifferentialCorpusReplayTest"
+        ],
+        "requiredCorpus": [
+          "rskj-core/src/test/resources/trie/differential/sample-parity-corpus.jsonl"
+        ]
+      },
+      "status": "implemented"
+    },
+    {
+      "specId": "SPEC-TRIE-COLLECT-KEYS-ITERATION-001",
+      "specClass": "trie",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 594,
+          "symbol": "collectKeys(Set<ByteArrayWrapper>, TrieKeySlice, int)"
+        },
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 618,
+          "symbol": "collectKeys(int byteSize)"
+        }
+      ],
+      "javaBehavior": "Collect keys traversal must preserve deterministic ordering and key truncation behavior.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.TrieIteratorTest",
+          "co.rsk.trie.engine.rust.UnitrieDifferentialCorpusReplayTest"
+        ],
+        "requiredCorpus": [
+          "rskj-core/src/test/resources/trie/differential/sample-parity-corpus.jsonl"
+        ]
+      },
+      "status": "implemented"
+    },
+    {
+      "specId": "SPEC-TRIE-CHILDREN-SIZE-VARINT-001",
+      "specClass": "trie",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 997,
+          "symbol": "getChildrenSize()"
+        },
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 682,
+          "symbol": "internalToMessage() childrenSize"
+        }
+      ],
+      "javaBehavior": "Serialized children-size varint encoding must match Java for every node shape.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.TrieDTOTest",
+          "co.rsk.trie.TrieStoreImplTest"
+        ],
+        "requiredCorpus": []
+      },
+      "status": "partial"
+    },
+    {
+      "specId": "SPEC-TRIE-EMBEDDABLE-THRESHOLD-44-001",
+      "specClass": "trie",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 68,
+          "symbol": "MAX_EMBEDDED_NODE_SIZE_IN_BYTES"
+        },
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 588,
+          "symbol": "isEmbeddable()"
+        }
+      ],
+      "javaBehavior": "Node embeddability threshold is exactly 44 bytes and impacts persistence and hashing.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.TrieStoreImplTest",
+          "co.rsk.trie.TrieSaveRetrieveTest"
+        ],
+        "requiredCorpus": []
+      },
+      "status": "partial"
+    },
+    {
+      "specId": "SPEC-TRIE-VALUE-LENGTH-HASH-001",
+      "specClass": "trie",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/db/MutableTrieImpl.java",
+          "line": 67,
+          "symbol": "getValueLength(byte[] key)"
+        },
+        {
+          "file": "rskj-core/src/main/java/co/rsk/db/MutableTrieImpl.java",
+          "line": 78,
+          "symbol": "getValueHash(byte[] key)"
+        }
+      ],
+      "javaBehavior": "Value length and hash APIs must remain semantically identical for EVM-visible behavior.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.TrieValueTest",
+          "co.rsk.trie.engine.rust.UnitrieDifferentialCorpusReplayTest"
+        ],
+        "requiredCorpus": [
+          "rskj-core/src/test/resources/trie/differential/sample-parity-corpus.jsonl"
+        ]
+      },
+      "status": "implemented"
+    },
+    {
+      "specId": "SPEC-CODEC-RSKIP107-SERIALIZE-001",
+      "specClass": "codec-rskip107",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 677,
+          "symbol": "internalToMessage()"
+        }
+      ],
+      "javaBehavior": "RSKIP107 serialization bytes for trie nodes are consensus-critical and must be stable.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.TrieStoreImplTest",
+          "co.rsk.trie.TrieSaveRetrieveTest"
+        ],
+        "requiredCorpus": []
+      },
+      "status": "partial"
+    },
+    {
+      "specId": "SPEC-CODEC-RSKIP107-DESERIALIZE-001",
+      "specClass": "codec-rskip107",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 259,
+          "symbol": "fromMessageRskip107(ByteBuffer message, TrieStore store)"
+        }
+      ],
+      "javaBehavior": "RSKIP107 deserialization must reconstruct nodes/references without byte-level ambiguity.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.TrieStoreImplTest",
+          "co.rsk.trie.TrieSaveRetrieveTest"
+        ],
+        "requiredCorpus": []
+      },
+      "status": "partial"
+    },
+    {
+      "specId": "SPEC-CODEC-ORCHID-SERIALIZE-001",
+      "specClass": "codec-orchid",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 525,
+          "symbol": "toMessageOrchid(boolean isSecure)"
+        }
+      ],
+      "javaBehavior": "Orchid serialization must remain compatible for pre-RSKIP107 stored states.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.TrieOrchidMessageTest",
+          "co.rsk.trie.TrieSaveRetrieveTest"
+        ],
+        "requiredCorpus": []
+      },
+      "status": "partial"
+    },
+    {
+      "specId": "SPEC-CODEC-ORCHID-DESERIALIZE-001",
+      "specClass": "codec-orchid",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 177,
+          "symbol": "fromMessageOrchid(byte[] message, TrieStore store)"
+        }
+      ],
+      "javaBehavior": "Orchid deserialization must correctly hydrate persisted legacy nodes.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.TrieOrchidMessageTest",
+          "co.rsk.trie.TrieSaveRetrieveTest"
+        ],
+        "requiredCorpus": []
+      },
+      "status": "partial"
+    },
+    {
+      "specId": "SPEC-STORAGE-KEYS-RSKIP108-MAPPING-001",
+      "specClass": "storage-keys",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/org/ethereum/db/TrieKeyMapper.java",
+          "line": 68,
+          "symbol": "getAccountStorageKey(RskAddress addr, DataWord subkeyDW)"
+        },
+        {
+          "file": "rskj-core/src/main/java/org/ethereum/db/TrieKeyMapper.java",
+          "line": 74,
+          "symbol": "secureKeyPrefix(byte[] key)"
+        }
+      ],
+      "javaBehavior": "Storage key mapping (secure prefix + stripped suffix) must remain exact for account storage compatibility.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.engine.rust.RustUnitrieBridgePackedCodecTest",
+          "co.rsk.trie.engine.rust.UnitrieDifferentialCorpusReplayTest"
+        ],
+        "requiredCorpus": [
+          "rskj-core/src/test/resources/trie/differential/sample-parity-corpus.jsonl"
+        ]
+      },
+      "status": "implemented"
+    },
+    {
+      "specId": "SPEC-STORAGE-KEYS-ITERATION-ORDER-001",
+      "specClass": "storage-keys",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/db/MutableTrieImpl.java",
+          "line": 93,
+          "symbol": "getStorageKeys(RskAddress addr)"
+        }
+      ],
+      "javaBehavior": "Storage key iteration must preserve deterministic order and key decoding offset behavior.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.engine.rust.RustUnitrieBridgePackedCodecTest",
+          "co.rsk.trie.engine.rust.UnitrieDifferentialCorpusReplayTest"
+        ],
+        "requiredCorpus": [
+          "rskj-core/src/test/resources/trie/differential/sample-parity-corpus.jsonl"
+        ]
+      },
+      "status": "implemented"
+    },
+    {
+      "specId": "SPEC-PERSISTENCE-SAVE-RAW-NODES-001",
+      "specClass": "persistence",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/TrieStoreImpl.java",
+          "line": 56,
+          "symbol": "save(Trie trie)"
+        },
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/TrieStoreImpl.java",
+          "line": 89,
+          "symbol": "saveRawNode(byte[] hash, byte[] serializedNode)"
+        }
+      ],
+      "javaBehavior": "Persisted node bytes keyed by hash must remain readable across engines.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.TrieStoreImplTest",
+          "co.rsk.trie.engine.rust.RustTrieStoreAdapterTest"
+        ],
+        "requiredCorpus": []
+      },
+      "status": "implemented"
+    },
+    {
+      "specId": "SPEC-PERSISTENCE-LONG-VALUE-BLOBS-001",
+      "specClass": "persistence",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/TrieStoreImpl.java",
+          "line": 132,
+          "symbol": "save(Trie trie, boolean isRootNode, int level, TraceInfo traceInfo)"
+        }
+      ],
+      "javaBehavior": "Long values are externalized and must preserve hash-addressed retrieval semantics.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.TrieValueTest",
+          "co.rsk.trie.TrieStoreImplTest"
+        ],
+        "requiredCorpus": []
+      },
+      "status": "partial"
+    },
+    {
+      "specId": "SPEC-PERSISTENCE-RETRIEVE-ROOT-001",
+      "specClass": "persistence",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/TrieStoreImpl.java",
+          "line": 162,
+          "symbol": "retrieve(byte[] hash)"
+        }
+      ],
+      "javaBehavior": "Root-based trie rehydration from persisted bytes must be cross-engine compatible.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.TrieSaveRetrieveTest",
+          "co.rsk.trie.engine.rust.UnitrieDifferentialCorpusReplayTest"
+        ],
+        "requiredCorpus": [
+          "rskj-core/src/test/resources/trie/differential/sample-parity-corpus.jsonl"
+        ]
+      },
+      "status": "partial"
+    },
+    {
+      "specId": "SPEC-HASH-EMPTY-ROOT-001",
+      "specClass": "hash",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 407,
+          "symbol": "get(byte[] key) / find path on empty trie"
+        },
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 371,
+          "symbol": "save() and hash recomputation"
+        }
+      ],
+      "javaBehavior": "Empty trie hash semantics must be stable and deterministic for all engines.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.TrieHashTest",
+          "co.rsk.trie.delete.SecureTrieHashTest"
+        ],
+        "requiredCorpus": []
+      },
+      "status": "implemented"
+    },
+    {
+      "specId": "SPEC-HASH-LONG-VALUE-THRESHOLD-001",
+      "specClass": "hash",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 963,
+          "symbol": "hasLongValue()"
+        },
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/Trie.java",
+          "line": 732,
+          "symbol": "internalToMessage long-value branch"
+        }
+      ],
+      "javaBehavior": "Values with length > 32 bytes must use hashed long-value encoding path.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.TrieValueTest",
+          "co.rsk.trie.TrieStoreImplTest"
+        ],
+        "requiredCorpus": []
+      },
+      "status": "partial"
+    },
+    {
+      "specId": "SPEC-HASH-ROOT-PARITY-001",
+      "specClass": "hash",
+      "criticality": "consensus-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/cli/tools/UnitrieValidationRunOnDemand.java",
+          "line": 328,
+          "symbol": "state root comparison"
+        }
+      ],
+      "javaBehavior": "State root parity between Java and Rust engines must hold block-by-block under identical execution.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.engine.rust.UnitrieDifferentialCorpusReplayTest"
+        ],
+        "requiredCorpus": [
+          "rskj-core/src/test/resources/trie/differential/sample-parity-corpus.jsonl"
+        ]
+      },
+      "status": "partial"
+    },
+    {
+      "specId": "SPEC-JNI-EXECUTION-STABILITY-001",
+      "specClass": "jni",
+      "criticality": "non-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/engine/rust/RustUnitrieBridge.java",
+          "line": 45,
+          "symbol": "load(@Nullable String libraryPath)"
+        }
+      ],
+      "javaBehavior": "JNI bridge load and call failure modes are captured for diagnostics artifacts and triage traceability.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.engine.rust.RustMutableTrieTest"
+        ],
+        "requiredCorpus": []
+      },
+      "status": "implemented"
+    },
+    {
+      "specId": "SPEC-TRIE-UNCLASSIFIED-001",
+      "specClass": "diagnostics",
+      "criticality": "non-critical",
+      "javaSource": [
+        {
+          "file": "rskj-core/src/main/java/co/rsk/trie/engine/rust/diagnostics/TrieDifferentialSpecResolver.java",
+          "line": 26,
+          "symbol": "UNKNOWN_SPEC_ID"
+        }
+      ],
+      "javaBehavior": "Fallback spec id used only when an operation is not yet mapped in the resolver.",
+      "rustTarget": [
+        "legacy-v1",
+        "next"
+      ],
+      "evidence": {
+        "requiredTests": [
+          "co.rsk.trie.engine.rust.diagnostics.JsonlTrieDifferentialRecorderTest"
+        ],
+        "requiredCorpus": []
+      },
+      "status": "implemented"
+    }
+  ]
+}

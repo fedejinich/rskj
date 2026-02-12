@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rsk.co/schemas/unitrie-spec-map.schema.json",
+  "title": "Unitrie Spec Map",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "generatedAt",
+    "sourceOfTruth",
+    "specs"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sourceOfTruth": {
+      "type": "string",
+      "enum": [
+        "java-unitrie"
+      ]
+    },
+    "specs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/specEntry"
+      }
+    }
+  },
+  "$defs": {
+    "sourceAnchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "line",
+        "symbol"
+      ],
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "line": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "symbol": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requiredTests",
+        "requiredCorpus"
+      ],
+      "properties": {
+        "requiredTests": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "requiredCorpus": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "specEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "specId",
+        "specClass",
+        "criticality",
+        "javaSource",
+        "javaBehavior",
+        "rustTarget",
+        "evidence",
+        "status"
+      ],
+      "properties": {
+        "specId": {
+          "type": "string",
+          "pattern": "^SPEC-[A-Z0-9-]+$"
+        },
+        "specClass": {
+          "type": "string",
+          "enum": [
+            "trie",
+            "codec-rskip107",
+            "codec-orchid",
+            "storage-keys",
+            "persistence",
+            "hash",
+            "jni",
+            "diagnostics"
+          ]
+        },
+        "criticality": {
+          "type": "string",
+          "enum": [
+            "consensus-critical",
+            "non-critical"
+          ]
+        },
+        "javaSource": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/sourceAnchor"
+          }
+        },
+        "javaBehavior": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rustTarget": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "legacy-v1",
+              "next"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidence"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "missing",
+            "partial",
+            "implemented",
+            "verified"
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
