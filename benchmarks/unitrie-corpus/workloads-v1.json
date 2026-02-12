@@ -1,0 +1,84 @@
+{
+  "version": "workloads-v1",
+  "workloads": [
+    {
+      "name": "putGetDeleteMix",
+      "repeat": 64,
+      "operations": [
+        {"op": "put", "keyHex": "1000", "valueHex": "aa00"},
+        {"op": "get", "keyHex": "1000"},
+        {"op": "put", "keyHex": "1001", "valueHex": "aa01"},
+        {"op": "get", "keyHex": "1001"},
+        {"op": "delete", "keyHex": "1000"},
+        {"op": "put", "keyHex": "10ff", "valueHex": "aa02"},
+        {"op": "deleteRecursive", "keyHex": "10"},
+        {"op": "rootHash"}
+      ]
+    },
+    {
+      "name": "longValueHeavyPaths",
+      "repeat": 48,
+      "operations": [
+        {"op": "put", "keyHex": "2000", "valueHex": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+        {"op": "get", "keyHex": "2000"},
+        {"op": "getValueLength", "keyHex": "2000"},
+        {"op": "getValueHash", "keyHex": "2000"},
+        {"op": "put", "keyHex": "2001", "valueHex": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+        {"op": "get", "keyHex": "2001"},
+        {"op": "rootHash"}
+      ]
+    },
+    {
+      "name": "saveReloadCycle",
+      "repeat": 32,
+      "operations": [
+        {"op": "put", "keyHex": "3000", "valueHex": "cc00"},
+        {"op": "saveReload"},
+        {"op": "get", "keyHex": "3000"},
+        {"op": "put", "keyHex": "3001", "valueHex": "cc01"},
+        {"op": "saveReload"},
+        {"op": "delete", "keyHex": "3000"},
+        {"op": "saveReload"},
+        {"op": "rootHash"}
+      ]
+    },
+    {
+      "name": "accountStorageKeyIteration",
+      "repeat": 40,
+      "operations": [
+        {"op": "put", "keyHex": "4000", "valueHex": "dd00"},
+        {"op": "put", "keyHex": "4001", "valueHex": "dd01"},
+        {"op": "put", "keyHex": "4002", "valueHex": "dd02"},
+        {"op": "put", "keyHex": "4003", "valueHex": "dd03"},
+        {"op": "put", "keyHex": "4010", "valueHex": "dd10"},
+        {"op": "put", "keyHex": "4011", "valueHex": "dd11"},
+        {"op": "collectKeys", "size": 256},
+        {"op": "rootHash"}
+      ]
+    },
+    {
+      "name": "datasetDrivenMassiveUpload",
+      "repeat": 20,
+      "operations": [
+        {"op": "put", "keyHex": "5000", "valueHex": "e000"},
+        {"op": "put", "keyHex": "5001", "valueHex": "e001"},
+        {"op": "put", "keyHex": "5002", "valueHex": "e002"},
+        {"op": "put", "keyHex": "5003", "valueHex": "e003"},
+        {"op": "put", "keyHex": "5004", "valueHex": "e004"},
+        {"op": "put", "keyHex": "5005", "valueHex": "e005"},
+        {"op": "put", "keyHex": "5006", "valueHex": "e006"},
+        {"op": "put", "keyHex": "5007", "valueHex": "e007"},
+        {"op": "put", "keyHex": "5008", "valueHex": "e008"},
+        {"op": "put", "keyHex": "5009", "valueHex": "e009"},
+        {"op": "put", "keyHex": "500a", "valueHex": "e00a"},
+        {"op": "put", "keyHex": "500b", "valueHex": "e00b"},
+        {"op": "put", "keyHex": "500c", "valueHex": "e00c"},
+        {"op": "put", "keyHex": "500d", "valueHex": "e00d"},
+        {"op": "put", "keyHex": "500e", "valueHex": "e00e"},
+        {"op": "put", "keyHex": "500f", "valueHex": "e00f"},
+        {"op": "collectKeys", "size": 1024},
+        {"op": "rootHash"}
+      ]
+    }
+  ]
+}
