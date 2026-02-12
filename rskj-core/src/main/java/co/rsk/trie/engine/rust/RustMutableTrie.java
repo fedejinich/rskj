@@ -400,6 +400,22 @@ public class RustMutableTrie implements MutableTrie {
         return javaKeys;
     }
 
+    public RustUnitriePerfCounters snapshotRustPerfCounters() {
+        if (engineType != TrieEngineType.RUST || bridge == null) {
+            return RustUnitriePerfCounters.empty();
+        }
+
+        return bridge.getPerfCounters(nativeHandle);
+    }
+
+    public void resetRustPerfCounters() {
+        if (engineType != TrieEngineType.RUST || bridge == null) {
+            return;
+        }
+
+        bridge.resetPerfCounters(nativeHandle);
+    }
+
     @Override
     protected void finalize() throws Throwable {
         try {

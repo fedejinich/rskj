@@ -171,23 +171,19 @@ public final class RustUnitrieBridge {
 
     public RustUnitriePerfCounters getPerfCounters(long handle) {
         long[] rawCounters = nativeGetPerfCounters(handle);
-        if (rawCounters == null || rawCounters.length < 7) {
-            return RustUnitriePerfCounters.empty();
-        }
-
-        return new RustUnitriePerfCounters(
-                rawCounters[0],
-                rawCounters[1],
-                rawCounters[2],
-                rawCounters[3],
-                rawCounters[4],
-                rawCounters[5],
-                rawCounters[6]
-        );
+        return RustUnitriePerfCounters.fromRawCounters(rawCounters);
     }
 
     public void resetPerfCounters(long handle) {
         nativeResetPerfCounters(handle);
+    }
+
+    public long benchmarkNoop(int iterations) {
+        return nativeBenchmarkNoop(iterations);
+    }
+
+    public long benchmarkRoundtrip(byte[] payload, int iterations) {
+        return nativeBenchmarkRoundtrip(payload, iterations);
     }
 
     private static List<byte[]> arrayToList(@Nullable byte[][] values) {
@@ -306,4 +302,8 @@ public final class RustUnitrieBridge {
     private static native long[] nativeGetPerfCounters(long handle);
 
     private static native void nativeResetPerfCounters(long handle);
+
+    private static native long nativeBenchmarkNoop(int iterations);
+
+    private static native long nativeBenchmarkRoundtrip(byte[] payload, int iterations);
 }

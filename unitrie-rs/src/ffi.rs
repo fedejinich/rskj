@@ -8,6 +8,7 @@ use jni::sys::{jbyteArray, jint, jlong, jlongArray, jobjectArray};
 use jni::JNIEnv;
 use once_cell::sync::Lazy;
 use std::sync::atomic::{AtomicI64, Ordering};
+use std::time::Instant;
 
 static NEXT_HANDLE: AtomicI64 = AtomicI64::new(1);
 static TRIES: Lazy<DashMap<i64, TrieHandle>> = Lazy::new(DashMap::new);
@@ -40,6 +41,13 @@ struct PerfCounters {
     cache_hits: u64,
     cache_misses: u64,
     jni_calls: u64,
+    ffi_decode_nanos: u64,
+    ffi_encode_nanos: u64,
+    core_runtime_nanos: u64,
+    store_callback_nanos: u64,
+    store_callback_calls: u64,
+    jni_bytes_in: u64,
+    jni_bytes_out: u64,
 }
 
 impl PerfCounters {
@@ -52,7 +60,42 @@ impl PerfCounters {
             self.cache_hits as jlong,
             self.cache_misses as jlong,
             self.jni_calls as jlong,
+            self.ffi_decode_nanos as jlong,
+            self.ffi_encode_nanos as jlong,
+            self.core_runtime_nanos as jlong,
+            self.store_callback_nanos as jlong,
+            self.store_callback_calls as jlong,
+            self.jni_bytes_in as jlong,
+            self.jni_bytes_out as jlong,
         ]
+    }
+
+    fn add_decode_nanos(&mut self, elapsed_nanos: u64) {
+        self.ffi_decode_nanos = self.ffi_decode_nanos.saturating_add(elapsed_nanos);
+    }
+
+    fn add_encode_nanos(&mut self, elapsed_nanos: u64) {
+        self.ffi_encode_nanos = self.ffi_encode_nanos.saturating_add(elapsed_nanos);
+    }
+
+    fn add_core_nanos(&mut self, elapsed_nanos: u64) {
+        self.core_runtime_nanos = self.core_runtime_nanos.saturating_add(elapsed_nanos);
+    }
+
+    fn add_store_callback_nanos(&mut self, elapsed_nanos: u64) {
+        self.store_callback_nanos = self.store_callback_nanos.saturating_add(elapsed_nanos);
+    }
+
+    fn add_store_callback_calls(&mut self, calls: u64) {
+        self.store_callback_calls = self.store_callback_calls.saturating_add(calls);
+    }
+
+    fn add_jni_bytes_in(&mut self, bytes: u64) {
+        self.jni_bytes_in = self.jni_bytes_in.saturating_add(bytes);
+    }
+
+    fn add_jni_bytes_out(&mut self, bytes: u64) {
+        self.jni_bytes_out = self.jni_bytes_out.saturating_add(bytes);
     }
 }
 
@@ -186,6 +229,8 @@ struct StoreStats {
     load_misses: u64,
     saved_nodes: u64,
     saved_values: u64,
+    callback_nanos: u64,
+    callback_calls: u64,
 }
 
 struct CountingRawStoreAdapter<'a, T: RawStoreAdapter> {
@@ -204,7 +249,13 @@ impl<'a, T: RawStoreAdapter> CountingRawStoreAdapter<'a, T> {
 
 impl<'a, T: RawStoreAdapter> RawStoreAdapter for CountingRawStoreAdapter<'a, T> {
     fn load_raw_node(&mut self, hash: &[u8]) -> Option<Vec<u8>> {
+        let callback_started = Instant::now();
+        self.stats.callback_calls = self.stats.callback_calls.saturating_add(1);
         let value = self.inner.load_raw_node(hash);
+        self.stats.callback_nanos = self
+            .stats
+            .callback_nanos
+            .saturating_add(elapsed_nanos(callback_started));
         if value.is_some() {
             self.stats.load_hits = self.stats.load_hits.saturating_add(1);
         } else {
@@ -214,7 +265,13 @@ impl<'a, T: RawStoreAdapter> RawStoreAdapter for CountingRawStoreAdapter<'a, T> 
     }
 
     fn load_raw_value(&mut self, hash: &[u8]) -> Option<Vec<u8>> {
+        let callback_started = Instant::now();
+        self.stats.callback_calls = self.stats.callback_calls.saturating_add(1);
         let value = self.inner.load_raw_value(hash);
+        self.stats.callback_nanos = self
+            .stats
+            .callback_nanos
+            .saturating_add(elapsed_nanos(callback_started));
         if value.is_some() {
             self.stats.load_hits = self.stats.load_hits.saturating_add(1);
         } else {
@@ -224,13 +281,25 @@ impl<'a, T: RawStoreAdapter> RawStoreAdapter for CountingRawStoreAdapter<'a, T> 
     }
 
     fn save_raw_node(&mut self, hash: &[u8], serialized_node: &[u8]) {
+        let callback_started = Instant::now();
+        self.stats.callback_calls = self.stats.callback_calls.saturating_add(1);
         self.stats.saved_nodes = self.stats.saved_nodes.saturating_add(1);
         self.inner.save_raw_node(hash, serialized_node);
+        self.stats.callback_nanos = self
+            .stats
+            .callback_nanos
+            .saturating_add(elapsed_nanos(callback_started));
     }
 
     fn save_raw_value(&mut self, hash: &[u8], value: &[u8]) {
+        let callback_started = Instant::now();
+        self.stats.callback_calls = self.stats.callback_calls.saturating_add(1);
         self.stats.saved_values = self.stats.saved_values.saturating_add(1);
         self.inner.save_raw_value(hash, value);
+        self.stats.callback_nanos = self
+            .stats
+            .callback_nanos
+            .saturating_add(elapsed_nanos(callback_started));
     }
 }
 
@@ -304,6 +373,37 @@ fn to_long_array(env: &mut JNIEnv, values: &[jlong], error_context: &str) -> Opt
     Some(array.into_raw())
 }
 
+fn elapsed_nanos(start: Instant) -> u64 {
+    let elapsed = start.elapsed().as_nanos();
+    if elapsed > u64::MAX as u128 {
+        u64::MAX
+    } else {
+        elapsed as u64
+    }
+}
+
+fn len_as_u64(value: usize) -> u64 {
+    if value > u64::MAX as usize {
+        u64::MAX
+    } else {
+        value as u64
+    }
+}
+
+fn record_decode_metrics(handle: jlong, elapsed_nanos: u64, bytes_in: u64) {
+    if let Some(mut trie_handle) = TRIES.get_mut(&handle) {
+        trie_handle.counters.add_decode_nanos(elapsed_nanos);
+        trie_handle.counters.add_jni_bytes_in(bytes_in);
+    }
+}
+
+fn record_encode_metrics(handle: jlong, elapsed_nanos: u64, bytes_out: u64) {
+    if let Some(mut trie_handle) = TRIES.get_mut(&handle) {
+        trie_handle.counters.add_encode_nanos(elapsed_nanos);
+        trie_handle.counters.add_jni_bytes_out(bytes_out);
+    }
+}
+
 fn with_trie_mut<T>(handle: jlong, f: impl FnOnce(&mut TrieHandle) -> T) -> Result<T, String> {
     let mut trie_handle = match TRIES.get_mut(&handle) {
         Some(trie_handle) => trie_handle,
@@ -319,6 +419,8 @@ fn with_trie_mut<T>(handle: jlong, f: impl FnOnce(&mut TrieHandle) -> T) -> Resu
 struct JavaRawStoreAdapter<'a, 'b> {
     env: &'a mut JNIEnv<'b>,
     adapter: JObject<'b>,
+    callback_nanos: u64,
+    callback_calls: u64,
 }
 
 impl<'a, 'b> JavaRawStoreAdapter<'a, 'b> {
@@ -328,15 +430,33 @@ impl<'a, 'b> JavaRawStoreAdapter<'a, 'b> {
             return Err(());
         }
 
-        Ok(Self { env, adapter })
+        Ok(Self {
+            env,
+            adapter,
+            callback_nanos: 0,
+            callback_calls: 0,
+        })
+    }
+
+    fn inner_stats_increment_call(&mut self) {
+        self.callback_calls = self.callback_calls.saturating_add(1);
+    }
+
+    fn inner_stats_record_duration(&mut self, started: Instant) {
+        self.callback_nanos = self.callback_nanos.saturating_add(elapsed_nanos(started));
     }
 }
 
 impl<'a, 'b> RawStoreAdapter for JavaRawStoreAdapter<'a, 'b> {
     fn load_raw_node(&mut self, hash: &[u8]) -> Option<Vec<u8>> {
+        let callback_start = Instant::now();
+        self.inner_stats_increment_call();
         let hash_array = match self.env.byte_array_from_slice(hash) {
             Ok(array) => array,
-            Err(_) => return None,
+            Err(_) => {
+                self.inner_stats_record_duration(callback_start);
+                return None;
+            }
         };
         let hash_object = JObject::from(hash_array);
 
@@ -348,25 +468,46 @@ impl<'a, 'b> RawStoreAdapter for JavaRawStoreAdapter<'a, 'b> {
                 "([B)[B",
                 &[JValue::Object(&hash_object)],
             )
-            .ok()?;
+            .ok();
 
-        let payload_object = result.l().ok()?;
+        let payload_object = match result {
+            Some(result) => result.l().ok(),
+            None => None,
+        };
+        let payload_object = match payload_object {
+            Some(payload_object) => payload_object,
+            None => {
+                self.inner_stats_record_duration(callback_start);
+                return None;
+            }
+        };
         if payload_object.is_null() {
+            self.inner_stats_record_duration(callback_start);
             return None;
         }
 
         let payload_array = JByteArray::from(payload_object);
-        self.env.convert_byte_array(payload_array).ok()
+        let output = self.env.convert_byte_array(payload_array).ok();
+        self.inner_stats_record_duration(callback_start);
+        output
     }
 
     fn save_raw_node(&mut self, hash: &[u8], serialized_node: &[u8]) {
+        let callback_start = Instant::now();
+        self.inner_stats_increment_call();
         let hash_array = match self.env.byte_array_from_slice(hash) {
             Ok(array) => array,
-            Err(_) => return,
+            Err(_) => {
+                self.inner_stats_record_duration(callback_start);
+                return;
+            }
         };
         let node_array = match self.env.byte_array_from_slice(serialized_node) {
             Ok(array) => array,
-            Err(_) => return,
+            Err(_) => {
+                self.inner_stats_record_duration(callback_start);
+                return;
+            }
         };
         let hash_object = JObject::from(hash_array);
         let node_object = JObject::from(node_array);
@@ -377,16 +518,25 @@ impl<'a, 'b> RawStoreAdapter for JavaRawStoreAdapter<'a, 'b> {
             "([B[B)V",
             &[JValue::Object(&hash_object), JValue::Object(&node_object)],
         );
+        self.inner_stats_record_duration(callback_start);
     }
 
     fn save_raw_value(&mut self, hash: &[u8], value: &[u8]) {
+        let callback_start = Instant::now();
+        self.inner_stats_increment_call();
         let hash_array = match self.env.byte_array_from_slice(hash) {
             Ok(array) => array,
-            Err(_) => return,
+            Err(_) => {
+                self.inner_stats_record_duration(callback_start);
+                return;
+            }
         };
         let value_array = match self.env.byte_array_from_slice(value) {
             Ok(array) => array,
-            Err(_) => return,
+            Err(_) => {
+                self.inner_stats_record_duration(callback_start);
+                return;
+            }
         };
         let hash_object = JObject::from(hash_array);
         let value_object = JObject::from(value_array);
@@ -397,6 +547,7 @@ impl<'a, 'b> RawStoreAdapter for JavaRawStoreAdapter<'a, 'b> {
             "([B[B)V",
             &[JValue::Object(&hash_object), JValue::Object(&value_object)],
         );
+        self.inner_stats_record_duration(callback_start);
     }
 
     fn load_raw_value(&mut self, hash: &[u8]) -> Option<Vec<u8>> {
@@ -484,10 +635,13 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeCrea
         Err(_) => return 0,
     };
 
+    let decode_started = Instant::now();
     let root_hash = match convert_required_array(&mut env, root_hash, "rootHash") {
         Ok(root_hash) => root_hash,
         Err(_) => return 0,
     };
+    let decode_elapsed = elapsed_nanos(decode_started);
+    let root_hash_len = len_as_u64(root_hash.len());
 
     let mut adapter = match JavaRawStoreAdapter::new(&mut env, store_adapter) {
         Ok(adapter) => adapter,
@@ -495,6 +649,7 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeCrea
     };
 
     let mut counting_adapter = CountingRawStoreAdapter::new(&mut adapter);
+    let core_started = Instant::now();
     let runtime = match TrieRuntime::from_persisted_root(implementation, &root_hash, &mut counting_adapter) {
         Ok(trie) => trie,
         Err(err) => {
@@ -505,6 +660,7 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeCrea
             return 0;
         }
     };
+    let core_elapsed = elapsed_nanos(core_started);
 
     let handle = NEXT_HANDLE.fetch_add(1, Ordering::Relaxed);
     let mut trie_handle = TrieHandle::new(runtime);
@@ -516,6 +672,15 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeCrea
         .counters
         .cache_misses
         .saturating_add(counting_adapter.stats.load_misses);
+    trie_handle.counters.add_decode_nanos(decode_elapsed);
+    trie_handle.counters.add_jni_bytes_in(root_hash_len);
+    trie_handle.counters.add_core_nanos(core_elapsed);
+    trie_handle
+        .counters
+        .add_store_callback_nanos(counting_adapter.stats.callback_nanos);
+    trie_handle
+        .counters
+        .add_store_callback_calls(counting_adapter.stats.callback_calls);
 
     TRIES.insert(handle, trie_handle);
     handle
@@ -541,14 +706,18 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeGet(
     handle: jlong,
     key: JByteArray,
 ) -> jbyteArray {
+    let decode_started = Instant::now();
     let key = match convert_required_array(&mut env, key, "key") {
         Ok(key) => key,
         Err(_) => return std::ptr::null_mut(),
     };
+    record_decode_metrics(handle, elapsed_nanos(decode_started), len_as_u64(key.len()));
 
-    let value = match with_trie_mut(handle, |trie| match trie.runtime.get_ref(&key) {
-        Some(value) => to_byte_array(&mut env, value, "value"),
-        None => Some(std::ptr::null_mut()),
+    let value = match with_trie_mut(handle, |trie| {
+        let core_started = Instant::now();
+        let value = trie.runtime.get_ref(&key).map(|value| value.to_vec());
+        trie.counters.add_core_nanos(elapsed_nanos(core_started));
+        value
     }) {
         Ok(value) => value,
         Err(err) => {
@@ -557,7 +726,17 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeGet(
         }
     };
 
-    value.unwrap_or(std::ptr::null_mut())
+    let encode_started = Instant::now();
+    let output_len = value
+        .as_ref()
+        .map(|value| len_as_u64(value.len()))
+        .unwrap_or(0);
+    let output = match value {
+        Some(value) => to_byte_array(&mut env, &value, "value").unwrap_or(std::ptr::null_mut()),
+        None => std::ptr::null_mut(),
+    };
+    record_encode_metrics(handle, elapsed_nanos(encode_started), output_len);
+    output
 }
 
 #[no_mangle]
@@ -568,6 +747,7 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativePut(
     key: JByteArray,
     value: JByteArray,
 ) {
+    let decode_started = Instant::now();
     let key = match convert_required_array(&mut env, key, "key") {
         Ok(key) => key,
         Err(_) => return,
@@ -584,10 +764,19 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativePut(
             }
         }
     };
+    let mut bytes_in = len_as_u64(key.len());
+    if let Some(value) = value.as_ref() {
+        bytes_in = bytes_in.saturating_add(len_as_u64(value.len()));
+    }
+    record_decode_metrics(handle, elapsed_nanos(decode_started), bytes_in);
 
-    if let Err(err) = with_trie_mut(handle, |trie| match value {
-        Some(value) => trie.runtime.put(key, value),
-        None => trie.runtime.delete(&key),
+    if let Err(err) = with_trie_mut(handle, |trie| {
+        let core_started = Instant::now();
+        match value {
+            Some(value) => trie.runtime.put(key, value),
+            None => trie.runtime.delete(&key),
+        }
+        trie.counters.add_core_nanos(elapsed_nanos(core_started));
     }) {
         throw_illegal_argument(&mut env, err);
     }
@@ -600,12 +789,18 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeDele
     handle: jlong,
     key: JByteArray,
 ) {
+    let decode_started = Instant::now();
     let key = match convert_required_array(&mut env, key, "key") {
         Ok(key) => key,
         Err(_) => return,
     };
+    record_decode_metrics(handle, elapsed_nanos(decode_started), len_as_u64(key.len()));
 
-    if let Err(err) = with_trie_mut(handle, |trie| trie.runtime.delete(&key)) {
+    if let Err(err) = with_trie_mut(handle, |trie| {
+        let core_started = Instant::now();
+        trie.runtime.delete(&key);
+        trie.counters.add_core_nanos(elapsed_nanos(core_started));
+    }) {
         throw_illegal_argument(&mut env, err);
     }
 }
@@ -617,12 +812,18 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeDele
     handle: jlong,
     key: JByteArray,
 ) {
+    let decode_started = Instant::now();
     let key = match convert_required_array(&mut env, key, "key") {
         Ok(key) => key,
         Err(_) => return,
     };
+    record_decode_metrics(handle, elapsed_nanos(decode_started), len_as_u64(key.len()));
 
-    if let Err(err) = with_trie_mut(handle, |trie| trie.runtime.delete_recursive(&key)) {
+    if let Err(err) = with_trie_mut(handle, |trie| {
+        let core_started = Instant::now();
+        trie.runtime.delete_recursive(&key);
+        trie.counters.add_core_nanos(elapsed_nanos(core_started));
+    }) {
         throw_illegal_argument(&mut env, err);
     }
 }
@@ -641,7 +842,9 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeSave
 
     let mut counting_adapter = CountingRawStoreAdapter::new(&mut adapter);
     if let Err(err) = with_trie_mut(handle, |trie| {
+        let core_started = Instant::now();
         trie.runtime.save_to_store(&mut counting_adapter);
+        trie.counters.add_core_nanos(elapsed_nanos(core_started));
 
         let saved_nodes = counting_adapter.stats.saved_nodes;
         let saved_values = counting_adapter.stats.saved_values;
@@ -660,6 +863,10 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeSave
             .counters
             .hashed_nodes
             .saturating_add(saved_nodes.saturating_add(saved_values));
+        trie.counters
+            .add_store_callback_nanos(counting_adapter.stats.callback_nanos);
+        trie.counters
+            .add_store_callback_calls(counting_adapter.stats.callback_calls);
     }) {
         throw_illegal_argument(&mut env, err);
     }
@@ -672,19 +879,28 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeGetV
     handle: jlong,
     key: JByteArray,
 ) -> jint {
+    let decode_started = Instant::now();
     let key = match convert_required_array(&mut env, key, "key") {
         Ok(key) => key,
         Err(_) => return -1,
     };
+    record_decode_metrics(handle, elapsed_nanos(decode_started), len_as_u64(key.len()));
 
-    match with_trie_mut(handle, |trie| trie.runtime.get_value_length(&key)) {
+    let core_started = Instant::now();
+    let output = match with_trie_mut(handle, |trie| trie.runtime.get_value_length(&key)) {
         Ok(Some(value_length)) => value_length as jint,
         Ok(None) => -1,
         Err(err) => {
             throw_illegal_argument(&mut env, err);
             -1
         }
+    };
+    if let Some(mut trie_handle) = TRIES.get_mut(&handle) {
+        trie_handle.counters.add_core_nanos(elapsed_nanos(core_started));
+        trie_handle.counters.add_encode_nanos(0);
+        trie_handle.counters.add_jni_bytes_out(4);
     }
+    output
 }
 
 #[no_mangle]
@@ -694,12 +910,19 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeGetV
     handle: jlong,
     key: JByteArray,
 ) -> jbyteArray {
+    let decode_started = Instant::now();
     let key = match convert_required_array(&mut env, key, "key") {
         Ok(key) => key,
         Err(_) => return std::ptr::null_mut(),
     };
+    record_decode_metrics(handle, elapsed_nanos(decode_started), len_as_u64(key.len()));
 
-    let value_hash = match with_trie_mut(handle, |trie| trie.runtime.get_value_hash(&key)) {
+    let value_hash = match with_trie_mut(handle, |trie| {
+        let core_started = Instant::now();
+        let value_hash = trie.runtime.get_value_hash(&key);
+        trie.counters.add_core_nanos(elapsed_nanos(core_started));
+        value_hash
+    }) {
         Ok(value_hash) => value_hash,
         Err(err) => {
             throw_illegal_argument(&mut env, err);
@@ -707,12 +930,16 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeGetV
         }
     };
 
-    match value_hash {
+    let encode_started = Instant::now();
+    let output_len = if value_hash.is_some() { 32 } else { 0 };
+    let output = match value_hash {
         Some(value_hash) => {
             to_byte_array(&mut env, &value_hash, "value hash").unwrap_or(std::ptr::null_mut())
         }
         None => std::ptr::null_mut(),
-    }
+    };
+    record_encode_metrics(handle, elapsed_nanos(encode_started), output_len);
+    output
 }
 
 #[no_mangle]
@@ -724,7 +951,12 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeColl
 ) -> jobjectArray {
     let size = if size < 0 { 0 } else { size as usize };
 
-    let keys = match with_trie_mut(handle, |trie| trie.runtime.collect_keys(size)) {
+    let keys = match with_trie_mut(handle, |trie| {
+        let core_started = Instant::now();
+        let keys = trie.runtime.collect_keys(size);
+        trie.counters.add_core_nanos(elapsed_nanos(core_started));
+        keys
+    }) {
         Ok(keys) => keys,
         Err(err) => {
             throw_illegal_argument(&mut env, err);
@@ -732,7 +964,13 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeColl
         }
     };
 
-    bytes_vec_to_jobject_array(&mut env, keys).unwrap_or(std::ptr::null_mut())
+    let encoded_bytes = keys
+        .iter()
+        .fold(0u64, |acc, key| acc.saturating_add(len_as_u64(key.len())));
+    let encode_started = Instant::now();
+    let output = bytes_vec_to_jobject_array(&mut env, keys).unwrap_or(std::ptr::null_mut());
+    record_encode_metrics(handle, elapsed_nanos(encode_started), encoded_bytes);
+    output
 }
 
 #[no_mangle]
@@ -742,13 +980,22 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeGetS
     handle: jlong,
     account_address: JByteArray,
 ) -> jobjectArray {
+    let decode_started = Instant::now();
     let account_address = match convert_required_array(&mut env, account_address, "accountAddress") {
         Ok(account_address) => account_address,
         Err(_) => return std::ptr::null_mut(),
     };
+    record_decode_metrics(
+        handle,
+        elapsed_nanos(decode_started),
+        len_as_u64(account_address.len()),
+    );
 
     let keys = match with_trie_mut(handle, |trie| {
-        trie.runtime.get_storage_keys(&account_address)
+        let core_started = Instant::now();
+        let keys = trie.runtime.get_storage_keys(&account_address);
+        trie.counters.add_core_nanos(elapsed_nanos(core_started));
+        keys
     }) {
         Ok(keys) => keys,
         Err(err) => {
@@ -757,7 +1004,13 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeGetS
         }
     };
 
-    bytes_vec_to_jobject_array(&mut env, keys).unwrap_or(std::ptr::null_mut())
+    let encoded_bytes = keys
+        .iter()
+        .fold(0u64, |acc, key| acc.saturating_add(len_as_u64(key.len())));
+    let encode_started = Instant::now();
+    let output = bytes_vec_to_jobject_array(&mut env, keys).unwrap_or(std::ptr::null_mut());
+    record_encode_metrics(handle, elapsed_nanos(encode_started), encoded_bytes);
+    output
 }
 
 #[no_mangle]
@@ -767,14 +1020,23 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeGetS
     handle: jlong,
     account_address: JByteArray,
 ) -> jbyteArray {
+    let decode_started = Instant::now();
     let account_address = match convert_required_array(&mut env, account_address, "accountAddress") {
         Ok(account_address) => account_address,
         Err(_) => return std::ptr::null_mut(),
     };
+    record_decode_metrics(
+        handle,
+        elapsed_nanos(decode_started),
+        len_as_u64(account_address.len()),
+    );
 
     let packed_keys = match with_trie_mut(handle, |trie| {
+        let core_started = Instant::now();
         let keys = trie.runtime.get_storage_keys(&account_address);
-        encode_storage_keys_packed(&keys)
+        let packed = encode_storage_keys_packed(&keys);
+        trie.counters.add_core_nanos(elapsed_nanos(core_started));
+        packed
     }) {
         Ok(packed_keys) => packed_keys,
         Err(err) => {
@@ -783,7 +1045,15 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeGetS
         }
     };
 
-    to_byte_array(&mut env, &packed_keys, "packed storage keys").unwrap_or(std::ptr::null_mut())
+    let encode_started = Instant::now();
+    let output = to_byte_array(&mut env, &packed_keys, "packed storage keys")
+        .unwrap_or(std::ptr::null_mut());
+    record_encode_metrics(
+        handle,
+        elapsed_nanos(encode_started),
+        len_as_u64(packed_keys.len()),
+    );
+    output
 }
 
 #[no_mangle]
@@ -792,7 +1062,12 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeRoot
     _class: JClass,
     handle: jlong,
 ) -> jbyteArray {
-    let root_hash = match with_trie_mut(handle, |trie| trie.runtime.root_hash()) {
+    let root_hash = match with_trie_mut(handle, |trie| {
+        let core_started = Instant::now();
+        let root_hash = trie.runtime.root_hash();
+        trie.counters.add_core_nanos(elapsed_nanos(core_started));
+        root_hash
+    }) {
         Ok(root_hash) => root_hash,
         Err(err) => {
             throw_illegal_argument(&mut env, err);
@@ -800,7 +1075,10 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeRoot
         }
     };
 
-    to_byte_array(&mut env, &root_hash, "root hash").unwrap_or(std::ptr::null_mut())
+    let encode_started = Instant::now();
+    let output = to_byte_array(&mut env, &root_hash, "root hash").unwrap_or(std::ptr::null_mut());
+    record_encode_metrics(handle, elapsed_nanos(encode_started), 32);
+    output
 }
 
 #[no_mangle]
@@ -809,7 +1087,12 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeCurr
     _class: JClass,
     handle: jlong,
 ) -> jbyteArray {
-    let root_hash = match with_trie_mut(handle, |trie| trie.runtime.current_root_hash()) {
+    let root_hash = match with_trie_mut(handle, |trie| {
+        let core_started = Instant::now();
+        let root_hash = trie.runtime.current_root_hash();
+        trie.counters.add_core_nanos(elapsed_nanos(core_started));
+        root_hash
+    }) {
         Ok(root_hash) => root_hash,
         Err(err) => {
             throw_illegal_argument(&mut env, err);
@@ -817,7 +1100,11 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeCurr
         }
     };
 
-    to_byte_array(&mut env, &root_hash, "current root hash").unwrap_or(std::ptr::null_mut())
+    let encode_started = Instant::now();
+    let output = to_byte_array(&mut env, &root_hash, "current root hash")
+        .unwrap_or(std::ptr::null_mut());
+    record_encode_metrics(handle, elapsed_nanos(encode_started), 32);
+    output
 }
 
 #[no_mangle]
@@ -826,7 +1113,12 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeGetP
     _class: JClass,
     handle: jlong,
 ) -> jlongArray {
-    let counters = match with_trie_mut(handle, |trie| trie.counters.as_long_vec()) {
+    let counters = match with_trie_mut(handle, |trie| {
+        let core_started = Instant::now();
+        let counters = trie.counters.as_long_vec();
+        trie.counters.add_core_nanos(elapsed_nanos(core_started));
+        counters
+    }) {
         Ok(counters) => counters,
         Err(err) => {
             throw_illegal_argument(&mut env, err);
@@ -834,7 +1126,14 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeGetP
         }
     };
 
-    to_long_array(&mut env, &counters, "perf counters").unwrap_or(std::ptr::null_mut())
+    let encode_started = Instant::now();
+    let output = to_long_array(&mut env, &counters, "perf counters").unwrap_or(std::ptr::null_mut());
+    record_encode_metrics(
+        handle,
+        elapsed_nanos(encode_started),
+        len_as_u64(counters.len().saturating_mul(std::mem::size_of::<jlong>())),
+    );
+    output
 }
 
 #[no_mangle]
@@ -848,6 +1147,58 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeRese
     }) {
         throw_illegal_argument(&mut env, err);
     }
+}
+
+#[no_mangle]
+pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeBenchmarkNoop(
+    mut env: JNIEnv,
+    _class: JClass,
+    iterations: jint,
+) -> jlong {
+    if iterations <= 0 {
+        throw_illegal_argument(&mut env, "iterations must be greater than zero");
+        return 0;
+    }
+
+    let started = Instant::now();
+    let mut checksum: u64 = 0;
+    for index in 0..(iterations as u64) {
+        checksum ^= index.wrapping_mul(0x9e37_79b9_7f4a_7c15);
+    }
+    let elapsed = elapsed_nanos(started);
+    (elapsed ^ checksum) as jlong
+}
+
+#[no_mangle]
+pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeBenchmarkRoundtrip(
+    mut env: JNIEnv,
+    _class: JClass,
+    payload: JByteArray,
+    iterations: jint,
+) -> jlong {
+    if iterations <= 0 {
+        throw_illegal_argument(&mut env, "iterations must be greater than zero");
+        return 0;
+    }
+
+    let payload = match convert_required_array(&mut env, payload, "payload") {
+        Ok(payload) => payload,
+        Err(_) => return 0,
+    };
+
+    let started = Instant::now();
+    let mut checksum: u64 = 0;
+    for index in 0..(iterations as usize) {
+        let copy = payload.clone();
+        checksum = checksum
+            .wrapping_add(len_as_u64(copy.len()))
+            .wrapping_add(index as u64);
+        if let Some(first) = copy.first() {
+            checksum ^= *first as u64;
+        }
+    }
+    let elapsed = elapsed_nanos(started);
+    (elapsed ^ checksum) as jlong
 }
 
 #[cfg(test)]

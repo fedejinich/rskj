@@ -26,6 +26,13 @@ public class RustUnitriePerfCounters {
     private final long cacheHits;
     private final long cacheMisses;
     private final long jniCalls;
+    private final long ffiDecodeNanos;
+    private final long ffiEncodeNanos;
+    private final long coreRuntimeNanos;
+    private final long storeCallbackNanos;
+    private final long storeCallbackCalls;
+    private final long jniBytesIn;
+    private final long jniBytesOut;
 
     public RustUnitriePerfCounters(
             long serializedNodes,
@@ -35,6 +42,39 @@ public class RustUnitriePerfCounters {
             long cacheHits,
             long cacheMisses,
             long jniCalls) {
+        this(
+                serializedNodes,
+                hashedNodes,
+                persistedNodes,
+                persistedValues,
+                cacheHits,
+                cacheMisses,
+                jniCalls,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+        );
+    }
+
+    public RustUnitriePerfCounters(
+            long serializedNodes,
+            long hashedNodes,
+            long persistedNodes,
+            long persistedValues,
+            long cacheHits,
+            long cacheMisses,
+            long jniCalls,
+            long ffiDecodeNanos,
+            long ffiEncodeNanos,
+            long coreRuntimeNanos,
+            long storeCallbackNanos,
+            long storeCallbackCalls,
+            long jniBytesIn,
+            long jniBytesOut) {
         this.serializedNodes = serializedNodes;
         this.hashedNodes = hashedNodes;
         this.persistedNodes = persistedNodes;
@@ -42,10 +82,44 @@ public class RustUnitriePerfCounters {
         this.cacheHits = cacheHits;
         this.cacheMisses = cacheMisses;
         this.jniCalls = jniCalls;
+        this.ffiDecodeNanos = ffiDecodeNanos;
+        this.ffiEncodeNanos = ffiEncodeNanos;
+        this.coreRuntimeNanos = coreRuntimeNanos;
+        this.storeCallbackNanos = storeCallbackNanos;
+        this.storeCallbackCalls = storeCallbackCalls;
+        this.jniBytesIn = jniBytesIn;
+        this.jniBytesOut = jniBytesOut;
     }
 
     public static RustUnitriePerfCounters empty() {
-        return new RustUnitriePerfCounters(0, 0, 0, 0, 0, 0, 0);
+        return new RustUnitriePerfCounters(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    }
+
+    public static RustUnitriePerfCounters fromRawCounters(long[] rawCounters) {
+        if (rawCounters == null || rawCounters.length < 7) {
+            return empty();
+        }
+
+        return new RustUnitriePerfCounters(
+                rawCounters[0],
+                rawCounters[1],
+                rawCounters[2],
+                rawCounters[3],
+                rawCounters[4],
+                rawCounters[5],
+                rawCounters[6],
+                readRaw(rawCounters, 7),
+                readRaw(rawCounters, 8),
+                readRaw(rawCounters, 9),
+                readRaw(rawCounters, 10),
+                readRaw(rawCounters, 11),
+                readRaw(rawCounters, 12),
+                readRaw(rawCounters, 13)
+        );
+    }
+
+    private static long readRaw(long[] rawCounters, int index) {
+        return index < rawCounters.length ? rawCounters[index] : 0L;
     }
 
     public long getSerializedNodes() {
@@ -74,5 +148,33 @@ public class RustUnitriePerfCounters {
 
     public long getJniCalls() {
         return jniCalls;
+    }
+
+    public long getFfiDecodeNanos() {
+        return ffiDecodeNanos;
+    }
+
+    public long getFfiEncodeNanos() {
+        return ffiEncodeNanos;
+    }
+
+    public long getCoreRuntimeNanos() {
+        return coreRuntimeNanos;
+    }
+
+    public long getStoreCallbackNanos() {
+        return storeCallbackNanos;
+    }
+
+    public long getStoreCallbackCalls() {
+        return storeCallbackCalls;
+    }
+
+    public long getJniBytesIn() {
+        return jniBytesIn;
+    }
+
+    public long getJniBytesOut() {
+        return jniBytesOut;
     }
 }
