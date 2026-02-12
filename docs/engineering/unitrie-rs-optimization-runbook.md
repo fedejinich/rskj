@@ -10,7 +10,22 @@ Rust variants:
 - `legacy-v1` (frozen baseline)
 - `next` (active optimization target)
 
-## 1.1 V4.1 sprint target
+## 1.1 Spec-first contract (V4.2)
+Before optimization decisions, parity evidence must be traceable through:
+1. `/Users/void_rsk/.codex/worktrees/35ae/rskj/docs/engineering/unitrie-spec-map.json`
+2. `/Users/void_rsk/.codex/worktrees/35ae/rskj/docs/engineering/unitrie-spec-map.md`
+3. `/Users/void_rsk/.codex/worktrees/35ae/rskj/docs/engineering/unitrie-spec-map.schema.json`
+
+Hard local check:
+```bash
+scripts/unitrie/check_spec_map.sh
+```
+
+PR policy:
+1. spec/parity gaps are blocking
+2. benchmark performance warnings remain non-blocking
+
+## 1.2 V4.1 sprint target
 Current sprint objective for `rust(next)`:
 1. Reach at least `2/5` benchmark wins against Java.
 2. Stretch objective: `3/5` wins.
@@ -33,14 +48,16 @@ Workload win definition:
 ## 3. Optimization loop
 Use this sequence on every optimization cycle:
 1. Implement small change in `unitrie-rs` (`next` path only when possible).
-2. Run Rust tests:
+2. Validate spec map:
+   - `scripts/unitrie/check_spec_map.sh`
+3. Run Rust tests:
    - `cargo test --manifest-path unitrie-rs/Cargo.toml`
-3. Run focused Java/unitrie tests:
+4. Run focused Java/unitrie tests:
    - `./gradlew :rskj-core:test --tests "co.rsk.config.UnitrieConfigTest" --tests "co.rsk.trie.engine.rust.*"`
-4. Run benchmark comparison (`java` vs `rust legacy-v1,next`).
-5. Inspect benchmark artifacts and warnings.
-6. If performance improves and parity remains clean, keep change.
-7. If divergence/regression appears, triage and revert/fix before next cycle.
+5. Run benchmark comparison (`java` vs `rust legacy-v1,next`).
+6. Inspect benchmark artifacts and warnings.
+7. If performance improves and parity remains clean, keep change.
+8. If divergence/regression appears, triage and revert/fix before next cycle.
 
 ## 4. Benchmark commands
 ## Fast local sample
@@ -69,23 +86,15 @@ UNITRIE_JMH_RUST_IMPLEMENTATIONS=next \
 
 ## Deep decision run (3 attempts, median)
 ```bash
-mkdir -p rskj-core/build/reports/jmh/deep-runs
+scripts/unitrie/benchmark_deep_3x.sh
+```
 
-for i in 1 2 3; do
-  UNITRIE_JMH_WARMUP_ITERATIONS=5 \
-  UNITRIE_JMH_MEASUREMENT_ITERATIONS=15 \
-  UNITRIE_JMH_WARMUP_SECONDS=10 \
-  UNITRIE_JMH_MEASUREMENT_SECONDS=10 \
-  UNITRIE_JMH_FORKS=1 \
-  UNITRIE_JMH_ENGINES=java,rust \
-  UNITRIE_JMH_RUST_IMPLEMENTATIONS=next \
-  ./gradlew :rskj-core:jmh -Pbenchmark=BenchmarkTrieEngineRunner
-
-  cp rskj-core/build/reports/jmh/result_trie_engine_summary.json \
-     rskj-core/build/reports/jmh/deep-runs/result_trie_engine_summary_run${i}.json
-  cp rskj-core/build/reports/jmh/result_trie_engine_comparison.md \
-     rskj-core/build/reports/jmh/deep-runs/result_trie_engine_comparison_run${i}.md
-done
+Manual median report generation for an existing deep-runs folder:
+```bash
+scripts/unitrie/benchmark_median_report.py \
+  --runs-dir rskj-core/build/reports/jmh/deep-runs/<run-group-id> \
+  --output rskj-core/build/reports/jmh/result_trie_engine_median_summary.json \
+  --candidate "rust(next)"
 ```
 
 If JNI library is not discoverable:
@@ -104,7 +113,9 @@ Interpretation rules:
 1. `summary.json` is machine-readable source of truth.
 2. `comparison.md` highlights Java deltas per Rust candidate (`legacy-v1`, `next`).
 3. Warnings are non-blocking signals for triage, not consensus verdicts.
-4. For V4.1 decisions, use median across 3 deep runs stored under `deep-runs/`.
+4. For V4.2 decisions, use median across 3 deep runs stored under `deep-runs/`.
+5. Median verdict artifact:
+   - `/Users/void_rsk/.codex/worktrees/35ae/rskj/rskj-core/build/reports/jmh/result_trie_engine_median_summary.json`
 
 ## 6. Parity gate (separate from benchmark)
 Performance is not enough. Before considering promotion:
@@ -117,13 +128,26 @@ Performance is not enough. Before considering promotion:
 When mismatch occurs:
 1. Stop at first divergence (`fail-fast`).
 2. Collect generated artifacts + corpus.
-3. Promote corpus to deterministic replay test.
-4. Fix root cause.
-5. Re-run replay test.
+3. Promote corpus:
+   - `scripts/unitrie/promote_corpus.sh <path-to-corpus.jsonl>`
+4. Add/adjust deterministic replay assertions.
+5. Run replay test until deterministic green.
 6. Re-run 500-block validation gate.
 
-## 8. Promotion checklist (`rust(next)` candidate)
+## 8. Evidence ladder (must be sequential)
+1. Spec map passes (`check_spec_map.sh`).
+2. Unit tests pass.
+3. Differential corpus replay passes.
+4. Validation Run (On-Demand) `500` blocks x `2` clean runs.
+5. Deep benchmark median report produced and reviewed.
+
+## 9. Promotion checklist (`rust(next)` candidate)
 1. Functional parity sustained in bounded validation runs.
 2. No JNI stability issues.
 3. Rust `next` outperforms Java under agreed V4 policy.
 4. Rollback remains immediate via `blockchain.unitrie.engine=java`.
+
+## 10. Clarification
+Benchmark superiority is necessary but never sufficient. Promotion requires both:
+1. parity evidence ladder completion
+2. benchmark median decision evidence

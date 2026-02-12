@@ -380,3 +380,83 @@ A workload is considered a win for Rust when all are true:
 1. `avg_time` Rust < Java
 2. `p95` Rust <= Java * `1.02`
 3. `throughput` Rust > Java
+
+## 16. V4.2 Spec-First Evidence Program (Crimsonland-Inspired)
+### Spec-first development contract
+Consensus-critical work is now traceable through a stable spec map:
+1. Machine-readable map:
+   - `/Users/void_rsk/.codex/worktrees/35ae/rskj/docs/engineering/unitrie-spec-map.json`
+2. Human-readable companion:
+   - `/Users/void_rsk/.codex/worktrees/35ae/rskj/docs/engineering/unitrie-spec-map.md`
+3. Validation schema:
+   - `/Users/void_rsk/.codex/worktrees/35ae/rskj/docs/engineering/unitrie-spec-map.schema.json`
+
+Every critical behavior is tracked with:
+1. `SPEC_ID`
+2. Java source anchor
+3. Rust target (`legacy-v1` and/or `next`)
+4. required tests/corpus evidence
+5. status lifecycle (`missing|partial|implemented|verified`)
+
+### Hard PR parity/spec gate
+CI job: `unitrie-spec-parity-gate`
+
+This job hard-fails on:
+1. invalid spec map structure/completeness
+2. missing evidence mapping for consensus-critical specs
+3. parity replay failure (`UnitrieDifferentialCorpusReplayTest`)
+4. rust-shadow smoke regression
+
+Tooling:
+1. `scripts/unitrie/check_spec_map.sh`
+2. `scripts/unitrie/check_spec_map.py`
+
+### Differential recorder enrichment
+Differential JSONL events now include:
+1. `specId`
+2. `specClass`
+3. `phase` (`mutation|read|save|reload`)
+4. `engineImpl` (`legacy-v1|next`)
+
+Divergence artifacts now include:
+1. `suspectedSpecIds[]`
+2. `evidenceBundleId`
+3. `rustImpl`
+4. `jniCounters` snapshot payload (available/unavailable marker)
+
+### Benchmark policy in V4.2
+Policy split:
+1. PR smoke benchmark:
+   - mandatory execution
+   - non-blocking performance warnings
+2. Deep decision benchmark:
+   - manual/on-demand
+   - three deep runs
+   - median-based decision artifact
+
+Deep helpers:
+1. `scripts/unitrie/benchmark_deep_3x.sh`
+2. `scripts/unitrie/benchmark_median_report.py`
+
+Median output:
+- `/Users/void_rsk/.codex/worktrees/35ae/rskj/rskj-core/build/reports/jmh/result_trie_engine_median_summary.json`
+
+### Corpus promotion protocol
+Mismatch handling before retrying validation:
+1. capture corpus on fail-fast
+2. promote corpus to test resources
+3. replay deterministically in tests
+4. retry validation run only after replay is green
+
+Helper:
+- `scripts/unitrie/promote_corpus.sh`
+
+### Evidence ladder
+Promotion claims must follow this order:
+1. unit tests
+2. differential corpus replay
+3. validation run (500 blocks, repeatRuns=2, same DB/range)
+4. deep benchmark median decision report
+
+### Production default remains unchanged
+`blockchain.unitrie.engine=java` stays the production default in this phase.

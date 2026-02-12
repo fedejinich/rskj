@@ -5,12 +5,82 @@ on:
     types: [opened, reopened, synchronize]
     branches:
       - "**"
-  schedule:
-    - cron: "0 3 * * *"
 
 permissions: read-all
 
 jobs:
+  unitrie-spec-parity-gate:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java & Gradle
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        name: Cache Gradle Wrapper
+        id: cache-gradle-wrapper
+        with:
+          path: |
+            gradle/wrapper/gradle-wrapper.jar
+          key: gradle-wrapper-v1
+
+      - name: Get Gradle wrapper
+        if: steps.cache-gradle-wrapper.outputs.cache-hit != 'true'
+        run: ./configure.sh
+
+      - name: Setup Rust
+        run: |
+          if ! command -v rustup >/dev/null 2>&1; then
+            curl https://sh.rustup.rs -sSf | sh -s -- -y
+            source "$HOME/.cargo/env"
+          fi
+          rustup set profile minimal
+          rustup toolchain install stable --no-self-update
+          rustup default stable
+
+      - name: Validate unitrie spec map
+        run: scripts/unitrie/check_spec_map.sh
+
+      - name: Run unitrie-rs tests
+        run: cargo test --manifest-path unitrie-rs/Cargo.toml
+
+      - name: Run unitrie parity and diagnostics tests
+        run: |
+          ./gradlew --no-daemon --stacktrace :rskj-core:test \
+            --tests "co.rsk.trie.engine.rust.UnitrieDifferentialCorpusReplayTest" \
+            --tests "co.rsk.trie.engine.rust.RustMutableTrieTest" \
+            --tests "co.rsk.trie.engine.rust.diagnostics.JsonlTrieDifferentialRecorderTest" \
+            --tests "co.rsk.cli.tools.UnitrieValidationRunOnDemandTest"
+
+      - name: Build unitrie-rs JNI library (release)
+        run: cargo build --manifest-path unitrie-rs/Cargo.toml --release
+
+      - name: Run trie benchmark smoke (java vs rust next)
+        env:
+          UNITRIE_JMH_WARMUP_ITERATIONS: 1
+          UNITRIE_JMH_MEASUREMENT_ITERATIONS: 2
+          UNITRIE_JMH_WARMUP_SECONDS: 1
+          UNITRIE_JMH_MEASUREMENT_SECONDS: 1
+          UNITRIE_JMH_FORKS: 1
+          UNITRIE_JMH_ENGINES: java,rust
+          UNITRIE_JMH_RUST_IMPLEMENTATIONS: next
+          UNITRIE_JMH_RUST_LIBRARY_PATH: ${{ github.workspace }}/unitrie-rs/target/release/libunitrie_rs_jni.so
+        run: ./gradlew --no-daemon --stacktrace :rskj-core:jmh -Pbenchmark=BenchmarkTrieEngineRunner
+
+      - name: Verify benchmark smoke artifacts
+        run: |
+          test -f rskj-core/build/reports/jmh/result_trie_engine.csv
+          test -f rskj-core/build/reports/jmh/result_trie_engine_summary.json
+          test -f rskj-core/build/reports/jmh/result_trie_engine_comparison.md
+
   legacy-immutability-guard:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
