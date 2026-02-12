@@ -89,19 +89,34 @@ impl Unitrie {
     }
 
     pub fn delete_recursive(&mut self, prefix: &[u8]) {
-        let keys_to_delete: Vec<Vec<u8>> = self
-            .entries
-            .keys()
-            .filter(|key| key.starts_with(prefix))
-            .cloned()
-            .collect();
-
-        if keys_to_delete.is_empty() {
+        if self.entries.is_empty() {
             return;
         }
 
-        for key in keys_to_delete {
-            self.entries.remove(&key);
+        if prefix.is_empty() {
+            self.entries.clear();
+            self.materialized = None;
+            return;
+        }
+
+        // Remove lexicographic window [prefix, prefix_upper_bound) which is exactly
+        // the key set that starts with `prefix`.
+        let mut tail = self.entries.split_off(prefix);
+        let removed_any = if let Some(upper_bound) = prefix_upper_bound(prefix) {
+            let mut suffix = tail.split_off(&upper_bound);
+            let removed = !tail.is_empty();
+            self.entries.append(&mut suffix);
+            removed
+        } else {
+            // Prefix made of 0xff bytes has no finite upper bound; everything in tail matches.
+            let removed = !tail.is_empty();
+            removed
+        };
+
+        if !removed_any {
+            // Restore original map when nothing was removed.
+            self.entries.append(&mut tail);
+            return;
         }
 
         self.materialized = None;
@@ -526,6 +541,23 @@ fn hex(bytes: &[u8]) -> String {
     output
 }
 
+fn prefix_upper_bound(prefix: &[u8]) -> Option<Vec<u8>> {
+    if prefix.is_empty() {
+        return None;
+    }
+
+    let mut upper = prefix.to_vec();
+    for index in (0..upper.len()).rev() {
+        if upper[index] != u8::MAX {
+            upper[index] = upper[index].saturating_add(1);
+            upper.truncate(index + 1);
+            return Some(upper);
+        }
+    }
+
+    None
+}
+
 #[cfg(test)]
 mod tests {
     use super::Unitrie;
@@ -579,6 +611,72 @@ mod tests {
         assert!(trie.get(b"acct:1:aa").is_none());
         assert!(trie.get(b"acct:1:bb").is_none());
         assert_eq!(trie.get(b"acct:2:aa").as_deref(), Some(b"v3".as_slice()));
+    }
+
+    #[test]
+    fn delete_recursive_handles_boundary_prefixes() {
+        let mut trie = Unitrie::new();
+        trie.put(vec![0xff, 0x10], vec![0x01]);
+        trie.put(vec![0xff, 0x20], vec![0x02]);
+        trie.put(vec![0xfe, 0x01], vec![0x03]);
+
+        trie.delete_recursive(&[0xff]);
+
+        assert!(trie.get(&[0xff, 0x10]).is_none());
+        assert!(trie.get(&[0xff, 0x20]).is_none());
+        assert_eq!(trie.get(&[0xfe, 0x01]).as_deref(), Some([0x03].as_slice()));
+    }
+
+    #[test]
+    fn delete_recursive_range_matches_naive_behavior() {
+        let keys = vec![
+            vec![],
+            vec![0x00],
+            vec![0x00, 0x01],
+            vec![0x00, 0xff],
+            vec![0x01],
+            vec![0x01, 0x00],
+            vec![0x01, 0x80],
+            vec![0x10, 0x20, 0x30],
+            vec![0xff],
+            vec![0xff, 0x00],
+            vec![0xff, 0xff],
+        ];
+
+        let prefixes = vec![
+            vec![],
+            vec![0x00],
+            vec![0x00, 0x01],
+            vec![0x01],
+            vec![0x01, 0x80],
+            vec![0x02],
+            vec![0xff],
+            vec![0xff, 0xff],
+            vec![0xff, 0xff, 0xff],
+        ];
+
+        for prefix in prefixes {
+            let mut trie = Unitrie::new();
+            let mut naive = HashMap::<Vec<u8>, Vec<u8>>::new();
+
+            for key in &keys {
+                let value = vec![key.len() as u8];
+                trie.put(key.clone(), value.clone());
+                naive.insert(key.clone(), value);
+            }
+
+            trie.delete_recursive(&prefix);
+            naive.retain(|key, _| !key.starts_with(&prefix));
+
+            let mut actual = HashMap::<Vec<u8>, Vec<u8>>::new();
+            for key in &keys {
+                if let Some(value) = trie.get(key) {
+                    actual.insert(key.clone(), value);
+                }
+            }
+
+            assert_eq!(actual, naive, "mismatch for prefix {:?}", prefix);
+        }
     }
 
     #[test]
