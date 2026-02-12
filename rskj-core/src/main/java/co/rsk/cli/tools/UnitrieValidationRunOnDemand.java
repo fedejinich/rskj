@@ -26,6 +26,7 @@ import co.rsk.trie.engine.TrieEngineType;
 import co.rsk.trie.engine.rust.RustUnitrieImplementation;
 import co.rsk.trie.engine.rust.diagnostics.JsonlTrieDifferentialRecorder;
 import co.rsk.trie.engine.rust.diagnostics.TrieDifferentialRecorder;
+import co.rsk.trie.engine.rust.diagnostics.TrieDifferentialSpecResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.ethereum.core.Block;
@@ -46,8 +47,10 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -438,6 +441,20 @@ public class UnitrieValidationRunOnDemand extends PicoCliToolRskContextAware {
         content.append("config.failFast=").append(artifact.getConfig().isFailFast()).append('\n');
         content.append("config.failOnMismatch=").append(artifact.getConfig().isFailOnMismatch()).append('\n');
         content.append("config.rustLibraryPath=").append(nullableString(artifact.getConfig().getRustLibraryPath())).append('\n');
+        content.append("rust.impl=").append(artifact.getRustImpl()).append('\n');
+        content.append("suspectedSpecIds=").append(String.join(",", artifact.getSuspectedSpecIds())).append('\n');
+        content.append("evidenceBundleId=").append(artifact.getEvidenceBundleId()).append('\n');
+        if (artifact.getJniCounters() != null) {
+            UnitrieDivergenceArtifact.JniCountersInfo jniCounters = artifact.getJniCounters();
+            content.append("jniCounters.available=").append(jniCounters.isAvailable()).append('\n');
+            content.append("jniCounters.serializedNodes=").append(jniCounters.getSerializedNodes()).append('\n');
+            content.append("jniCounters.hashedNodes=").append(jniCounters.getHashedNodes()).append('\n');
+            content.append("jniCounters.persistedNodes=").append(jniCounters.getPersistedNodes()).append('\n');
+            content.append("jniCounters.persistedValues=").append(jniCounters.getPersistedValues()).append('\n');
+            content.append("jniCounters.cacheHits=").append(jniCounters.getCacheHits()).append('\n');
+            content.append("jniCounters.cacheMisses=").append(jniCounters.getCacheMisses()).append('\n');
+            content.append("jniCounters.jniCalls=").append(jniCounters.getJniCalls()).append('\n');
+        }
         content.append("corpus.path=").append(nullableString(artifact.getCorpusPath())).append('\n');
 
         if (artifact.getException() != null) {
@@ -493,6 +510,10 @@ public class UnitrieValidationRunOnDemand extends PicoCliToolRskContextAware {
                 true,
                 rustLibraryPath
         );
+        List<String> suspectedSpecIds = inferSuspectedSpecIds(reason, corpusPath);
+        String evidenceBundleId = "run-" + effectiveRunId + "-attempt-" + attemptIndex + "-block-" + block.getNumber();
+        String rustImpl = ctx.getRskSystemProperties().getUnitrieRustImplementation();
+        UnitrieDivergenceArtifact.JniCountersInfo jniCountersInfo = buildJniCountersSnapshot(corpusPath);
         UnitrieDivergenceArtifact.ExceptionInfo exceptionInfo = exception == null
                 ? null
                 : new UnitrieDivergenceArtifact.ExceptionInfo(
@@ -509,9 +530,101 @@ public class UnitrieValidationRunOnDemand extends PicoCliToolRskContextAware {
                 timingInfo,
                 txInfo,
                 configInfo,
+                suspectedSpecIds,
+                evidenceBundleId,
+                rustImpl,
+                jniCountersInfo,
                 corpusPath == null ? null : corpusPath.toAbsolutePath().toString(),
                 exceptionInfo
         );
+    }
+
+    private List<String> inferSuspectedSpecIds(String reason, @Nullable Path corpusPath) {
+        LinkedHashSet<String> specIds = new LinkedHashSet<>();
+        specIds.add(TrieDifferentialSpecResolver.resolveSpecId("mismatch", reason));
+
+        String normalizedReason = reason.toLowerCase(Locale.ROOT);
+        if (normalizedReason.contains("exception")) {
+            specIds.add("SPEC-JNI-EXECUTION-STABILITY-001");
+        }
+
+        if (corpusPath != null && Files.exists(corpusPath)) {
+            try {
+                for (String line : Files.readAllLines(corpusPath, StandardCharsets.UTF_8)) {
+                    if (line.isBlank()) {
+                        continue;
+                    }
+
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> event = JSON_MAPPER.readValue(line, Map.class);
+                    Object specId = event.get("specId");
+                    if (specId instanceof String && !((String) specId).isBlank()) {
+                        specIds.add((String) specId);
+                    }
+                }
+            } catch (IOException e) {
+                printError("Could not parse differential corpus while inferring suspected spec ids: {}", e.getMessage());
+            }
+        }
+
+        return List.copyOf(specIds);
+    }
+
+    private UnitrieDivergenceArtifact.JniCountersInfo buildJniCountersSnapshot(@Nullable Path corpusPath) {
+        if (corpusPath == null || !Files.exists(corpusPath)) {
+            return unavailableJniCounters();
+        }
+
+        Map<String, Object> latestJniCounters = null;
+        try {
+            for (String line : Files.readAllLines(corpusPath, StandardCharsets.UTF_8)) {
+                if (line.isBlank()) {
+                    continue;
+                }
+
+                @SuppressWarnings("unchecked")
+                Map<String, Object> event = JSON_MAPPER.readValue(line, Map.class);
+                Object counters = event.get("jniCounters");
+                if (counters instanceof Map) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> casted = (Map<String, Object>) counters;
+                    latestJniCounters = casted;
+                }
+            }
+        } catch (IOException e) {
+            printError("Could not parse differential corpus JNI counters snapshot: {}", e.getMessage());
+            return unavailableJniCounters();
+        }
+
+        if (latestJniCounters == null) {
+            return unavailableJniCounters();
+        }
+
+        return new UnitrieDivergenceArtifact.JniCountersInfo(
+                true,
+                readLongField(latestJniCounters, "serializedNodes", "serialized_nodes"),
+                readLongField(latestJniCounters, "hashedNodes", "hashed_nodes"),
+                readLongField(latestJniCounters, "persistedNodes", "persisted_nodes"),
+                readLongField(latestJniCounters, "persistedValues", "persisted_values"),
+                readLongField(latestJniCounters, "cacheHits", "cache_hits"),
+                readLongField(latestJniCounters, "cacheMisses", "cache_misses"),
+                readLongField(latestJniCounters, "jniCalls", "jni_calls")
+        );
+    }
+
+    private static UnitrieDivergenceArtifact.JniCountersInfo unavailableJniCounters() {
+        return new UnitrieDivergenceArtifact.JniCountersInfo(false, 0, 0, 0, 0, 0, 0, 0);
+    }
+
+    private static long readLongField(Map<String, Object> fields, String... keys) {
+        for (String key : keys) {
+            Object value = fields.get(key);
+            if (value instanceof Number) {
+                return ((Number) value).longValue();
+            }
+        }
+
+        return 0L;
     }
 
     @Nullable
@@ -551,8 +664,14 @@ public class UnitrieValidationRunOnDemand extends PicoCliToolRskContextAware {
 
                 byte[] shadowRoot = shadowResult.getFinalState().getHash().getBytes();
                 if (javaRoot != null && !Arrays.equals(javaRoot, shadowRoot)) {
+                    String mismatchMessage = "Probe replay ended with root mismatch";
+                    String specId = TrieDifferentialSpecResolver.resolveSpecId("probeFinalStateRoot", mismatchMessage);
                     recorder.recordOperation(
                             "probeFinalStateRoot",
+                            specId,
+                            TrieDifferentialSpecResolver.resolveSpecClass(specId),
+                            TrieDifferentialSpecResolver.resolvePhase("probeFinalStateRoot"),
+                            ctx.getRskSystemProperties().getUnitrieRustImplementation(),
                             null,
                             null,
                             null,
@@ -560,12 +679,18 @@ public class UnitrieValidationRunOnDemand extends PicoCliToolRskContextAware {
                             null,
                             javaRoot,
                             shadowRoot,
-                            "Probe replay ended with root mismatch"
+                            mismatchMessage
                     );
                 }
             } catch (RuntimeException ex) {
+                String mismatchMessage = ex.getClass().getName() + ": " + ex.getMessage();
+                String specId = TrieDifferentialSpecResolver.resolveSpecId("probeException", mismatchMessage);
                 recorder.recordOperation(
                         "probeException",
+                        specId,
+                        TrieDifferentialSpecResolver.resolveSpecClass(specId),
+                        TrieDifferentialSpecResolver.resolvePhase("probeException"),
+                        ctx.getRskSystemProperties().getUnitrieRustImplementation(),
                         null,
                         null,
                         null,
@@ -573,7 +698,7 @@ public class UnitrieValidationRunOnDemand extends PicoCliToolRskContextAware {
                         null,
                         javaRoot,
                         null,
-                        ex.getClass().getName() + ": " + ex.getMessage()
+                        mismatchMessage
                 );
             }
         } catch (RuntimeException ex) {

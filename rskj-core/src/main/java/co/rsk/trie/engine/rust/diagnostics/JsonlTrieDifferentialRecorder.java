@@ -59,6 +59,10 @@ public final class JsonlTrieDifferentialRecorder implements TrieDifferentialReco
     @Override
     public synchronized void recordOperation(
             String op,
+            String specId,
+            String specClass,
+            String phase,
+            String engineImpl,
             @Nullable byte[] key,
             @Nullable byte[] value,
             @Nullable Integer valueLength,
@@ -71,6 +75,10 @@ public final class JsonlTrieDifferentialRecorder implements TrieDifferentialReco
             Map<String, Object> event = new LinkedHashMap<>();
             event.put("stepIndex", stepIndex.getAndIncrement());
             event.put("op", op);
+            event.put("specId", specId);
+            event.put("specClass", specClass);
+            event.put("phase", phase);
+            event.put("engineImpl", engineImpl);
             event.put("keyHex", nullableHex(key));
             event.put("valueHex", nullableHex(value));
             event.put("valueLen", valueLength != null ? valueLength : (value == null ? null : value.length));

@@ -28,6 +28,7 @@ import co.rsk.trie.Trie;
 import co.rsk.trie.TrieStore;
 import co.rsk.trie.engine.TrieEngineType;
 import co.rsk.trie.engine.rust.diagnostics.TrieDifferentialRecorder;
+import co.rsk.trie.engine.rust.diagnostics.TrieDifferentialSpecResolver;
 import org.ethereum.db.ByteArrayWrapper;
 import org.ethereum.util.ByteUtil;
 import org.ethereum.vm.DataWord;
@@ -562,8 +563,15 @@ public class RustMutableTrie implements MutableTrie {
         try {
             byte[] javaRoot = javaDelegateOrMirror().getHash().getBytes();
             byte[] rustRoot = bridge.currentRootHash(nativeHandle);
+            String specId = TrieDifferentialSpecResolver.resolveSpecId(operation, mismatchMessage);
+            String specClass = TrieDifferentialSpecResolver.resolveSpecClass(specId);
+            String phase = TrieDifferentialSpecResolver.resolvePhase(operation);
             differentialRecorder.recordOperation(
                     operation,
+                    specId,
+                    specClass,
+                    phase,
+                    rustImplementation.getConfigName(),
                     key,
                     value,
                     valueLength,

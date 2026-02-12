@@ -41,6 +41,10 @@ class JsonlTrieDifferentialRecorderTest {
         try (JsonlTrieDifferentialRecorder recorder = new JsonlTrieDifferentialRecorder(outputFile)) {
             recorder.recordOperation(
                     "put",
+                    "SPEC-TRIE-PUT-SPLIT-COALESCE-001",
+                    "trie",
+                    "mutation",
+                    "next",
                     new byte[]{0x01},
                     new byte[]{0x02},
                     1,
@@ -52,6 +56,10 @@ class JsonlTrieDifferentialRecorderTest {
             );
             recorder.recordOperation(
                     "get",
+                    "SPEC-TRIE-GET-FIND-001",
+                    "trie",
+                    "read",
+                    "next",
                     new byte[]{0x01},
                     null,
                     null,
@@ -71,9 +79,14 @@ class JsonlTrieDifferentialRecorderTest {
 
         assertEquals(0, ((Number) first.get("stepIndex")).intValue());
         assertEquals("put", first.get("op"));
+        assertEquals("SPEC-TRIE-PUT-SPLIT-COALESCE-001", first.get("specId"));
+        assertEquals("trie", first.get("specClass"));
+        assertEquals("mutation", first.get("phase"));
+        assertEquals("next", first.get("engineImpl"));
         assertEquals(1, ((Number) first.get("valueLen")).intValue());
 
         assertEquals(1, ((Number) second.get("stepIndex")).intValue());
         assertEquals("simulated mismatch", second.get("mismatchMessage"));
+        assertEquals("read", second.get("phase"));
     }
 }

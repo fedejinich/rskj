@@ -32,6 +32,11 @@ final class UnitrieDivergenceArtifact {
     private final TimingInfo timing;
     private final TxInfo tx;
     private final ConfigInfo config;
+    private final List<String> suspectedSpecIds;
+    private final String evidenceBundleId;
+    private final String rustImpl;
+    @Nullable
+    private final JniCountersInfo jniCounters;
     @Nullable
     private final String corpusPath;
     @Nullable
@@ -46,6 +51,10 @@ final class UnitrieDivergenceArtifact {
             TimingInfo timing,
             TxInfo tx,
             ConfigInfo config,
+            List<String> suspectedSpecIds,
+            String evidenceBundleId,
+            String rustImpl,
+            @Nullable JniCountersInfo jniCounters,
             @Nullable String corpusPath,
             @Nullable ExceptionInfo exception) {
         this.reason = reason;
@@ -56,6 +65,10 @@ final class UnitrieDivergenceArtifact {
         this.timing = timing;
         this.tx = tx;
         this.config = config;
+        this.suspectedSpecIds = suspectedSpecIds;
+        this.evidenceBundleId = evidenceBundleId;
+        this.rustImpl = rustImpl;
+        this.jniCounters = jniCounters;
         this.corpusPath = corpusPath;
         this.exception = exception;
     }
@@ -90,6 +103,23 @@ final class UnitrieDivergenceArtifact {
 
     ConfigInfo getConfig() {
         return config;
+    }
+
+    List<String> getSuspectedSpecIds() {
+        return suspectedSpecIds;
+    }
+
+    String getEvidenceBundleId() {
+        return evidenceBundleId;
+    }
+
+    String getRustImpl() {
+        return rustImpl;
+    }
+
+    @Nullable
+    JniCountersInfo getJniCounters() {
+        return jniCounters;
     }
 
     @Nullable
@@ -225,6 +255,68 @@ final class UnitrieDivergenceArtifact {
         @Nullable
         String getRustLibraryPath() {
             return rustLibraryPath;
+        }
+    }
+
+    static final class JniCountersInfo {
+        private final boolean available;
+        private final long serializedNodes;
+        private final long hashedNodes;
+        private final long persistedNodes;
+        private final long persistedValues;
+        private final long cacheHits;
+        private final long cacheMisses;
+        private final long jniCalls;
+
+        JniCountersInfo(
+                boolean available,
+                long serializedNodes,
+                long hashedNodes,
+                long persistedNodes,
+                long persistedValues,
+                long cacheHits,
+                long cacheMisses,
+                long jniCalls) {
+            this.available = available;
+            this.serializedNodes = serializedNodes;
+            this.hashedNodes = hashedNodes;
+            this.persistedNodes = persistedNodes;
+            this.persistedValues = persistedValues;
+            this.cacheHits = cacheHits;
+            this.cacheMisses = cacheMisses;
+            this.jniCalls = jniCalls;
+        }
+
+        boolean isAvailable() {
+            return available;
+        }
+
+        long getSerializedNodes() {
+            return serializedNodes;
+        }
+
+        long getHashedNodes() {
+            return hashedNodes;
+        }
+
+        long getPersistedNodes() {
+            return persistedNodes;
+        }
+
+        long getPersistedValues() {
+            return persistedValues;
+        }
+
+        long getCacheHits() {
+            return cacheHits;
+        }
+
+        long getCacheMisses() {
+            return cacheMisses;
+        }
+
+        long getJniCalls() {
+            return jniCalls;
         }
     }
 

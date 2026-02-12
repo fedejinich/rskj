@@ -30,6 +30,10 @@ enum NoopTrieDifferentialRecorder implements TrieDifferentialRecorder {
     @Override
     public void recordOperation(
             String op,
+            String specId,
+            String specClass,
+            String phase,
+            String engineImpl,
             @Nullable byte[] key,
             @Nullable byte[] value,
             @Nullable Integer valueLength,
