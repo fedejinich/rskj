@@ -12,6 +12,11 @@ pub fn size_of(value: u64) -> usize {
 
 pub fn encode(value: u64) -> Vec<u8> {
     let mut encoded = Vec::with_capacity(size_of(value));
+    encode_into(value, &mut encoded);
+    encoded
+}
+
+pub fn encode_into(value: u64, encoded: &mut Vec<u8>) {
     if value < 0xfd {
         encoded.push(value as u8);
     } else if value <= 0xffff {
@@ -24,8 +29,6 @@ pub fn encode(value: u64) -> Vec<u8> {
         encoded.push(0xff);
         encoded.extend_from_slice(&value.to_le_bytes());
     }
-
-    encoded
 }
 
 pub fn decode_from_slice(input: &[u8], offset: &mut usize) -> Result<u64, String> {
@@ -82,7 +85,7 @@ fn decode_u64(input: &[u8], offset: &mut usize) -> Result<u64, String> {
 
 #[cfg(test)]
 mod tests {
-    use super::{decode_from_slice, encode, size_of};
+    use super::{decode_from_slice, encode, encode_into, size_of};
 
     #[test]
     fn size_matches_encoding_boundaries() {
@@ -101,6 +104,17 @@ mod tests {
             let decoded = decode_from_slice(&encoded, &mut offset).expect("varint should decode");
             assert_eq!(decoded, value);
             assert_eq!(offset, encoded.len());
+        }
+    }
+
+    #[test]
+    fn encode_into_matches_encode() {
+        let values = [0, 1, 252, 253, 65_535, 65_536, u32::MAX as u64 + 1];
+        for value in values {
+            let direct = encode(value);
+            let mut reused = Vec::new();
+            encode_into(value, &mut reused);
+            assert_eq!(direct, reused);
         }
     }
 }

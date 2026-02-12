@@ -152,6 +152,15 @@ public final class RustUnitrieBridge {
         return arrayToList(keys).iterator();
     }
 
+    @Nullable
+    public byte[] getStorageKeysPacked(long handle, byte[] accountAddress) {
+        return nativeGetStorageKeysPacked(handle, accountAddress);
+    }
+
+    public Iterator<byte[]> getStorageKeysPackedDecoded(long handle, byte[] accountAddress) {
+        return decodeStorageKeysPacked(getStorageKeysPacked(handle, accountAddress)).iterator();
+    }
+
     public byte[] rootHash(long handle) {
         return nativeRootHash(handle);
     }
@@ -191,6 +200,81 @@ public final class RustUnitrieBridge {
         return list;
     }
 
+    static List<byte[]> decodeStorageKeysPacked(@Nullable byte[] payload) {
+        if (payload == null || payload.length == 0) {
+            return Collections.emptyList();
+        }
+
+        Cursor cursor = new Cursor();
+        long rawCount = decodeVarInt(payload, cursor);
+        if (rawCount < 0 || rawCount > Integer.MAX_VALUE) {
+            throw new IllegalStateException("Invalid storage key count in packed payload");
+        }
+
+        int count = (int) rawCount;
+        List<byte[]> keys = new ArrayList<>(count);
+        for (int index = 0; index < count; index++) {
+            long rawLength = decodeVarInt(payload, cursor);
+            if (rawLength < 0 || rawLength > Integer.MAX_VALUE) {
+                throw new IllegalStateException("Invalid storage key length in packed payload");
+            }
+
+            int length = (int) rawLength;
+            int end = cursor.offset + length;
+            if (end > payload.length) {
+                throw new IllegalStateException("Packed storage keys payload is truncated");
+            }
+
+            byte[] key = new byte[length];
+            System.arraycopy(payload, cursor.offset, key, 0, length);
+            cursor.offset = end;
+            keys.add(key);
+        }
+
+        if (cursor.offset != payload.length) {
+            throw new IllegalStateException("Packed storage keys payload has trailing bytes");
+        }
+
+        return keys;
+    }
+
+    private static long decodeVarInt(byte[] payload, Cursor cursor) {
+        if (cursor.offset >= payload.length) {
+            throw new IllegalStateException("Packed storage keys varint is truncated");
+        }
+
+        int first = payload[cursor.offset++] & 0xff;
+        if (first < 0xfd) {
+            return first;
+        }
+
+        if (first == 0xfd) {
+            return decodeFixed(payload, cursor, 2);
+        }
+        if (first == 0xfe) {
+            return decodeFixed(payload, cursor, 4);
+        }
+        return decodeFixed(payload, cursor, 8);
+    }
+
+    private static long decodeFixed(byte[] payload, Cursor cursor, int size) {
+        int end = cursor.offset + size;
+        if (end > payload.length) {
+            throw new IllegalStateException("Packed storage keys fixed varint is truncated");
+        }
+
+        long value = 0L;
+        for (int shift = 0; shift < size; shift++) {
+            value |= ((long) payload[cursor.offset + shift] & 0xffL) << (shift * 8);
+        }
+        cursor.offset = end;
+        return value;
+    }
+
+    private static final class Cursor {
+        private int offset = 0;
+    }
+
     private static native long nativeCreateTrie(String implementation);
     private static native long nativeCreateTrieFromRoot(byte[] rootHash, RustTrieStoreAdapter storeAdapter, String implementation);
 
@@ -212,6 +296,8 @@ public final class RustUnitrieBridge {
     private static native byte[][] nativeCollectKeys(long handle, int size);
 
     private static native byte[][] nativeGetStorageKeys(long handle, byte[] accountAddress);
+
+    private static native byte[] nativeGetStorageKeysPacked(long handle, byte[] accountAddress);
 
     private static native byte[] nativeRootHash(long handle);
 

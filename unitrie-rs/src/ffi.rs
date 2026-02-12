@@ -1,6 +1,7 @@
 use crate::core_trie::Unitrie;
 use crate::next::core_trie::NextUnitrie;
 use crate::store_adapter::RawStoreAdapter;
+use crate::varint;
 use dashmap::DashMap;
 use jni::objects::{JByteArray, JClass, JObject, JString, JValue};
 use jni::sys::{jbyteArray, jint, jlong, jlongArray, jobjectArray};
@@ -436,6 +437,22 @@ fn bytes_vec_to_jobject_array(env: &mut JNIEnv, values: Vec<Vec<u8>>) -> Option<
     Some(array.into_raw())
 }
 
+fn encode_storage_keys_packed(values: &[Vec<u8>]) -> Vec<u8> {
+    let mut payload_size = varint::size_of(values.len() as u64);
+    for value in values {
+        payload_size += varint::size_of(value.len() as u64) + value.len();
+    }
+
+    let mut output = Vec::with_capacity(payload_size);
+    varint::encode_into(values.len() as u64, &mut output);
+    for value in values {
+        varint::encode_into(value.len() as u64, &mut output);
+        output.extend_from_slice(value);
+    }
+
+    output
+}
+
 #[no_mangle]
 pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeCreateTrie(
     mut env: JNIEnv,
@@ -742,6 +759,32 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeGetS
 }
 
 #[no_mangle]
+pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeGetStorageKeysPacked(
+    mut env: JNIEnv,
+    _class: JClass,
+    handle: jlong,
+    account_address: JByteArray,
+) -> jbyteArray {
+    let account_address = match convert_required_array(&mut env, account_address, "accountAddress") {
+        Ok(account_address) => account_address,
+        Err(_) => return std::ptr::null_mut(),
+    };
+
+    let packed_keys = match with_trie_mut(handle, |trie| {
+        let keys = trie.runtime.get_storage_keys(&account_address);
+        encode_storage_keys_packed(&keys)
+    }) {
+        Ok(packed_keys) => packed_keys,
+        Err(err) => {
+            throw_illegal_argument(&mut env, err);
+            return std::ptr::null_mut();
+        }
+    };
+
+    to_byte_array(&mut env, &packed_keys, "packed storage keys").unwrap_or(std::ptr::null_mut())
+}
+
+#[no_mangle]
 pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeRootHash(
     mut env: JNIEnv,
     _class: JClass,
@@ -802,5 +845,32 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeRese
         trie.counters = PerfCounters::default();
     }) {
         throw_illegal_argument(&mut env, err);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::encode_storage_keys_packed;
+    use crate::varint::decode_from_slice;
+
+    #[test]
+    fn storage_keys_packed_round_trip() {
+        let values = vec![vec![0x01], vec![0xaa, 0xbb], vec![0x10; 260]];
+        let encoded = encode_storage_keys_packed(&values);
+
+        let mut offset = 0usize;
+        let count = decode_from_slice(&encoded, &mut offset).expect("count varint");
+        assert_eq!(count as usize, values.len());
+
+        let mut decoded = Vec::new();
+        for _ in 0..count {
+            let len = decode_from_slice(&encoded, &mut offset).expect("len varint") as usize;
+            let end = offset + len;
+            decoded.push(encoded[offset..end].to_vec());
+            offset = end;
+        }
+
+        assert_eq!(decoded, values);
+        assert_eq!(offset, encoded.len());
     }
 }
