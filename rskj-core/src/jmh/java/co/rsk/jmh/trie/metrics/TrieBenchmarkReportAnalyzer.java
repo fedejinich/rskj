@@ -50,6 +50,15 @@ public final class TrieBenchmarkReportAnalyzer {
     public static final double ALLOC_REGRESSION_WARNING_THRESHOLD_PCT = 15.0;
     public static final double VALUE_WRITE_REGRESSION_WARNING_THRESHOLD_PCT = 15.0;
     public static final double THROUGHPUT_DROP_WARNING_THRESHOLD_PCT = 5.0;
+    public static final double DEFAULT_JNI_OVERHEAD_BUDGET_PCT = 20.0;
+
+    private static final Map<String, Double> JNI_OVERHEAD_BUDGET_BY_WORKLOAD_PCT = Map.of(
+            "datasetDrivenMassiveUpload", 10.0,
+            "putGetDeleteMix", 15.0,
+            "longValueHeavyPaths", 20.0,
+            "accountStorageKeyIteration", 20.0,
+            "saveReloadCycle", 35.0
+    );
 
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
@@ -74,6 +83,7 @@ public final class TrieBenchmarkReportAnalyzer {
 
         List<Map<String, Object>> workloadResults = new ArrayList<>();
         List<Map<String, Object>> comparison = new ArrayList<>();
+        List<Map<String, Object>> jniBreakdown = new ArrayList<>();
         List<String> warnings = new ArrayList<>();
 
         for (Map.Entry<String, Map<String, EngineMetrics>> workloadEntry : grouped.entrySet()) {
@@ -91,11 +101,20 @@ public final class TrieBenchmarkReportAnalyzer {
                 List<String> rowWarnings = (List<String>) row.get("warnings");
                 warnings.addAll(rowWarnings);
             }
+
+            List<Map<String, Object>> workloadJniRows = analyzeJniDecontamination(workload, byEngine);
+            jniBreakdown.addAll(workloadJniRows);
+            for (Map<String, Object> row : workloadJniRows) {
+                @SuppressWarnings("unchecked")
+                List<String> rowWarnings = (List<String>) row.get("warnings");
+                warnings.addAll(rowWarnings);
+            }
         }
 
-        Map<String, Object> summary = buildSummary(metadata, workloadResults, comparison, warnings);
+        Map<String, Object> summary = buildSummary(metadata, workloadResults, comparison, jniBreakdown, warnings);
+        Map<String, Object> jniBreakdownReport = buildJniBreakdownReport(metadata, jniBreakdown);
         String comparisonMarkdown = buildComparisonMarkdown(metadata, comparison);
-        return new AnalysisReport(summary, comparisonMarkdown, warnings);
+        return new AnalysisReport(summary, comparisonMarkdown, jniBreakdownReport, warnings);
     }
 
     private static void collectPrimaryMode(EngineMetrics metrics, Mode mode, Result<?> primaryResult) {
@@ -166,6 +185,38 @@ public final class TrieBenchmarkReportAnalyzer {
         metrics.storeBytesWrittenValuePerOp = metrics.storeBytesWrittenValuePerOp != null
                 ? metrics.storeBytesWrittenValuePerOp
                 : findSecondaryMetricBySuffix(metrics, "store_bytes_written_value");
+
+        metrics.rustJniCallsPerOp = metrics.rustJniCallsPerOp != null
+                ? metrics.rustJniCallsPerOp
+                : findSecondaryMetricBySuffix(metrics, "rust_jni_calls");
+
+        metrics.rustFfiDecodeNsPerOp = metrics.rustFfiDecodeNsPerOp != null
+                ? metrics.rustFfiDecodeNsPerOp
+                : findSecondaryMetricBySuffix(metrics, "rust_ffi_decode_ns");
+
+        metrics.rustFfiEncodeNsPerOp = metrics.rustFfiEncodeNsPerOp != null
+                ? metrics.rustFfiEncodeNsPerOp
+                : findSecondaryMetricBySuffix(metrics, "rust_ffi_encode_ns");
+
+        metrics.rustCoreRuntimeNsPerOp = metrics.rustCoreRuntimeNsPerOp != null
+                ? metrics.rustCoreRuntimeNsPerOp
+                : findSecondaryMetricBySuffix(metrics, "rust_core_runtime_ns");
+
+        metrics.rustStoreCallbackNsPerOp = metrics.rustStoreCallbackNsPerOp != null
+                ? metrics.rustStoreCallbackNsPerOp
+                : findSecondaryMetricBySuffix(metrics, "rust_store_callback_ns");
+
+        metrics.rustStoreCallbackCallsPerOp = metrics.rustStoreCallbackCallsPerOp != null
+                ? metrics.rustStoreCallbackCallsPerOp
+                : findSecondaryMetricBySuffix(metrics, "rust_store_callback_calls");
+
+        metrics.rustJniBytesInPerOp = metrics.rustJniBytesInPerOp != null
+                ? metrics.rustJniBytesInPerOp
+                : findSecondaryMetricBySuffix(metrics, "rust_jni_bytes_in");
+
+        metrics.rustJniBytesOutPerOp = metrics.rustJniBytesOutPerOp != null
+                ? metrics.rustJniBytesOutPerOp
+                : findSecondaryMetricBySuffix(metrics, "rust_jni_bytes_out");
     }
 
     private static Double findSecondaryMetricBySuffix(EngineMetrics metrics, String suffix) {
@@ -267,6 +318,79 @@ public final class TrieBenchmarkReportAnalyzer {
         return rows;
     }
 
+    private static List<Map<String, Object>> analyzeJniDecontamination(
+            String workload,
+            Map<String, EngineMetrics> byEngine) {
+        List<Map<String, Object>> rows = new ArrayList<>();
+        Double budgetPct = JNI_OVERHEAD_BUDGET_BY_WORKLOAD_PCT.getOrDefault(workload, DEFAULT_JNI_OVERHEAD_BUDGET_PCT);
+
+        List<String> candidates = byEngine.keySet().stream()
+                .filter(engine -> engine.startsWith("rust"))
+                .sorted()
+                .toList();
+
+        for (String candidateLabel : candidates) {
+            EngineMetrics rust = byEngine.get(candidateLabel);
+            if (rust == null) {
+                continue;
+            }
+
+            Double jniBoundaryNsPerOp = sum(rust.rustFfiDecodeNsPerOp, rust.rustFfiEncodeNsPerOp);
+            Double coreRuntimeNsPerOp = rust.rustCoreRuntimeNsPerOp;
+            Double storeCallbackNsPerOp = rust.rustStoreCallbackNsPerOp;
+            Double jniOverheadRatioPct = null;
+            if (jniBoundaryNsPerOp != null && coreRuntimeNsPerOp != null) {
+                double denominator = jniBoundaryNsPerOp + coreRuntimeNsPerOp;
+                if (denominator > 0.0d) {
+                    jniOverheadRatioPct = (jniBoundaryNsPerOp / denominator) * 100.0d;
+                }
+            }
+
+            List<String> warnings = new ArrayList<>();
+            String status;
+            if (jniOverheadRatioPct == null) {
+                status = "WARNING";
+                warnings.add("Missing JNI/core timing counters for contamination analysis");
+            } else if (jniOverheadRatioPct > budgetPct) {
+                status = "CONTAMINATED";
+                warnings.add(String.format(
+                        Locale.ROOT,
+                        "JNI overhead %.2f%% exceeds workload budget %.2f%%",
+                        jniOverheadRatioPct,
+                        budgetPct
+                ));
+            } else {
+                status = "OK";
+            }
+
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("benchmark", workload);
+            row.put("candidate", candidateLabel);
+            row.put("status", status);
+            row.put("jniBoundaryNsPerOp", jniBoundaryNsPerOp);
+            row.put("coreRuntimeNsPerOp", coreRuntimeNsPerOp);
+            row.put("storeCallbackNsPerOp", storeCallbackNsPerOp);
+            row.put("jniOverheadRatioPct", jniOverheadRatioPct);
+            row.put("jniOverheadBudgetPct", budgetPct);
+            row.put("rustJniCallsPerOp", rust.rustJniCallsPerOp);
+            row.put("rustStoreCallbackCallsPerOp", rust.rustStoreCallbackCallsPerOp);
+            row.put("rustJniBytesInPerOp", rust.rustJniBytesInPerOp);
+            row.put("rustJniBytesOutPerOp", rust.rustJniBytesOutPerOp);
+            row.put("warnings", warnings);
+            rows.add(row);
+        }
+
+        return rows;
+    }
+
+    private static Double sum(Double left, Double right) {
+        if (left == null && right == null) {
+            return null;
+        }
+
+        return (left == null ? 0.0d : left) + (right == null ? 0.0d : right);
+    }
+
     private static Double percentWorseLowerIsBetter(Double baselineJava, Double candidateRust) {
         if (baselineJava == null || candidateRust == null || baselineJava == 0.0d) {
             return null;
@@ -361,6 +485,7 @@ public final class TrieBenchmarkReportAnalyzer {
             RunMetadata metadata,
             List<Map<String, Object>> workloadResults,
             List<Map<String, Object>> comparison,
+            List<Map<String, Object>> jniBreakdown,
             List<String> warnings) {
         Map<String, Object> summary = new LinkedHashMap<>();
         summary.put("generatedAt", metadata.generatedAt);
@@ -378,9 +503,24 @@ public final class TrieBenchmarkReportAnalyzer {
 
         summary.put("results", workloadResults);
         summary.put("comparison", comparison);
+        summary.put("jniBreakdown", jniBreakdown);
         summary.put("warnings", warnings);
 
         return summary;
+    }
+
+    private static Map<String, Object> buildJniBreakdownReport(
+            RunMetadata metadata,
+            List<Map<String, Object>> jniBreakdownRows) {
+        Map<String, Object> report = new LinkedHashMap<>();
+        report.put("generatedAt", metadata.generatedAt);
+        report.put("gitCommit", metadata.gitCommit);
+        report.put("jvm", metadata.jvm);
+        report.put("host", metadata.host);
+        report.put("jniOverheadBudgetByWorkloadPct", JNI_OVERHEAD_BUDGET_BY_WORKLOAD_PCT);
+        report.put("defaultJniOverheadBudgetPct", DEFAULT_JNI_OVERHEAD_BUDGET_PCT);
+        report.put("rows", jniBreakdownRows);
+        return report;
     }
 
     private static String buildComparisonMarkdown(RunMetadata metadata, List<Map<String, Object>> comparisonRows) {
@@ -425,11 +565,17 @@ public final class TrieBenchmarkReportAnalyzer {
     public static final class AnalysisReport {
         private final Map<String, Object> summary;
         private final String comparisonMarkdown;
+        private final Map<String, Object> jniBreakdown;
         private final List<String> warnings;
 
-        private AnalysisReport(Map<String, Object> summary, String comparisonMarkdown, List<String> warnings) {
+        private AnalysisReport(
+                Map<String, Object> summary,
+                String comparisonMarkdown,
+                Map<String, Object> jniBreakdown,
+                List<String> warnings) {
             this.summary = summary;
             this.comparisonMarkdown = comparisonMarkdown;
+            this.jniBreakdown = jniBreakdown;
             this.warnings = warnings;
         }
 
@@ -438,10 +584,18 @@ public final class TrieBenchmarkReportAnalyzer {
         }
 
         public void write(Path summaryPath, Path comparisonPath) throws IOException {
+            write(summaryPath, comparisonPath, null);
+        }
+
+        public void write(Path summaryPath, Path comparisonPath, Path jniBreakdownPath) throws IOException {
             Files.createDirectories(summaryPath.getParent());
             Files.createDirectories(comparisonPath.getParent());
             JSON_MAPPER.writeValue(summaryPath.toFile(), summary);
             Files.writeString(comparisonPath, comparisonMarkdown);
+            if (jniBreakdownPath != null) {
+                Files.createDirectories(jniBreakdownPath.getParent());
+                JSON_MAPPER.writeValue(jniBreakdownPath.toFile(), jniBreakdown);
+            }
         }
     }
 
@@ -462,6 +616,22 @@ public final class TrieBenchmarkReportAnalyzer {
             String generatedAt = Instant.now().toString();
             String jvm = System.getProperty("java.version") + " (" + System.getProperty("java.vendor") + ")";
             return new RunMetadata(generatedAt, gitCommit, jvm, resolveHostName());
+        }
+
+        public String generatedAt() {
+            return generatedAt;
+        }
+
+        public String gitCommit() {
+            return gitCommit;
+        }
+
+        public String jvm() {
+            return jvm;
+        }
+
+        public String host() {
+            return host;
         }
 
         private static String resolveHostName() {
@@ -490,6 +660,14 @@ public final class TrieBenchmarkReportAnalyzer {
         private Double storeBytesReadPerOp;
         private Double storeBytesWrittenKeyPerOp;
         private Double storeBytesWrittenValuePerOp;
+        private Double rustJniCallsPerOp;
+        private Double rustFfiDecodeNsPerOp;
+        private Double rustFfiEncodeNsPerOp;
+        private Double rustCoreRuntimeNsPerOp;
+        private Double rustStoreCallbackNsPerOp;
+        private Double rustStoreCallbackCallsPerOp;
+        private Double rustJniBytesInPerOp;
+        private Double rustJniBytesOutPerOp;
 
         private EngineMetrics(String benchmark, String engine) {
             this.benchmark = benchmark;
@@ -520,6 +698,14 @@ public final class TrieBenchmarkReportAnalyzer {
             metrics.put("storeBytesReadPerOp", storeBytesReadPerOp);
             metrics.put("storeBytesWrittenKeyPerOp", storeBytesWrittenKeyPerOp);
             metrics.put("storeBytesWrittenValuePerOp", storeBytesWrittenValuePerOp);
+            metrics.put("rustJniCallsPerOp", rustJniCallsPerOp);
+            metrics.put("rustFfiDecodeNsPerOp", rustFfiDecodeNsPerOp);
+            metrics.put("rustFfiEncodeNsPerOp", rustFfiEncodeNsPerOp);
+            metrics.put("rustCoreRuntimeNsPerOp", rustCoreRuntimeNsPerOp);
+            metrics.put("rustStoreCallbackNsPerOp", rustStoreCallbackNsPerOp);
+            metrics.put("rustStoreCallbackCallsPerOp", rustStoreCallbackCallsPerOp);
+            metrics.put("rustJniBytesInPerOp", rustJniBytesInPerOp);
+            metrics.put("rustJniBytesOutPerOp", rustJniBytesOutPerOp);
             output.put("metrics", metrics);
             return output;
         }

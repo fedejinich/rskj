@@ -19,6 +19,8 @@
 package co.rsk.jmh.trie;
 
 import co.rsk.jmh.trie.metrics.TrieBenchmarkAuxCounters;
+import co.rsk.jmh.trie.metrics.RustFfiMetricsDelta;
+import co.rsk.jmh.trie.metrics.RustFfiMetricsSnapshot;
 import co.rsk.jmh.trie.metrics.TrieStoreMetricsDelta;
 import co.rsk.jmh.trie.metrics.TrieStoreMetricsSnapshot;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -41,53 +43,63 @@ public class TrieEngineBenchmark {
     @Benchmark
     public int putGetDeleteMix(TrieBenchmarkPlan plan, TrieBenchmarkAuxCounters counters) {
         TrieStoreMetricsSnapshot baseline = plan.snapshotStoreMetrics();
+        RustFfiMetricsSnapshot ffiBaseline = plan.snapshotRustFfiMetrics();
         byte[] key = plan.nextKey();
         byte[] value = plan.nextValue();
         plan.mutableTrie().put(key, value);
         byte[] loaded = plan.mutableTrie().get(key);
         plan.mutableTrie().deleteRecursive(key);
         TrieStoreMetricsDelta delta = plan.diffFrom(baseline);
-        counters.record(delta);
+        RustFfiMetricsDelta ffiDelta = plan.diffRustFfiMetrics(ffiBaseline);
+        counters.record(delta, ffiDelta);
         return loaded == null ? 0 : loaded.length;
     }
 
     @Benchmark
     public int longValueHeavyPaths(TrieBenchmarkPlan plan, TrieBenchmarkAuxCounters counters) {
         TrieStoreMetricsSnapshot baseline = plan.snapshotStoreMetrics();
+        RustFfiMetricsSnapshot ffiBaseline = plan.snapshotRustFfiMetrics();
         byte[] key = plan.nextKey();
         byte[] value = plan.nextLongValue();
         plan.mutableTrie().put(key, value);
         byte[] loaded = plan.mutableTrie().get(key);
         TrieStoreMetricsDelta delta = plan.diffFrom(baseline);
-        counters.record(delta);
+        RustFfiMetricsDelta ffiDelta = plan.diffRustFfiMetrics(ffiBaseline);
+        counters.record(delta, ffiDelta);
         return loaded == null ? 0 : loaded.length;
     }
 
     @Benchmark
     public int saveReloadCycle(TrieBenchmarkPlan plan, TrieBenchmarkAuxCounters counters) {
         TrieStoreMetricsSnapshot baseline = plan.snapshotStoreMetrics();
+        RustFfiMetricsSnapshot ffiBaseline = plan.snapshotRustFfiMetrics();
         plan.mutableTrie().put(plan.nextKey(), plan.nextValue());
         plan.saveAndReload();
         TrieStoreMetricsDelta delta = plan.diffFrom(baseline);
-        counters.record(delta);
+        RustFfiMetricsDelta ffiDelta = plan.diffRustFfiMetrics(ffiBaseline);
+        counters.record(delta, ffiDelta);
         return plan.mutableTrie().getHash().getBytes().length;
     }
 
     @Benchmark
     public int accountStorageKeyIteration(TrieBenchmarkPlan plan, TrieBenchmarkAuxCounters counters) {
         TrieStoreMetricsSnapshot baseline = plan.snapshotStoreMetrics();
+        RustFfiMetricsSnapshot ffiBaseline = plan.snapshotRustFfiMetrics();
         int count = plan.iterateStorageKeys();
         TrieStoreMetricsDelta delta = plan.diffFrom(baseline);
-        counters.record(delta);
+        RustFfiMetricsDelta ffiDelta = plan.diffRustFfiMetrics(ffiBaseline);
+        counters.record(delta, ffiDelta);
         return count;
     }
 
     @Benchmark
     public int datasetDrivenMassiveUpload(TrieBenchmarkPlan plan, TrieBenchmarkAuxCounters counters) {
         TrieStoreMetricsSnapshot baseline = plan.snapshotStoreMetrics();
+        RustFfiMetricsSnapshot ffiBaseline = plan.snapshotRustFfiMetrics();
         plan.replayMassiveUploadDataset();
         TrieStoreMetricsDelta delta = plan.diffFrom(baseline);
-        counters.record(delta);
+        RustFfiMetricsDelta ffiDelta = plan.diffRustFfiMetrics(ffiBaseline);
+        counters.record(delta, ffiDelta);
         return plan.mutableTrie().getHash().getBytes().length;
     }
 }

@@ -20,12 +20,17 @@ package co.rsk.jmh.runners;
 
 import co.rsk.jmh.trie.metrics.TrieBenchmarkReportAnalyzer;
 import co.rsk.jmh.trie.TrieEngineBenchmark;
+import co.rsk.jmh.trie.TrieJavaCoreBenchmark;
+import co.rsk.jmh.trie.TrieJniOverheadBenchmark;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
+import org.openjdk.jmh.runner.options.ChainedOptionsBuilder;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,10 +38,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class BenchmarkTrieEngineRunner {
 
+    private static final ObjectMapper JSON_MAPPER = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+
     private static final String ENGINES_PROPERTY = "unitrie.jmh.engines";
+    private static final String INCLUDE_PROPERTY = "unitrie.jmh.include";
     private static final String FAIL_ON_MISMATCH_PROPERTY = "unitrie.jmh.failOnMismatch";
     private static final String RUST_LIBRARY_PATH_PROPERTY = "unitrie.jmh.rustLibraryPath";
     private static final String RUST_IMPLEMENTATIONS_PROPERTY = "unitrie.jmh.rustImplementations";
@@ -46,6 +58,7 @@ public class BenchmarkTrieEngineRunner {
     private static final String MEASUREMENT_SECONDS_PROPERTY = "unitrie.jmh.measurementSeconds";
     private static final String FORKS_PROPERTY = "unitrie.jmh.forks";
     private static final String ENGINES_ENV = "UNITRIE_JMH_ENGINES";
+    private static final String INCLUDE_ENV = "UNITRIE_JMH_INCLUDE";
     private static final String FAIL_ON_MISMATCH_ENV = "UNITRIE_JMH_FAIL_ON_MISMATCH";
     private static final String RUST_LIBRARY_PATH_ENV = "UNITRIE_JMH_RUST_LIBRARY_PATH";
     private static final String RUST_IMPLEMENTATIONS_ENV = "UNITRIE_JMH_RUST_IMPLEMENTATIONS";
@@ -60,8 +73,11 @@ public class BenchmarkTrieEngineRunner {
         Path reportPath = reportsDir.resolve("result_trie_engine.csv");
         Path summaryPath = reportsDir.resolve("result_trie_engine_summary.json");
         Path comparisonPath = reportsDir.resolve("result_trie_engine_comparison.md");
+        Path jniBreakdownPath = reportsDir.resolve("result_trie_engine_jni_breakdown.json");
+        Path jniMicrobenchPath = reportsDir.resolve("result_trie_jni_microbench.json");
         createReportDirectory(reportPath);
 
+        String[] includes = resolveIncludes();
         String[] engines = resolveEngines();
         String failOnMismatch = resolveConfig(FAIL_ON_MISMATCH_PROPERTY, FAIL_ON_MISMATCH_ENV, "true");
         String rustLibraryPath = resolveConfig(RUST_LIBRARY_PATH_PROPERTY, RUST_LIBRARY_PATH_ENV, "");
@@ -72,8 +88,7 @@ public class BenchmarkTrieEngineRunner {
         int measurementSeconds = Integer.parseInt(resolveConfig(MEASUREMENT_SECONDS_PROPERTY, MEASUREMENT_SECONDS_ENV, "10"));
         int forks = Integer.parseInt(resolveConfig(FORKS_PROPERTY, FORKS_ENV, "1"));
 
-        Options options = new OptionsBuilder()
-                .include(TrieEngineBenchmark.class.getName())
+        ChainedOptionsBuilder optionsBuilder = new OptionsBuilder()
                 .warmupIterations(warmupIterations)
                 .warmupTime(TimeValue.seconds(warmupSeconds))
                 .measurementIterations(measurementIterations)
@@ -86,21 +101,30 @@ public class BenchmarkTrieEngineRunner {
                 .addProfiler("gc")
                 .result(reportPath.toString())
                 .resultFormat(ResultFormatType.CSV)
-                .shouldFailOnError(true)
-                .build();
+                .shouldFailOnError(true);
+
+        for (String include : includes) {
+            optionsBuilder.include(includeToBenchmarkClass(include));
+        }
+
+        Options options = optionsBuilder.build();
 
         Collection<org.openjdk.jmh.results.RunResult> runResults = new Runner(options).run();
 
+        TrieBenchmarkReportAnalyzer.RunMetadata metadata = TrieBenchmarkReportAnalyzer.RunMetadata.capture(resolveGitCommit());
         TrieBenchmarkReportAnalyzer analyzer = new TrieBenchmarkReportAnalyzer();
         TrieBenchmarkReportAnalyzer.AnalysisReport report = analyzer.analyze(
                 runResults,
-                TrieBenchmarkReportAnalyzer.RunMetadata.capture(resolveGitCommit())
+                metadata
         );
-        report.write(summaryPath, comparisonPath);
+        report.write(summaryPath, comparisonPath, jniBreakdownPath);
+        writeJniMicrobenchReport(runResults, metadata, jniMicrobenchPath);
 
         System.out.printf("JMH raw results: %s%n", reportPath);
         System.out.printf("JMH summary: %s%n", summaryPath);
         System.out.printf("JMH comparison: %s%n", comparisonPath);
+        System.out.printf("JMH JNI breakdown: %s%n", jniBreakdownPath);
+        System.out.printf("JMH JNI microbench: %s%n", jniMicrobenchPath);
         if (report.getWarnings().isEmpty()) {
             System.out.println("Trie benchmark comparison status: OK");
         } else {
@@ -127,6 +151,16 @@ public class BenchmarkTrieEngineRunner {
                 .toArray(String[]::new);
 
         return values.length == 0 ? new String[]{"java", "rust"} : values;
+    }
+
+    private static String[] resolveIncludes() {
+        String configured = resolveConfig(INCLUDE_PROPERTY, INCLUDE_ENV, "TrieEngineBenchmark");
+        String[] values = Arrays.stream(configured.split(","))
+                .map(String::trim)
+                .filter(value -> !value.isEmpty())
+                .toArray(String[]::new);
+
+        return values.length == 0 ? new String[]{"TrieEngineBenchmark"} : values;
     }
 
     private static String[] resolveRustImplementations() {
@@ -172,5 +206,48 @@ public class BenchmarkTrieEngineRunner {
         } catch (IOException e) {
             return "unknown";
         }
+    }
+
+    private static String includeToBenchmarkClass(String include) {
+        String normalized = include.trim();
+        switch (normalized) {
+            case "TrieEngineBenchmark":
+                return TrieEngineBenchmark.class.getName();
+            case "TrieJniOverheadBenchmark":
+                return TrieJniOverheadBenchmark.class.getName();
+            case "TrieJavaCoreBenchmark":
+                return TrieJavaCoreBenchmark.class.getName();
+            default:
+                throw new IllegalArgumentException("Unsupported benchmark include: " + include);
+        }
+    }
+
+    private static void writeJniMicrobenchReport(
+            Collection<org.openjdk.jmh.results.RunResult> runResults,
+            TrieBenchmarkReportAnalyzer.RunMetadata metadata,
+            Path outputPath) throws IOException {
+        List<Map<String, Object>> rows = runResults.stream()
+                .filter(runResult -> runResult.getParams().getBenchmark().contains("TrieJniOverheadBenchmark"))
+                .map(runResult -> {
+                    Map<String, Object> row = new LinkedHashMap<>();
+                    row.put("benchmark", runResult.getParams().getBenchmark());
+                    row.put("mode", runResult.getParams().getMode().name());
+                    row.put("score", runResult.getPrimaryResult().getScore());
+                    row.put("scoreUnit", runResult.getPrimaryResult().getScoreUnit());
+                    row.put("sampleCount", runResult.getPrimaryResult().getSampleCount());
+                    return row;
+                })
+                .toList();
+
+        Map<String, Object> payload = new LinkedHashMap<>();
+        payload.put("generatedAt", metadata.generatedAt());
+        payload.put("gitCommit", metadata.gitCommit());
+        payload.put("jvm", metadata.jvm());
+        payload.put("host", metadata.host());
+        payload.put("status", rows.isEmpty() ? "SKIPPED" : "OK");
+        payload.put("rows", rows);
+
+        Files.createDirectories(outputPath.getParent());
+        JSON_MAPPER.writeValue(outputPath.toFile(), payload);
     }
 }

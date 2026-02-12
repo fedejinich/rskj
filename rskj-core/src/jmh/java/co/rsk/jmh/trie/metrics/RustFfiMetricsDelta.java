@@ -1,0 +1,103 @@
+/*
+ * This file is part of RskJ
+ * Copyright (C) 2026 RSK Labs Ltd.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package co.rsk.jmh.trie.metrics;
+
+public final class RustFfiMetricsDelta {
+
+    private final long jniCalls;
+    private final long ffiDecodeNanos;
+    private final long ffiEncodeNanos;
+    private final long coreRuntimeNanos;
+    private final long storeCallbackNanos;
+    private final long storeCallbackCalls;
+    private final long jniBytesIn;
+    private final long jniBytesOut;
+
+    private RustFfiMetricsDelta(
+            long jniCalls,
+            long ffiDecodeNanos,
+            long ffiEncodeNanos,
+            long coreRuntimeNanos,
+            long storeCallbackNanos,
+            long storeCallbackCalls,
+            long jniBytesIn,
+            long jniBytesOut) {
+        this.jniCalls = jniCalls;
+        this.ffiDecodeNanos = ffiDecodeNanos;
+        this.ffiEncodeNanos = ffiEncodeNanos;
+        this.coreRuntimeNanos = coreRuntimeNanos;
+        this.storeCallbackNanos = storeCallbackNanos;
+        this.storeCallbackCalls = storeCallbackCalls;
+        this.jniBytesIn = jniBytesIn;
+        this.jniBytesOut = jniBytesOut;
+    }
+
+    public static RustFfiMetricsDelta from(RustFfiMetricsSnapshot older, RustFfiMetricsSnapshot newer) {
+        return new RustFfiMetricsDelta(
+                nonNegativeDelta(older.getJniCalls(), newer.getJniCalls()),
+                nonNegativeDelta(older.getFfiDecodeNanos(), newer.getFfiDecodeNanos()),
+                nonNegativeDelta(older.getFfiEncodeNanos(), newer.getFfiEncodeNanos()),
+                nonNegativeDelta(older.getCoreRuntimeNanos(), newer.getCoreRuntimeNanos()),
+                nonNegativeDelta(older.getStoreCallbackNanos(), newer.getStoreCallbackNanos()),
+                nonNegativeDelta(older.getStoreCallbackCalls(), newer.getStoreCallbackCalls()),
+                nonNegativeDelta(older.getJniBytesIn(), newer.getJniBytesIn()),
+                nonNegativeDelta(older.getJniBytesOut(), newer.getJniBytesOut())
+        );
+    }
+
+    private static long nonNegativeDelta(long older, long newer) {
+        return newer >= older ? newer - older : 0L;
+    }
+
+    public static RustFfiMetricsDelta empty() {
+        return new RustFfiMetricsDelta(0, 0, 0, 0, 0, 0, 0, 0);
+    }
+
+    public long getJniCalls() {
+        return jniCalls;
+    }
+
+    public long getFfiDecodeNanos() {
+        return ffiDecodeNanos;
+    }
+
+    public long getFfiEncodeNanos() {
+        return ffiEncodeNanos;
+    }
+
+    public long getCoreRuntimeNanos() {
+        return coreRuntimeNanos;
+    }
+
+    public long getStoreCallbackNanos() {
+        return storeCallbackNanos;
+    }
+
+    public long getStoreCallbackCalls() {
+        return storeCallbackCalls;
+    }
+
+    public long getJniBytesIn() {
+        return jniBytesIn;
+    }
+
+    public long getJniBytesOut() {
+        return jniBytesOut;
+    }
+}

@@ -19,6 +19,8 @@
 package co.rsk.jmh.trie;
 
 import co.rsk.jmh.trie.metrics.MeasuredKeyValueDataSource;
+import co.rsk.jmh.trie.metrics.RustFfiMetricsDelta;
+import co.rsk.jmh.trie.metrics.RustFfiMetricsSnapshot;
 import co.rsk.jmh.trie.metrics.TrieStoreMetricsDelta;
 import co.rsk.jmh.trie.metrics.TrieStoreMetricsSnapshot;
 import co.rsk.core.RskAddress;
@@ -28,6 +30,7 @@ import co.rsk.trie.TrieStore;
 import co.rsk.trie.TrieStoreImpl;
 import co.rsk.trie.engine.MutableTrieFactory;
 import co.rsk.trie.engine.TrieEngineType;
+import co.rsk.trie.engine.rust.RustMutableTrie;
 import co.rsk.trie.engine.rust.RustUnitrieImplementation;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.db.MutableRepository;
@@ -133,6 +136,19 @@ public class TrieBenchmarkPlan {
 
     public TrieStoreMetricsDelta diffFrom(TrieStoreMetricsSnapshot baseline) {
         return measuredDataSource.diffFrom(baseline);
+    }
+
+    public RustFfiMetricsSnapshot snapshotRustFfiMetrics() {
+        if (!(mutableTrie instanceof RustMutableTrie)) {
+            return RustFfiMetricsSnapshot.empty();
+        }
+
+        RustMutableTrie rustMutableTrie = (RustMutableTrie) mutableTrie;
+        return RustFfiMetricsSnapshot.fromCounters(rustMutableTrie.snapshotRustPerfCounters());
+    }
+
+    public RustFfiMetricsDelta diffRustFfiMetrics(RustFfiMetricsSnapshot baseline) {
+        return baseline.diffTo(snapshotRustFfiMetrics());
     }
 
     public byte[] nextKey() {
