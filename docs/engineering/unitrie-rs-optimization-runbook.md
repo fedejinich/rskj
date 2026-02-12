@@ -97,6 +97,33 @@ scripts/unitrie/benchmark_median_report.py \
   --candidate "rust(next)"
 ```
 
+## JNI-only decontaminated benchmark modes (V4.3)
+Use the dedicated script modes:
+
+1. End-to-end only:
+```bash
+scripts/unitrie/benchmark_deep_3x.sh --mode e2e
+```
+2. JNI micro-overhead only:
+```bash
+scripts/unitrie/benchmark_deep_3x.sh --mode jni-micro
+```
+3. Full decontaminated run (`e2e + jni-micro + core-to-core`):
+```bash
+scripts/unitrie/benchmark_deep_3x.sh --mode full
+```
+
+`--mode full` additionally runs:
+1. Java core-only benchmark (`TrieJavaCoreBenchmark`) over shared corpus.
+2. Rust core-only benchmark (`unitrie-rs/benches/core_trie_bench.rs`) over the same corpus.
+3. Merge step via:
+```bash
+scripts/unitrie/merge_core_benchmarks.py
+```
+
+Shared corpus:
+- `/Users/void_rsk/.codex/worktrees/35ae/rskj/benchmarks/unitrie-corpus/workloads-v1.json`
+
 If JNI library is not discoverable:
 ```bash
 UNITRIE_JMH_RUST_LIBRARY_PATH=/absolute/path/to/libunitrie_rs_jni.dylib \
@@ -108,6 +135,11 @@ Generated files:
 - `/Users/void_rsk/.codex/worktrees/35ae/rskj/rskj-core/build/reports/jmh/result_trie_engine.csv`
 - `/Users/void_rsk/.codex/worktrees/35ae/rskj/rskj-core/build/reports/jmh/result_trie_engine_summary.json`
 - `/Users/void_rsk/.codex/worktrees/35ae/rskj/rskj-core/build/reports/jmh/result_trie_engine_comparison.md`
+- `/Users/void_rsk/.codex/worktrees/35ae/rskj/rskj-core/build/reports/jmh/result_trie_engine_jni_breakdown.json`
+- `/Users/void_rsk/.codex/worktrees/35ae/rskj/rskj-core/build/reports/jmh/result_trie_jni_microbench.json`
+- `/Users/void_rsk/.codex/worktrees/35ae/rskj/rskj-core/build/reports/jmh/result_trie_java_core_summary.json`
+- `/Users/void_rsk/.codex/worktrees/35ae/rskj/rskj-core/build/reports/jmh/result_trie_rust_core_summary.json`
+- `/Users/void_rsk/.codex/worktrees/35ae/rskj/rskj-core/build/reports/jmh/result_trie_core_comparison.json`
 
 Interpretation rules:
 1. `summary.json` is machine-readable source of truth.
@@ -116,6 +148,12 @@ Interpretation rules:
 4. For V4.2 decisions, use median across 3 deep runs stored under `deep-runs/`.
 5. Median verdict artifact:
    - `/Users/void_rsk/.codex/worktrees/35ae/rskj/rskj-core/build/reports/jmh/result_trie_engine_median_summary.json`
+6. `result_trie_engine_jni_breakdown.json` provides JNI contamination ratio per workload:
+   - `jniBoundaryNsPerOp = ffi_decode + ffi_encode`
+   - `coreRuntimeNsPerOp`
+   - `storeCallbackNsPerOp`
+   - `jniOverheadRatioPct`
+7. Core comparison (`result_trie_core_comparison.json`) is the JNI-free signal for Java core vs Rust core.
 
 ## 6. Parity gate (separate from benchmark)
 Performance is not enough. Before considering promotion:
@@ -151,3 +189,7 @@ When mismatch occurs:
 Benchmark superiority is necessary but never sufficient. Promotion requires both:
 1. parity evidence ladder completion
 2. benchmark median decision evidence
+
+Important:
+1. Decontaminated benchmark evidence is not a consensus gate.
+2. Consensus parity gate remains Validation Run (On-Demand) `500x2`.

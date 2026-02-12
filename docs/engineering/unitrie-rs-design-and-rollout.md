@@ -235,12 +235,24 @@ It is intentionally separate from consensus parity gating.
   - `store_bytes_read`
   - `store_bytes_written_key`
   - `store_bytes_written_value`
+- Rust FFI/JNI counters (per operation, engine rust):
+  - `rust_jni_calls`
+  - `rust_ffi_decode_ns`
+  - `rust_ffi_encode_ns`
+  - `rust_core_runtime_ns`
+  - `rust_store_callback_ns`
+  - `rust_store_callback_calls`
+  - `rust_jni_bytes_in`
+  - `rust_jni_bytes_out`
 
 #### Artifacts
 The runner produces:
 - `build/reports/jmh/result_trie_engine.csv` (raw JMH output)
 - `build/reports/jmh/result_trie_engine_summary.json` (machine-readable summary)
 - `build/reports/jmh/result_trie_engine_comparison.md` (human-readable Java vs Rust delta report)
+- `build/reports/jmh/result_trie_engine_jni_breakdown.json` (JNI contamination budget report)
+- `build/reports/jmh/result_trie_jni_microbench.json` (JNI micro-overhead benchmark report)
+- `build/reports/jmh/result_trie_core_comparison.json` (core-only Java vs Rust merged report)
 
 #### Non-blocking warning policy (conservative)
 Warnings are emitted (exit code remains success) when Rust regresses vs Java beyond:
@@ -290,11 +302,32 @@ UNITRIE_JMH_RUST_LIBRARY_PATH=/absolute/path/to/libunitrie_rs_jni.dylib \
 - `OK` means no warning threshold was crossed in the Java vs Rust comparison table.
 - `WARNING` means at least one conservative threshold was crossed; triage before optimization continues.
 - A benchmark warning is a performance signal, not a consensus verdict.
+- `CONTAMINATED` in JNI breakdown means JNI boundary cost exceeded workload budget.
+
+#### JNI decontamination layers (V4.3)
+V4.3 separates benchmark evidence in three layers:
+1. End-to-end (`TrieEngineBenchmark`): full RSKj runtime path with JNI bridge.
+2. JNI micro-overhead (`TrieJniOverheadBenchmark`): JNI boundary-only measurements (`noop` + roundtrip payload sizes).
+3. Core-to-core (no JNI):
+   - Java core: `TrieJavaCoreBenchmark` using direct `MutableTrieImpl`.
+   - Rust core: `unitrie-rs/benches/core_trie_bench.rs` using direct `NextUnitrie`.
+   - Shared workload corpus: `benchmarks/unitrie-corpus/workloads-v1.json`.
+   - Merged artifact: `result_trie_core_comparison.json`.
+
+JNI overhead ratio is reported as:
+`jniOverheadRatioPct = (ffi_decode + ffi_encode) / (ffi_decode + ffi_encode + core_runtime) * 100`.
+Workload budgets:
+1. `datasetDrivenMassiveUpload <= 10%`
+2. `putGetDeleteMix <= 15%`
+3. `longValueHeavyPaths <= 20%`
+4. `accountStorageKeyIteration <= 20%`
+5. `saveReloadCycle <= 35%`
 
 #### Consensus clarification
 Benchmark parity and state-root parity are different gates:
 - Performance benchmark gate: this JMH suite (alert-only in this phase).
 - Consensus/parity gate: Validation Run (On-Demand) block replay with fail-fast divergence artifacts.
+- Decontaminated benchmark evidence (V4.3) refines performance diagnosis only; it is not a consensus gate.
 
 ## 12. Rollout and Rollback
 ### Rollout stages
@@ -417,6 +450,35 @@ Differential JSONL events now include:
 2. `specClass`
 3. `phase` (`mutation|read|save|reload`)
 4. `engineImpl` (`legacy-v1|next`)
+
+## 17. V4.3 JNI-Only Benchmark Decontamination
+### Scope
+V4.3 explicitly keeps JNI as the only integration path and isolates JNI boundary overhead from trie core runtime.
+
+### New internal benchmark APIs
+`RustUnitrieBridge` exposes internal-only microbench methods:
+1. `benchmarkNoop(int iterations)`
+2. `benchmarkRoundtrip(byte[] payload, int iterations)`
+
+### Extended Rust perf counters
+FFI payload now includes legacy counters plus:
+1. `ffi_decode_nanos`
+2. `ffi_encode_nanos`
+3. `core_runtime_nanos`
+4. `store_callback_nanos`
+5. `store_callback_calls`
+6. `jni_bytes_in`
+7. `jni_bytes_out`
+
+Java bridge mapping accepts legacy payload (`7`) and extended payload (`14`) for backward compatibility.
+
+### Operational commands
+1. E2E only:
+   - `scripts/unitrie/benchmark_deep_3x.sh --mode e2e`
+2. JNI micro-only:
+   - `scripts/unitrie/benchmark_deep_3x.sh --mode jni-micro`
+3. Full decontaminated run:
+   - `scripts/unitrie/benchmark_deep_3x.sh --mode full`
 
 Divergence artifacts now include:
 1. `suspectedSpecIds[]`
