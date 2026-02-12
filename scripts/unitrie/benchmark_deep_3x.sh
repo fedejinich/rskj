@@ -122,6 +122,19 @@ run_e2e_deep_3x() {
 }
 
 run_jni_micro() {
+  local backup_dir
+  backup_dir="$(mktemp -d "${REPORT_DIR}/jni-micro-backup.XXXXXX")"
+  for artifact in \
+    result_trie_engine.csv \
+    result_trie_engine_summary.json \
+    result_trie_engine_comparison.md \
+    result_trie_engine_jni_breakdown.json
+  do
+    if [[ -f "${REPORT_DIR}/${artifact}" ]]; then
+      cp "${REPORT_DIR}/${artifact}" "${backup_dir}/${artifact}"
+    fi
+  done
+
   export UNITRIE_JMH_WARMUP_ITERATIONS="${UNITRIE_JMH_WARMUP_ITERATIONS:-5}"
   export UNITRIE_JMH_MEASUREMENT_ITERATIONS="${UNITRIE_JMH_MEASUREMENT_ITERATIONS:-15}"
   export UNITRIE_JMH_WARMUP_SECONDS="${UNITRIE_JMH_WARMUP_SECONDS:-10}"
@@ -137,6 +150,18 @@ run_jni_micro() {
     echo "Missing JNI microbench report: ${JNI_MICRO_OUTPUT}" >&2
     exit 1
   fi
+
+  for artifact in \
+    result_trie_engine.csv \
+    result_trie_engine_summary.json \
+    result_trie_engine_comparison.md \
+    result_trie_engine_jni_breakdown.json
+  do
+    if [[ -f "${backup_dir}/${artifact}" ]]; then
+      mv "${backup_dir}/${artifact}" "${REPORT_DIR}/${artifact}"
+    fi
+  done
+  rm -rf "${backup_dir}"
 }
 
 run_core_to_core() {
