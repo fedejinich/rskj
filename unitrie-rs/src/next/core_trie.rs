@@ -1,5 +1,5 @@
 use crate::core_api::{TrieEngine, TrieSnapshot};
-use crate::core_trie::Unitrie;
+use crate::core_trie::{SaveStats, Unitrie};
 use crate::next::hashing::IncrementalHashState;
 use crate::next::iter::collect_exact_size_keys;
 use crate::next::mutation::MutationGeneration;
@@ -19,6 +19,7 @@ pub struct NextUnitrie {
     persistence: IncrementalPersistence,
     storage_iteration_cache: StorageIterationCache,
     mutation_generation: MutationGeneration,
+    last_save_stats: SaveStats,
 }
 
 impl NextUnitrie {
@@ -113,10 +114,15 @@ impl NextUnitrie {
     }
 
     pub fn save_to_store<T: RawStoreAdapter>(&mut self, store: &mut T) {
-        self.persistence
-            .save(&mut self.inner, store, self.node_arena.dirty_count());
+        self.last_save_stats =
+            self.persistence
+                .save(&mut self.inner, store, self.node_arena.dirty_count());
         self.node_arena.clear_dirty();
         self.hash_state.update(self.inner.current_root_hash());
+    }
+
+    pub fn last_save_stats(&self) -> SaveStats {
+        self.last_save_stats
     }
 
     fn storage_keys_bundle_for_account(

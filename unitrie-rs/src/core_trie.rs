@@ -7,7 +7,7 @@ use crate::node_ref::{
 };
 use crate::path::shared_path_serializer;
 use crate::store_adapter::RawStoreAdapter;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, HashMap, HashSet};
 
 const SECURE_KEY_SIZE: usize = 10;
 const DOMAIN_PREFIX: [u8; 1] = [0x00];
@@ -27,10 +27,19 @@ struct NodeMetadata {
     embeddable: bool,
 }
 
+#[derive(Debug, Default, Clone, Copy)]
+pub struct SaveStats {
+    pub nodes_visited: u64,
+    pub nodes_written: u64,
+    pub values_written: u64,
+}
+
 #[derive(Debug, Default, Clone)]
 pub struct Unitrie {
     entries: BTreeMap<Vec<u8>, Vec<u8>>,
     materialized: Option<MaterializedTrie>,
+    persisted_node_hashes: HashSet<[u8; HASH_SIZE]>,
+    persisted_value_hashes: HashSet<[u8; HASH_SIZE]>,
 }
 
 impl Unitrie {
@@ -61,12 +70,25 @@ impl Unitrie {
         let root_node = decode_persisted_node(&root_payload)?;
 
         let mut node_cache = HashMap::new();
+        let mut persisted_node_hashes = HashSet::new();
+        persisted_node_hashes.insert(fixed_root);
+        let mut persisted_value_hashes = HashSet::new();
         let mut entries = BTreeMap::new();
-        collect_entries_from_node(&root_node, Vec::new(), store, &mut node_cache, &mut entries)?;
+        collect_entries_from_node(
+            &root_node,
+            Vec::new(),
+            store,
+            &mut node_cache,
+            &mut entries,
+            &mut persisted_node_hashes,
+            &mut persisted_value_hashes,
+        )?;
 
         Ok(Self {
             entries,
             materialized: None,
+            persisted_node_hashes,
+            persisted_value_hashes,
         })
     }
 
@@ -184,6 +206,10 @@ impl Unitrie {
     }
 
     pub fn save_to_store<T: RawStoreAdapter>(&mut self, store: &mut T) {
+        let _ = self.save_to_store_with_stats(store);
+    }
+
+    pub fn save_to_store_with_stats<T: RawStoreAdapter>(&mut self, store: &mut T) -> SaveStats {
         if self.entries.is_empty() {
             let empty_node_serialized = Rskip107Codec::encode_node(
                 &TrieNode::empty(),
@@ -194,11 +220,16 @@ impl Unitrie {
             .expect("empty trie node encoding should never fail");
             let empty_hash = empty_trie_hash();
             store.save_raw_node(&empty_hash, &empty_node_serialized);
+            self.persisted_node_hashes.insert(empty_hash);
             self.materialized = Some(MaterializedTrie {
                 root_node: None,
                 root_hash: empty_hash,
             });
-            return;
+            return SaveStats {
+                nodes_visited: 1,
+                nodes_written: 1,
+                values_written: 0,
+            };
         }
 
         let root_node = self
@@ -208,12 +239,19 @@ impl Unitrie {
             .expect("non-empty trie must have root node")
             .clone();
 
-        let root_metadata = persist_node_recursive(&root_node, store, true)
-            .expect("persisting node generated from in-memory entries should not fail");
+        let (root_metadata, save_stats) = persist_node_recursive(
+            &root_node,
+            store,
+            &mut self.persisted_node_hashes,
+            &mut self.persisted_value_hashes,
+            true,
+        )
+        .expect("persisting node generated from in-memory entries should not fail");
         self.materialized = Some(MaterializedTrie {
             root_node: Some(root_node),
             root_hash: root_metadata.hash,
         });
+        save_stats
     }
 
     fn materialize(&mut self) -> &MaterializedTrie {
@@ -252,17 +290,40 @@ fn collect_entries_from_node<T: RawStoreAdapter>(
     store: &mut T,
     node_cache: &mut HashMap<[u8; HASH_SIZE], TrieNode>,
     entries: &mut BTreeMap<Vec<u8>, Vec<u8>>,
+    persisted_node_hashes: &mut HashSet<[u8; HASH_SIZE]>,
+    persisted_value_hashes: &mut HashSet<[u8; HASH_SIZE]>,
 ) -> Result<(), String> {
     let mut full_bits = prefix_bits;
     full_bits.extend_from_slice(node.shared_path.as_bits());
 
     if node.value.has_value() {
+        if let ValueRef::Hashed { hash, .. } = &node.value {
+            persisted_value_hashes.insert(*hash);
+        }
         let value = resolve_node_value(&node.value, store)?;
         entries.insert(shared_path_serializer::encode(&full_bits), value);
     }
 
-    collect_child_entries(&node.left, 0, &full_bits, store, node_cache, entries)?;
-    collect_child_entries(&node.right, 1, &full_bits, store, node_cache, entries)?;
+    collect_child_entries(
+        &node.left,
+        0,
+        &full_bits,
+        store,
+        node_cache,
+        entries,
+        persisted_node_hashes,
+        persisted_value_hashes,
+    )?;
+    collect_child_entries(
+        &node.right,
+        1,
+        &full_bits,
+        store,
+        node_cache,
+        entries,
+        persisted_node_hashes,
+        persisted_value_hashes,
+    )?;
     Ok(())
 }
 
@@ -273,16 +334,29 @@ fn collect_child_entries<T: RawStoreAdapter>(
     store: &mut T,
     node_cache: &mut HashMap<[u8; HASH_SIZE], TrieNode>,
     entries: &mut BTreeMap<Vec<u8>, Vec<u8>>,
+    persisted_node_hashes: &mut HashSet<[u8; HASH_SIZE]>,
+    persisted_value_hashes: &mut HashSet<[u8; HASH_SIZE]>,
 ) -> Result<(), String> {
     let child = match reference {
         NodeReference::Empty => return Ok(()),
         NodeReference::Embedded(node) => node.as_ref().clone(),
-        NodeReference::Hashed(hash) => load_node_by_hash(hash, store, node_cache)?,
+        NodeReference::Hashed(hash) => {
+            persisted_node_hashes.insert(*hash);
+            load_node_by_hash(hash, store, node_cache)?
+        }
     };
 
     let mut child_prefix = parent_bits.to_vec();
     child_prefix.push(implicit_bit);
-    collect_entries_from_node(&child, child_prefix, store, node_cache, entries)
+    collect_entries_from_node(
+        &child,
+        child_prefix,
+        store,
+        node_cache,
+        entries,
+        persisted_node_hashes,
+        persisted_value_hashes,
+    )
 }
 
 fn load_node_by_hash<T: RawStoreAdapter>(
@@ -461,10 +535,22 @@ fn compute_child_encoding(reference: &NodeReference) -> Result<(ChildEncoding, u
 fn persist_node_recursive<T: RawStoreAdapter>(
     node: &TrieNode,
     store: &mut T,
+    persisted_node_hashes: &mut HashSet<[u8; HASH_SIZE]>,
+    persisted_value_hashes: &mut HashSet<[u8; HASH_SIZE]>,
     is_root: bool,
-) -> Result<NodeMetadata, String> {
-    let (left_encoding, left_size) = persist_child_reference(&node.left, store)?;
-    let (right_encoding, right_size) = persist_child_reference(&node.right, store)?;
+) -> Result<(NodeMetadata, SaveStats), String> {
+    let (left_encoding, left_size, left_stats) = persist_child_reference(
+        &node.left,
+        store,
+        persisted_node_hashes,
+        persisted_value_hashes,
+    )?;
+    let (right_encoding, right_size, right_stats) = persist_child_reference(
+        &node.right,
+        store,
+        persisted_node_hashes,
+        persisted_value_hashes,
+    )?;
 
     let children_size = if node.is_terminal() {
         None
@@ -474,17 +560,38 @@ fn persist_node_recursive<T: RawStoreAdapter>(
     let serialized =
         Rskip107Codec::encode_node(node, &left_encoding, &right_encoding, children_size)?;
     let hash = keccak256(&serialized);
+    let mut save_stats = SaveStats {
+        nodes_visited: 1 + left_stats.nodes_visited + right_stats.nodes_visited,
+        nodes_written: left_stats.nodes_written + right_stats.nodes_written,
+        values_written: left_stats.values_written + right_stats.values_written,
+    };
 
     if let Some(inline_value) = node.value.inline_bytes() {
         if inline_value.len() > LONG_VALUE_THRESHOLD {
             let value_hash = keccak256(inline_value);
-            store.save_raw_value(&value_hash, inline_value);
+            if persisted_value_hashes.insert(value_hash) {
+                store.save_raw_value(&value_hash, inline_value);
+                save_stats.values_written = save_stats.values_written.saturating_add(1);
+            }
         }
     }
 
     let embeddable = node.is_terminal() && serialized.len() <= MAX_EMBEDDED_NODE_SIZE_IN_BYTES;
     if is_root || !embeddable {
-        store.save_raw_node(&hash, &serialized);
+        let should_write = if is_root {
+            true
+        } else {
+            persisted_node_hashes.insert(hash)
+        };
+
+        if should_write {
+            store.save_raw_node(&hash, &serialized);
+            save_stats.nodes_written = save_stats.nodes_written.saturating_add(1);
+        }
+
+        if is_root {
+            persisted_node_hashes.insert(hash);
+        }
     }
 
     let external_value_size = if node.has_long_value() {
@@ -494,35 +601,51 @@ fn persist_node_recursive<T: RawStoreAdapter>(
     };
     let reference_size = children_size.unwrap_or(0) + external_value_size + serialized.len() as u64;
 
-    Ok(NodeMetadata {
-        hash,
-        serialized,
-        reference_size,
-        embeddable,
-    })
+    Ok((
+        NodeMetadata {
+            hash,
+            serialized,
+            reference_size,
+            embeddable,
+        },
+        save_stats,
+    ))
 }
 
 fn persist_child_reference<T: RawStoreAdapter>(
     reference: &NodeReference,
     store: &mut T,
-) -> Result<(ChildEncoding, u64), String> {
+    persisted_node_hashes: &mut HashSet<[u8; HASH_SIZE]>,
+    persisted_value_hashes: &mut HashSet<[u8; HASH_SIZE]>,
+) -> Result<(ChildEncoding, u64, SaveStats), String> {
     match reference {
-        NodeReference::Empty => Ok((ChildEncoding::Empty, 0)),
+        NodeReference::Empty => Ok((ChildEncoding::Empty, 0, SaveStats::default())),
         NodeReference::Embedded(child) => {
-            let child_metadata = persist_node_recursive(child, store, false)?;
+            let (child_metadata, child_stats) = persist_node_recursive(
+                child,
+                store,
+                persisted_node_hashes,
+                persisted_value_hashes,
+                false,
+            )?;
             if child_metadata.embeddable {
                 Ok((
                     ChildEncoding::Embedded(child_metadata.serialized),
                     child_metadata.reference_size,
+                    child_stats,
                 ))
             } else {
                 Ok((
                     ChildEncoding::Hashed(child_metadata.hash),
                     child_metadata.reference_size,
+                    child_stats,
                 ))
             }
         }
-        NodeReference::Hashed(hash) => Ok((ChildEncoding::Hashed(*hash), 0)),
+        NodeReference::Hashed(hash) => {
+            persisted_node_hashes.insert(*hash);
+            Ok((ChildEncoding::Hashed(*hash), 0, SaveStats::default()))
+        }
     }
 }
 

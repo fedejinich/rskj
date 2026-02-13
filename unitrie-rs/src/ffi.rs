@@ -1,4 +1,4 @@
-use crate::core_trie::Unitrie;
+use crate::core_trie::{SaveStats, Unitrie};
 use crate::next::core_trie::NextUnitrie;
 use crate::storage_keys_packed;
 use crate::store_adapter::RawStoreAdapter;
@@ -49,6 +49,12 @@ struct PerfCounters {
     store_callback_calls: u64,
     jni_bytes_in: u64,
     jni_bytes_out: u64,
+    nodes_loaded_from_store: u64,
+    nodes_decoded: u64,
+    nodes_saved: u64,
+    dirty_nodes_saved: u64,
+    rehydrate_root_only_count: u64,
+    rehydrate_full_scan_fallback_count: u64,
 }
 
 impl PerfCounters {
@@ -68,6 +74,12 @@ impl PerfCounters {
             self.store_callback_calls as jlong,
             self.jni_bytes_in as jlong,
             self.jni_bytes_out as jlong,
+            self.nodes_loaded_from_store as jlong,
+            self.nodes_decoded as jlong,
+            self.nodes_saved as jlong,
+            self.dirty_nodes_saved as jlong,
+            self.rehydrate_root_only_count as jlong,
+            self.rehydrate_full_scan_fallback_count as jlong,
         ]
     }
 
@@ -98,9 +110,35 @@ impl PerfCounters {
     fn add_jni_bytes_out(&mut self, bytes: u64) {
         self.jni_bytes_out = self.jni_bytes_out.saturating_add(bytes);
     }
+
+    fn add_nodes_loaded_from_store(&mut self, count: u64) {
+        self.nodes_loaded_from_store = self.nodes_loaded_from_store.saturating_add(count);
+    }
+
+    fn add_nodes_decoded(&mut self, count: u64) {
+        self.nodes_decoded = self.nodes_decoded.saturating_add(count);
+    }
+
+    fn add_nodes_saved(&mut self, count: u64) {
+        self.nodes_saved = self.nodes_saved.saturating_add(count);
+    }
+
+    fn add_dirty_nodes_saved(&mut self, count: u64) {
+        self.dirty_nodes_saved = self.dirty_nodes_saved.saturating_add(count);
+    }
+
+    fn add_rehydrate_root_only_count(&mut self, count: u64) {
+        self.rehydrate_root_only_count = self.rehydrate_root_only_count.saturating_add(count);
+    }
+
+    fn add_rehydrate_full_scan_fallback_count(&mut self, count: u64) {
+        self.rehydrate_full_scan_fallback_count = self
+            .rehydrate_full_scan_fallback_count
+            .saturating_add(count);
+    }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 enum TrieRuntime {
     Legacy(Unitrie),
     Next(Box<NextUnitrie>),
@@ -216,10 +254,13 @@ impl TrieRuntime {
         }
     }
 
-    fn save_to_store<T: RawStoreAdapter>(&mut self, store: &mut T) {
+    fn save_to_store<T: RawStoreAdapter>(&mut self, store: &mut T) -> SaveStats {
         match self {
-            Self::Legacy(trie) => trie.save_to_store(store),
-            Self::Next(trie) => trie.save_to_store(store),
+            Self::Legacy(trie) => trie.save_to_store_with_stats(store),
+            Self::Next(trie) => {
+                trie.save_to_store(store);
+                trie.last_save_stats()
+            }
         }
     }
 }
@@ -243,6 +284,8 @@ impl TrieHandle {
 struct StoreStats {
     load_hits: u64,
     load_misses: u64,
+    loaded_nodes: u64,
+    loaded_values: u64,
     saved_nodes: u64,
     saved_values: u64,
     callback_nanos: u64,
@@ -267,6 +310,7 @@ impl<'a, T: RawStoreAdapter> RawStoreAdapter for CountingRawStoreAdapter<'a, T> 
     fn load_raw_node(&mut self, hash: &[u8]) -> Option<Vec<u8>> {
         let callback_started = Instant::now();
         self.stats.callback_calls = self.stats.callback_calls.saturating_add(1);
+        self.stats.loaded_nodes = self.stats.loaded_nodes.saturating_add(1);
         let value = self.inner.load_raw_node(hash);
         self.stats.callback_nanos = self
             .stats
@@ -283,6 +327,7 @@ impl<'a, T: RawStoreAdapter> RawStoreAdapter for CountingRawStoreAdapter<'a, T> 
     fn load_raw_value(&mut self, hash: &[u8]) -> Option<Vec<u8>> {
         let callback_started = Instant::now();
         self.stats.callback_calls = self.stats.callback_calls.saturating_add(1);
+        self.stats.loaded_values = self.stats.loaded_values.saturating_add(1);
         let value = self.inner.load_raw_value(hash);
         self.stats.callback_nanos = self
             .stats
@@ -408,6 +453,19 @@ fn len_as_u64(value: usize) -> u64 {
     } else {
         value as u64
     }
+}
+
+fn root_hash_to_array(root_hash: &[u8]) -> Result<[u8; 32], String> {
+    if root_hash.len() != 32 {
+        return Err(format!(
+            "root hash must be 32 bytes, got {}",
+            root_hash.len()
+        ));
+    }
+
+    let mut fixed = [0u8; 32];
+    fixed.copy_from_slice(root_hash);
+    Ok(fixed)
 }
 
 fn with_trie_mut<T>(handle: jlong, f: impl FnOnce(&mut TrieHandle) -> T) -> Result<T, String> {
@@ -647,6 +705,13 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeCrea
     };
     let decode_elapsed = elapsed_nanos(decode_started);
     let root_hash_len = len_as_u64(root_hash.len());
+    let _fixed_root_hash = match root_hash_to_array(&root_hash) {
+        Ok(fixed_root_hash) => fixed_root_hash,
+        Err(err) => {
+            throw_illegal_argument(&mut env, err);
+            return 0;
+        }
+    };
 
     let mut adapter = match JavaRawStoreAdapter::new(&mut env, store_adapter) {
         Ok(adapter) => adapter,
@@ -670,6 +735,8 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeCrea
 
     let handle = NEXT_HANDLE.fetch_add(1, Ordering::Relaxed);
     let mut trie_handle = TrieHandle::new(runtime);
+    let loaded_nodes = counting_adapter.stats.loaded_nodes;
+    let decoded_nodes = loaded_nodes.saturating_add(1);
     trie_handle.counters.cache_hits = trie_handle
         .counters
         .cache_hits
@@ -687,6 +754,14 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeCrea
     trie_handle
         .counters
         .add_store_callback_calls(counting_adapter.stats.callback_calls);
+    trie_handle
+        .counters
+        .add_nodes_loaded_from_store(loaded_nodes);
+    trie_handle.counters.add_nodes_decoded(decoded_nodes);
+    trie_handle.counters.add_rehydrate_root_only_count(0);
+    trie_handle
+        .counters
+        .add_rehydrate_full_scan_fallback_count(1);
 
     TRIES.insert(handle, trie_handle);
     handle
@@ -852,7 +927,7 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeSave
     let mut counting_adapter = CountingRawStoreAdapter::new(&mut adapter);
     if let Err(err) = with_trie_mut(handle, |trie| {
         let core_started = Instant::now();
-        trie.runtime.save_to_store(&mut counting_adapter);
+        let save_stats = trie.runtime.save_to_store(&mut counting_adapter);
         trie.counters.add_core_nanos(elapsed_nanos(core_started));
 
         let saved_nodes = counting_adapter.stats.saved_nodes;
@@ -862,15 +937,21 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeSave
         trie.counters.persisted_values =
             trie.counters.persisted_values.saturating_add(saved_values);
 
-        trie.counters.serialized_nodes = trie.counters.serialized_nodes.saturating_add(saved_nodes);
+        trie.counters.serialized_nodes = trie
+            .counters
+            .serialized_nodes
+            .saturating_add(save_stats.nodes_visited);
         trie.counters.hashed_nodes = trie
             .counters
             .hashed_nodes
-            .saturating_add(saved_nodes.saturating_add(saved_values));
+            .saturating_add(save_stats.nodes_visited.saturating_add(saved_values));
         trie.counters
             .add_store_callback_nanos(counting_adapter.stats.callback_nanos);
         trie.counters
             .add_store_callback_calls(counting_adapter.stats.callback_calls);
+        trie.counters.add_nodes_saved(save_stats.nodes_visited);
+        trie.counters
+            .add_dirty_nodes_saved(save_stats.nodes_written);
     }) {
         throw_illegal_argument(&mut env, err);
     }
