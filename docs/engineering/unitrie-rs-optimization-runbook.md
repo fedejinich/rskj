@@ -99,6 +99,14 @@ scripts/unitrie/benchmark_median_report.py \
   --memory-multiplier 1.15
 ```
 
+Save/reload focused KPI extraction:
+```bash
+scripts/unitrie/save_reload_report.py \
+  --summary rskj-core/build/reports/jmh/result_trie_engine_summary.json \
+  --jni-breakdown rskj-core/build/reports/jmh/result_trie_engine_jni_breakdown.json \
+  --out rskj-core/build/reports/jmh/result_trie_save_reload_focus.json
+```
+
 ## JNI-only decontaminated benchmark modes (V4.3)
 Use the dedicated script modes:
 
@@ -142,6 +150,7 @@ Generated files:
 - `/Users/void_rsk/.codex/worktrees/35ae/rskj/rskj-core/build/reports/jmh/result_trie_java_core_summary.json`
 - `/Users/void_rsk/.codex/worktrees/35ae/rskj/rskj-core/build/reports/jmh/result_trie_rust_core_summary.json`
 - `/Users/void_rsk/.codex/worktrees/35ae/rskj/rskj-core/build/reports/jmh/result_trie_core_comparison.json`
+- `/Users/void_rsk/.codex/worktrees/35ae/rskj/rskj-core/build/reports/jmh/result_trie_save_reload_focus.json`
 
 Interpretation rules:
 1. `summary.json` is machine-readable source of truth.
@@ -156,6 +165,14 @@ Interpretation rules:
    - `storeCallbackNsPerOp`
    - `jniOverheadRatioPct`
 7. Core comparison (`result_trie_core_comparison.json`) is the JNI-free signal for Java core vs Rust core.
+8. Save/reload focus (`result_trie_save_reload_focus.json`) is the dedicated KPI source for:
+   - `storeCallbackCallsPerOp`
+   - `storeCallbackNsPerOp`
+   - `nodesSavedPerOp`
+   - `dirtyNodesSavedPerOp`
+   - `dirtyNodesSavedRatio`
+   - `rehydrateRootOnlyCountPerOp`
+   - `rehydrateFullScanFallbackCountPerOp`
 
 ## 6. Parity gate (separate from benchmark)
 Performance is not enough. Before considering promotion:

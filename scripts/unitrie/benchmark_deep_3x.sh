@@ -11,6 +11,7 @@ JNI_MICRO_OUTPUT="${REPORT_DIR}/result_trie_jni_microbench.json"
 JAVA_CORE_OUTPUT="${REPORT_DIR}/result_trie_java_core_summary.json"
 RUST_CORE_OUTPUT="${REPORT_DIR}/result_trie_rust_core_summary.json"
 CORE_COMPARISON_OUTPUT="${REPORT_DIR}/result_trie_core_comparison.json"
+SAVE_RELOAD_FOCUS_OUTPUT="${REPORT_DIR}/result_trie_save_reload_focus.json"
 
 MODE="e2e"
 
@@ -111,12 +112,24 @@ run_e2e_deep_3x() {
     if [[ -f "${REPORT_DIR}/result_trie_engine_jni_breakdown.json" ]]; then
       cp "${REPORT_DIR}/result_trie_engine_jni_breakdown.json" "${RUNS_DIR}/result_trie_engine_jni_breakdown_run${attempt}.json"
     fi
+    if [[ -f "${REPORT_DIR}/result_trie_engine_summary.json" && -f "${REPORT_DIR}/result_trie_engine_jni_breakdown.json" ]]; then
+      python3 "${REPO_ROOT}/scripts/unitrie/save_reload_report.py" \
+        --summary "${REPORT_DIR}/result_trie_engine_summary.json" \
+        --jni-breakdown "${REPORT_DIR}/result_trie_engine_jni_breakdown.json" \
+        --out "${RUNS_DIR}/result_trie_save_reload_focus_run${attempt}.json"
+    fi
   done
 
   python3 "${REPO_ROOT}/scripts/unitrie/benchmark_median_report.py" \
     --runs-dir "${RUNS_DIR}" \
     --output "${MEDIAN_OUTPUT}" \
     --candidate "rust(next)"
+  if [[ -f "${REPORT_DIR}/result_trie_engine_summary.json" && -f "${REPORT_DIR}/result_trie_engine_jni_breakdown.json" ]]; then
+    python3 "${REPO_ROOT}/scripts/unitrie/save_reload_report.py" \
+      --summary "${REPORT_DIR}/result_trie_engine_summary.json" \
+      --jni-breakdown "${REPORT_DIR}/result_trie_engine_jni_breakdown.json" \
+      --out "${SAVE_RELOAD_FOCUS_OUTPUT}"
+  fi
 
   echo "[unitrie] deep e2e 3x complete"
 }

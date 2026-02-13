@@ -244,6 +244,12 @@ It is intentionally separate from consensus parity gating.
   - `rust_store_callback_calls`
   - `rust_jni_bytes_in`
   - `rust_jni_bytes_out`
+  - `rust_nodes_loaded_from_store`
+  - `rust_nodes_decoded`
+  - `rust_nodes_saved`
+  - `rust_dirty_nodes_saved`
+  - `rust_rehydrate_root_only_count`
+  - `rust_rehydrate_full_scan_fallback_count`
 
 #### Artifacts
 The runner produces:
@@ -253,6 +259,7 @@ The runner produces:
 - `build/reports/jmh/result_trie_engine_jni_breakdown.json` (JNI contamination budget report)
 - `build/reports/jmh/result_trie_jni_microbench.json` (JNI micro-overhead benchmark report)
 - `build/reports/jmh/result_trie_core_comparison.json` (core-only Java vs Rust merged report)
+- `build/reports/jmh/result_trie_save_reload_focus.json` (save/reload KPI-focused report)
 
 #### Non-blocking warning policy (conservative)
 Warnings are emitted (exit code remains success) when Rust regresses vs Java beyond:
