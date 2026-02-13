@@ -23,22 +23,22 @@ The machine-readable source of truth is:
 | SPEC_ID | Class | Java Anchor | Rust Target | Status |
 |---|---|---|---|---|
 | `SPEC-TRIE-PUT-SPLIT-COALESCE-001` | trie | `co/rsk/trie/Trie.java:438,827,915` | legacy-v1,next | partial |
-| `SPEC-TRIE-DELETE-RECURSIVE-PREFIX-001` | trie | `co/rsk/trie/Trie.java:475` | legacy-v1,next | partial |
-| `SPEC-TRIE-GET-FIND-001` | trie | `co/rsk/trie/Trie.java:407,650` | legacy-v1,next | implemented |
+| `SPEC-TRIE-DELETE-RECURSIVE-PREFIX-001` | trie | `co/rsk/trie/Trie.java:475` | legacy-v1,next | verified |
+| `SPEC-TRIE-GET-FIND-001` | trie | `co/rsk/trie/Trie.java:407,650` | legacy-v1,next | verified |
 | `SPEC-TRIE-COLLECT-KEYS-ITERATION-001` | trie | `co/rsk/trie/Trie.java:594,618` | legacy-v1,next | implemented |
 | `SPEC-TRIE-CHILDREN-SIZE-VARINT-001` | trie | `co/rsk/trie/Trie.java:682,997` | legacy-v1,next | partial |
 | `SPEC-TRIE-EMBEDDABLE-THRESHOLD-44-001` | trie | `co/rsk/trie/Trie.java:68,588` | legacy-v1,next | partial |
-| `SPEC-TRIE-VALUE-LENGTH-HASH-001` | trie | `co/rsk/db/MutableTrieImpl.java:67,78` | legacy-v1,next | implemented |
-| `SPEC-CODEC-RSKIP107-SERIALIZE-001` | codec-rskip107 | `co/rsk/trie/Trie.java:677` | legacy-v1,next | partial |
-| `SPEC-CODEC-RSKIP107-DESERIALIZE-001` | codec-rskip107 | `co/rsk/trie/Trie.java:259` | legacy-v1,next | partial |
-| `SPEC-CODEC-ORCHID-SERIALIZE-001` | codec-orchid | `co/rsk/trie/Trie.java:525` | legacy-v1,next | partial |
-| `SPEC-CODEC-ORCHID-DESERIALIZE-001` | codec-orchid | `co/rsk/trie/Trie.java:177` | legacy-v1,next | partial |
+| `SPEC-TRIE-VALUE-LENGTH-HASH-001` | trie | `co/rsk/db/MutableTrieImpl.java:67,78` | legacy-v1,next | verified |
+| `SPEC-CODEC-RSKIP107-SERIALIZE-001` | codec-rskip107 | `co/rsk/trie/Trie.java:677` | legacy-v1,next | verified |
+| `SPEC-CODEC-RSKIP107-DESERIALIZE-001` | codec-rskip107 | `co/rsk/trie/Trie.java:259` | legacy-v1,next | verified |
+| `SPEC-CODEC-ORCHID-SERIALIZE-001` | codec-orchid | `co/rsk/trie/Trie.java:525` | legacy-v1,next | verified |
+| `SPEC-CODEC-ORCHID-DESERIALIZE-001` | codec-orchid | `co/rsk/trie/Trie.java:177` | legacy-v1,next | verified |
 | `SPEC-STORAGE-KEYS-RSKIP108-MAPPING-001` | storage-keys | `org/ethereum/db/TrieKeyMapper.java:68,74` | legacy-v1,next | implemented |
 | `SPEC-STORAGE-KEYS-ITERATION-ORDER-001` | storage-keys | `co/rsk/db/MutableTrieImpl.java:93` | legacy-v1,next | implemented |
 | `SPEC-PERSISTENCE-SAVE-RAW-NODES-001` | persistence | `co/rsk/trie/TrieStoreImpl.java:56,89` | legacy-v1,next | implemented |
 | `SPEC-PERSISTENCE-LONG-VALUE-BLOBS-001` | persistence | `co/rsk/trie/TrieStoreImpl.java:132` | legacy-v1,next | partial |
 | `SPEC-PERSISTENCE-RETRIEVE-ROOT-001` | persistence | `co/rsk/trie/TrieStoreImpl.java:162` | legacy-v1,next | partial |
-| `SPEC-HASH-EMPTY-ROOT-001` | hash | `co/rsk/trie/Trie.java:371,407` | legacy-v1,next | implemented |
+| `SPEC-HASH-EMPTY-ROOT-001` | hash | `co/rsk/trie/Trie.java:371,407` | legacy-v1,next | verified |
 | `SPEC-HASH-LONG-VALUE-THRESHOLD-001` | hash | `co/rsk/trie/Trie.java:732,963` | legacy-v1,next | partial |
 | `SPEC-HASH-ROOT-PARITY-001` | hash | `co/rsk/cli/tools/UnitrieValidationRunOnDemand.java:328` | legacy-v1,next | partial |
 

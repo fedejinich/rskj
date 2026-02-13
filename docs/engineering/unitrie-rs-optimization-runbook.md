@@ -1,4 +1,4 @@
-# Unitrie-rs Optimization Runbook (V4)
+# Unitrie-rs Optimization Runbook (V5)
 
 ## 1. Scope
 This runbook defines the iterative optimization flow for `unitrie-rs` while preserving consensus safety.
@@ -25,17 +25,18 @@ PR policy:
 1. spec/parity gaps are blocking
 2. benchmark performance warnings remain non-blocking
 
-## 1.2 V4.1 sprint target
-Current sprint objective for `rust(next)`:
-1. Reach at least `2/5` benchmark wins against Java.
-2. Stretch objective: `3/5` wins.
-3. Mandatory kept win: `datasetDrivenMassiveUpload`.
-4. Primary target workloads: `putGetDeleteMix` and `accountStorageKeyIteration`.
+## 1.2 V5 replacement target
+Current objective for `rust(next)`:
+1. Reach `5/5` benchmark wins against Java on deep median E2E.
+2. Respect balanced memory policy:
+   - `gc.alloc.rate.norm` for Rust must remain `<= Java * 1.15` per workload.
+3. Keep parity and consensus safety unchanged.
 
 Workload win definition:
 1. `avg_time` (Rust) < `avg_time` (Java)
 2. `p95` (Rust) <= `p95` (Java) * `1.02`
 3. `throughput` (Rust) > `throughput` (Java)
+4. `alloc_norm` (Rust) <= `alloc_norm` (Java) * `1.15`
 
 ## 2. Baseline and immutability
 1. Legacy snapshot path:
@@ -94,7 +95,8 @@ Manual median report generation for an existing deep-runs folder:
 scripts/unitrie/benchmark_median_report.py \
   --runs-dir rskj-core/build/reports/jmh/deep-runs/<run-group-id> \
   --output rskj-core/build/reports/jmh/result_trie_engine_median_summary.json \
-  --candidate "rust(next)"
+  --candidate "rust(next)" \
+  --memory-multiplier 1.15
 ```
 
 ## JNI-only decontaminated benchmark modes (V4.3)
@@ -182,7 +184,7 @@ When mismatch occurs:
 ## 9. Promotion checklist (`rust(next)` candidate)
 1. Functional parity sustained in bounded validation runs.
 2. No JNI stability issues.
-3. Rust `next` outperforms Java under agreed V4 policy.
+3. Rust `next` wins `5/5` on deep median with memory criterion (`<=1.15x`).
 4. Rollback remains immediate via `blockchain.unitrie.engine=java`.
 
 ## 10. Clarification

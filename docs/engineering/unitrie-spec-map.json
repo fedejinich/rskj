@@ -60,13 +60,15 @@
       "evidence": {
         "requiredTests": [
           "co.rsk.trie.TrieDeleteTest",
-          "co.rsk.trie.engine.rust.UnitrieDifferentialCorpusReplayTest"
+          "co.rsk.trie.engine.rust.UnitrieDifferentialCorpusReplayTest",
+          "unitrie-rs/src/core_trie.rs::tests::delete_recursive_removes_prefixed_keys_only",
+          "unitrie-rs/src/core_trie.rs::tests::delete_recursive_range_matches_naive_behavior"
         ],
         "requiredCorpus": [
           "rskj-core/src/test/resources/trie/differential/sample-parity-corpus.jsonl"
         ]
       },
-      "status": "partial"
+      "status": "verified"
     },
     {
       "specId": "SPEC-TRIE-GET-FIND-001",
@@ -92,13 +94,14 @@
       "evidence": {
         "requiredTests": [
           "co.rsk.trie.TrieKeyValueTest",
-          "co.rsk.trie.engine.rust.UnitrieDifferentialCorpusReplayTest"
+          "co.rsk.trie.engine.rust.UnitrieDifferentialCorpusReplayTest",
+          "unitrie-rs/src/core_trie.rs::tests::get_put_delete_round_trip"
         ],
         "requiredCorpus": [
           "rskj-core/src/test/resources/trie/differential/sample-parity-corpus.jsonl"
         ]
       },
-      "status": "implemented"
+      "status": "verified"
     },
     {
       "specId": "SPEC-TRIE-COLLECT-KEYS-ITERATION-001",
@@ -216,13 +219,14 @@
       "evidence": {
         "requiredTests": [
           "co.rsk.trie.TrieValueTest",
-          "co.rsk.trie.engine.rust.UnitrieDifferentialCorpusReplayTest"
+          "co.rsk.trie.engine.rust.UnitrieDifferentialCorpusReplayTest",
+          "unitrie-rs/src/core_trie.rs::tests::save_and_load_from_persisted_root_round_trip"
         ],
         "requiredCorpus": [
           "rskj-core/src/test/resources/trie/differential/sample-parity-corpus.jsonl"
         ]
       },
-      "status": "implemented"
+      "status": "verified"
     },
     {
       "specId": "SPEC-CODEC-RSKIP107-SERIALIZE-001",
@@ -243,11 +247,13 @@
       "evidence": {
         "requiredTests": [
           "co.rsk.trie.TrieStoreImplTest",
-          "co.rsk.trie.TrieSaveRetrieveTest"
+          "co.rsk.trie.TrieSaveRetrieveTest",
+          "unitrie-rs/src/codec_rskip107.rs::tests::encode_decode_round_trip_terminal_short_value",
+          "unitrie-rs/src/codec_rskip107.rs::tests::encode_sets_version_and_long_value_bits"
         ],
         "requiredCorpus": []
       },
-      "status": "partial"
+      "status": "verified"
     },
     {
       "specId": "SPEC-CODEC-RSKIP107-DESERIALIZE-001",
@@ -268,11 +274,13 @@
       "evidence": {
         "requiredTests": [
           "co.rsk.trie.TrieStoreImplTest",
-          "co.rsk.trie.TrieSaveRetrieveTest"
+          "co.rsk.trie.TrieSaveRetrieveTest",
+          "unitrie-rs/src/codec_rskip107.rs::tests::encode_decode_round_trip_terminal_short_value",
+          "unitrie-rs/src/codec_rskip107.rs::tests::decode_rejects_empty_payload"
         ],
         "requiredCorpus": []
       },
-      "status": "partial"
+      "status": "verified"
     },
     {
       "specId": "SPEC-CODEC-ORCHID-SERIALIZE-001",
@@ -293,11 +301,12 @@
       "evidence": {
         "requiredTests": [
           "co.rsk.trie.TrieOrchidMessageTest",
-          "co.rsk.trie.TrieSaveRetrieveTest"
+          "co.rsk.trie.TrieSaveRetrieveTest",
+          "unitrie-rs/src/codec_orchid.rs::tests::encode_decode_round_trip"
         ],
         "requiredCorpus": []
       },
-      "status": "partial"
+      "status": "verified"
     },
     {
       "specId": "SPEC-CODEC-ORCHID-DESERIALIZE-001",
@@ -318,11 +327,13 @@
       "evidence": {
         "requiredTests": [
           "co.rsk.trie.TrieOrchidMessageTest",
-          "co.rsk.trie.TrieSaveRetrieveTest"
+          "co.rsk.trie.TrieSaveRetrieveTest",
+          "unitrie-rs/src/codec_orchid.rs::tests::encode_decode_round_trip",
+          "unitrie-rs/src/codec_orchid.rs::tests::decode_rejects_wrong_arity"
         ],
         "requiredCorpus": []
       },
-      "status": "partial"
+      "status": "verified"
     },
     {
       "specId": "SPEC-STORAGE-KEYS-RSKIP108-MAPPING-001",
@@ -489,11 +500,13 @@
       "evidence": {
         "requiredTests": [
           "co.rsk.trie.TrieHashTest",
-          "co.rsk.trie.delete.SecureTrieHashTest"
+          "co.rsk.trie.delete.SecureTrieHashTest",
+          "unitrie-rs/src/core_trie.rs::tests::empty_root_hash_matches_expected_semantics",
+          "unitrie-rs/src/hash.rs::tests::empty_hash_is_stable"
         ],
         "requiredCorpus": []
       },
-      "status": "implemented"
+      "status": "verified"
     },
     {
       "specId": "SPEC-HASH-LONG-VALUE-THRESHOLD-001",

@@ -522,3 +522,44 @@ Promotion claims must follow this order:
 
 ### Production default remains unchanged
 `blockchain.unitrie.engine=java` stays the production default in this phase.
+
+## 18. V5 5/5 Replacement Program
+### Program goal
+V5 targets replacement candidacy for `rust(next)` with three simultaneous constraints:
+1. Performance: win `5/5` workloads in deep median E2E benchmark.
+2. Memory: allocation envelope stays within `+15%` versus Java (`gc.alloc.rate.norm`).
+3. Consensus: no promotion without parity gate completion.
+
+### Core modularization contract
+V5 introduces a crate-level reusable core contract:
+1. `/Users/void_rsk/.codex/worktrees/35ae/rskj/unitrie-rs/src/core_api/mod.rs`
+2. JNI remains an adapter layer (`ffi.rs`) and is feature-gated (`feature = "jni"`).
+3. Core can be compiled and tested without JNI:
+   - `cargo test --manifest-path unitrie-rs/Cargo.toml --no-default-features`
+
+### V5 gate definition
+Promotion candidate requires all checks green:
+1. Deep benchmark median artifact reports `5/5` wins:
+   - `avg` win
+   - `p95 <= 1.02x`
+   - `throughput` win
+   - `memory <= 1.15x`
+2. Validation Run (On-Demand):
+   - `500` blocks
+   - `repeatRuns=2`
+   - zero divergence
+   - zero JNI errors
+3. Spec map gate:
+   - no missing consensus-critical entries
+   - evidence mapped for each critical spec
+   - critical statuses advanced to `verified` only when executable evidence is traceable
+
+### Deep median memory-aware decision artifact
+`scripts/unitrie/benchmark_median_report.py` now supports a memory gate:
+1. `--memory-multiplier` (default `1.15`)
+2. Per-workload medians include:
+   - `gcAllocRateNormBytesPerOpMedian`
+3. Workload win now requires memory criterion in addition to latency and throughput.
+
+### Operational note
+V5 improves modularity and performance instrumentation fidelity, but production default remains Java until the full V5 gate is satisfied.
