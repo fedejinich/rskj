@@ -40,9 +40,11 @@ import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -71,6 +73,7 @@ public class RustMutableTrie implements MutableTrie {
     private MutableTrie javaMirror;
     private final boolean maintainJavaMirrorOnRust;
     private boolean mirrorDirty;
+    private final Map<ByteArrayWrapper, List<byte[]>> storageKeysCache;
     @Nullable
     private final RustUnitrieBridge bridge;
     private final long nativeHandle;
@@ -112,6 +115,7 @@ public class RustMutableTrie implements MutableTrie {
         this.javaMirror = new MutableTrieImpl(trieStore, trie);
         this.maintainJavaMirrorOnRust = rustImplementation != RustUnitrieImplementation.NEXT;
         this.mirrorDirty = false;
+        this.storageKeysCache = new HashMap<>();
 
         RustUnitrieBridge loadedBridge = RustUnitrieBridge.load(rustLibraryPath);
         if (!loadedBridge.isAvailable()) {
@@ -178,6 +182,7 @@ public class RustMutableTrie implements MutableTrie {
     @Override
     public void put(byte[] key, byte[] value) {
         if (engineType == TrieEngineType.RUST && bridge != null) {
+            invalidateStorageKeysCache();
             if (value == null) {
                 bridge.delete(nativeHandle, key);
                 recordDifferentialOperation("delete", key, null, null, null, null, null);
@@ -273,7 +278,7 @@ public class RustMutableTrie implements MutableTrie {
     @Override
     public Iterator<DataWord> getStorageKeys(RskAddress addr) {
         if (engineType == TrieEngineType.RUST && bridge != null) {
-            List<byte[]> rustKeys = loadStorageKeysFromBridge(addr.getBytes());
+            List<byte[]> rustKeys = getOrLoadStorageKeys(addr.getBytes());
             recordDifferentialOperation("getStorageKeys", addr.getBytes(), null, null, null, null, null);
             return toDataWordIterator(rustKeys);
         }
@@ -312,9 +317,26 @@ public class RustMutableTrie implements MutableTrie {
         }
     }
 
+    private List<byte[]> getOrLoadStorageKeys(byte[] accountAddress) {
+        ByteArrayWrapper cacheKey = new ByteArrayWrapper(Arrays.copyOf(accountAddress, accountAddress.length));
+        List<byte[]> cached = storageKeysCache.get(cacheKey);
+        if (cached != null) {
+            return cached;
+        }
+
+        List<byte[]> loaded = loadStorageKeysFromBridge(accountAddress);
+        storageKeysCache.put(cacheKey, loaded);
+        return loaded;
+    }
+
+    private void invalidateStorageKeysCache() {
+        storageKeysCache.clear();
+    }
+
     @Override
     public void deleteRecursive(byte[] key) {
         if (engineType == TrieEngineType.RUST && bridge != null) {
+            invalidateStorageKeysCache();
             bridge.deleteRecursive(nativeHandle, key);
             if (maintainJavaMirrorOnRust) {
                 javaMirror.deleteRecursive(key);
