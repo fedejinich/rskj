@@ -25,6 +25,12 @@ def parse_args() -> argparse.Namespace:
         default="rust(next)",
         help="Candidate rust engine label from summary.json (default: rust(next))",
     )
+    parser.add_argument(
+        "--memory-multiplier",
+        type=float,
+        default=1.15,
+        help="Maximum allowed rust allocation multiplier vs java (default: 1.15)",
+    )
     return parser.parse_args()
 
 
@@ -33,6 +39,7 @@ def main() -> int:
     runs_dir = pathlib.Path(args.runs_dir)
     output_path = pathlib.Path(args.output)
     candidate_engine = args.candidate
+    memory_multiplier = args.memory_multiplier
 
     run_files = sorted(runs_dir.glob("result_trie_engine_summary_run*.json"))
     if not run_files:
@@ -54,6 +61,8 @@ def main() -> int:
         rust_p95 = collect_metric(runs, workload, candidate_engine, "p95Micros")
         java_throughput = collect_metric(runs, workload, "java", "throughputOpsPerSec")
         rust_throughput = collect_metric(runs, workload, candidate_engine, "throughputOpsPerSec")
+        java_alloc_norm = collect_metric(runs, workload, "java", "gcAllocRateNormBytesPerOp")
+        rust_alloc_norm = collect_metric(runs, workload, candidate_engine, "gcAllocRateNormBytesPerOp")
 
         java_avg_median = safe_median(java_avg)
         rust_avg_median = safe_median(rust_avg)
@@ -61,11 +70,18 @@ def main() -> int:
         rust_p95_median = safe_median(rust_p95)
         java_throughput_median = safe_median(java_throughput)
         rust_throughput_median = safe_median(rust_throughput)
+        java_alloc_norm_median = safe_median(java_alloc_norm)
+        rust_alloc_norm_median = safe_median(rust_alloc_norm)
 
         avg_win = is_less(rust_avg_median, java_avg_median)
         p95_win = is_less_or_equal_multiplier(rust_p95_median, java_p95_median, 1.02)
         throughput_win = is_greater(rust_throughput_median, java_throughput_median)
-        workload_win = avg_win and p95_win and throughput_win
+        memory_win = is_less_or_equal_multiplier(
+            rust_alloc_norm_median,
+            java_alloc_norm_median,
+            memory_multiplier,
+        )
+        workload_win = avg_win and p95_win and throughput_win and memory_win
 
         workload_summaries.append(
             {
@@ -74,22 +90,26 @@ def main() -> int:
                     "avgMicrosMedian": java_avg_median,
                     "p95MicrosMedian": java_p95_median,
                     "throughputOpsPerSecMedian": java_throughput_median,
+                    "gcAllocRateNormBytesPerOpMedian": java_alloc_norm_median,
                 },
                 "candidate": {
                     "engine": candidate_engine,
                     "avgMicrosMedian": rust_avg_median,
                     "p95MicrosMedian": rust_p95_median,
                     "throughputOpsPerSecMedian": rust_throughput_median,
+                    "gcAllocRateNormBytesPerOpMedian": rust_alloc_norm_median,
                 },
                 "decision": {
                     "avgWin": avg_win,
                     "p95Win": p95_win,
                     "throughputWin": throughput_win,
+                    "memoryWin": memory_win,
                     "workloadWin": workload_win,
                     "criteria": {
                         "avg": "rust avg_time < java avg_time",
                         "p95": "rust p95 <= java p95 * 1.02",
                         "throughput": "rust throughput > java throughput",
+                        "memory": f"rust alloc_norm <= java alloc_norm * {memory_multiplier:.2f}",
                     },
                 },
             }
@@ -103,6 +123,7 @@ def main() -> int:
         "runsDir": str(runs_dir.resolve()),
         "runCount": len(run_files),
         "candidateEngine": candidate_engine,
+        "memoryMultiplier": memory_multiplier,
         "runFiles": [str(path.resolve()) for path in run_files],
         "workloads": workload_summaries,
         "summary": {
