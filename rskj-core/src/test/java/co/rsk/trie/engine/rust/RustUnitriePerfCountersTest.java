@@ -38,6 +38,12 @@ class RustUnitriePerfCountersTest {
         assertEquals(0, counters.getStoreCallbackCalls());
         assertEquals(0, counters.getJniBytesIn());
         assertEquals(0, counters.getJniBytesOut());
+        assertEquals(0, counters.getNodesLoadedFromStore());
+        assertEquals(0, counters.getNodesDecoded());
+        assertEquals(0, counters.getNodesSaved());
+        assertEquals(0, counters.getDirtyNodesSaved());
+        assertEquals(0, counters.getRehydrateRootOnlyCount());
+        assertEquals(0, counters.getRehydrateFullScanFallbackCount());
     }
 
     @Test
@@ -54,5 +60,53 @@ class RustUnitriePerfCountersTest {
         assertEquals(12, counters.getStoreCallbackCalls());
         assertEquals(13, counters.getJniBytesIn());
         assertEquals(14, counters.getJniBytesOut());
+        assertEquals(0, counters.getNodesLoadedFromStore());
+        assertEquals(0, counters.getNodesDecoded());
+        assertEquals(0, counters.getNodesSaved());
+        assertEquals(0, counters.getDirtyNodesSaved());
+        assertEquals(0, counters.getRehydrateRootOnlyCount());
+        assertEquals(0, counters.getRehydrateFullScanFallbackCount());
+    }
+
+    @Test
+    void mapsSaveReloadExtendedCountersWhenPresent() {
+        RustUnitriePerfCounters counters = RustUnitriePerfCounters.fromRawCounters(new long[] {
+                1, 2, 3, 4, 5, 6, 7,
+                8, 9, 10, 11, 12, 13, 14,
+                15, 16, 17, 18, 19, 20
+        });
+
+        assertEquals(15, counters.getNodesLoadedFromStore());
+        assertEquals(16, counters.getNodesDecoded());
+        assertEquals(17, counters.getNodesSaved());
+        assertEquals(18, counters.getDirtyNodesSaved());
+        assertEquals(19, counters.getRehydrateRootOnlyCount());
+        assertEquals(20, counters.getRehydrateFullScanFallbackCount());
+    }
+
+    @Test
+    void plusAccumulatesAllFields() {
+        RustUnitriePerfCounters left = RustUnitriePerfCounters.fromRawCounters(new long[] {
+                1, 1, 1, 1, 1, 1, 1,
+                1, 1, 1, 1, 1, 1, 1,
+                1, 1, 1, 1, 1, 1
+        });
+        RustUnitriePerfCounters right = RustUnitriePerfCounters.fromRawCounters(new long[] {
+                2, 2, 2, 2, 2, 2, 2,
+                2, 2, 2, 2, 2, 2, 2,
+                2, 2, 2, 2, 2, 2
+        });
+
+        RustUnitriePerfCounters combined = left.plus(right);
+        assertEquals(3, combined.getSerializedNodes());
+        assertEquals(3, combined.getJniCalls());
+        assertEquals(3, combined.getFfiDecodeNanos());
+        assertEquals(3, combined.getStoreCallbackCalls());
+        assertEquals(3, combined.getNodesLoadedFromStore());
+        assertEquals(3, combined.getNodesDecoded());
+        assertEquals(3, combined.getNodesSaved());
+        assertEquals(3, combined.getDirtyNodesSaved());
+        assertEquals(3, combined.getRehydrateRootOnlyCount());
+        assertEquals(3, combined.getRehydrateFullScanFallbackCount());
     }
 }

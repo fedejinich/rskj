@@ -30,6 +30,12 @@ public final class RustFfiMetricsSnapshot {
     private final long storeCallbackCalls;
     private final long jniBytesIn;
     private final long jniBytesOut;
+    private final long nodesLoadedFromStore;
+    private final long nodesDecoded;
+    private final long nodesSaved;
+    private final long dirtyNodesSaved;
+    private final long rehydrateRootOnlyCount;
+    private final long rehydrateFullScanFallbackCount;
 
     public RustFfiMetricsSnapshot(
             long jniCalls,
@@ -39,7 +45,13 @@ public final class RustFfiMetricsSnapshot {
             long storeCallbackNanos,
             long storeCallbackCalls,
             long jniBytesIn,
-            long jniBytesOut) {
+            long jniBytesOut,
+            long nodesLoadedFromStore,
+            long nodesDecoded,
+            long nodesSaved,
+            long dirtyNodesSaved,
+            long rehydrateRootOnlyCount,
+            long rehydrateFullScanFallbackCount) {
         this.jniCalls = jniCalls;
         this.ffiDecodeNanos = ffiDecodeNanos;
         this.ffiEncodeNanos = ffiEncodeNanos;
@@ -48,6 +60,12 @@ public final class RustFfiMetricsSnapshot {
         this.storeCallbackCalls = storeCallbackCalls;
         this.jniBytesIn = jniBytesIn;
         this.jniBytesOut = jniBytesOut;
+        this.nodesLoadedFromStore = nodesLoadedFromStore;
+        this.nodesDecoded = nodesDecoded;
+        this.nodesSaved = nodesSaved;
+        this.dirtyNodesSaved = dirtyNodesSaved;
+        this.rehydrateRootOnlyCount = rehydrateRootOnlyCount;
+        this.rehydrateFullScanFallbackCount = rehydrateFullScanFallbackCount;
     }
 
     public static RustFfiMetricsSnapshot fromCounters(RustUnitriePerfCounters counters) {
@@ -59,12 +77,18 @@ public final class RustFfiMetricsSnapshot {
                 counters.getStoreCallbackNanos(),
                 counters.getStoreCallbackCalls(),
                 counters.getJniBytesIn(),
-                counters.getJniBytesOut()
+                counters.getJniBytesOut(),
+                counters.getNodesLoadedFromStore(),
+                counters.getNodesDecoded(),
+                counters.getNodesSaved(),
+                counters.getDirtyNodesSaved(),
+                counters.getRehydrateRootOnlyCount(),
+                counters.getRehydrateFullScanFallbackCount()
         );
     }
 
     public static RustFfiMetricsSnapshot empty() {
-        return new RustFfiMetricsSnapshot(0, 0, 0, 0, 0, 0, 0, 0);
+        return new RustFfiMetricsSnapshot(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
     public RustFfiMetricsDelta diffTo(RustFfiMetricsSnapshot newer) {
@@ -101,5 +125,29 @@ public final class RustFfiMetricsSnapshot {
 
     public long getJniBytesOut() {
         return jniBytesOut;
+    }
+
+    public long getNodesLoadedFromStore() {
+        return nodesLoadedFromStore;
+    }
+
+    public long getNodesDecoded() {
+        return nodesDecoded;
+    }
+
+    public long getNodesSaved() {
+        return nodesSaved;
+    }
+
+    public long getDirtyNodesSaved() {
+        return dirtyNodesSaved;
+    }
+
+    public long getRehydrateRootOnlyCount() {
+        return rehydrateRootOnlyCount;
+    }
+
+    public long getRehydrateFullScanFallbackCount() {
+        return rehydrateFullScanFallbackCount;
     }
 }

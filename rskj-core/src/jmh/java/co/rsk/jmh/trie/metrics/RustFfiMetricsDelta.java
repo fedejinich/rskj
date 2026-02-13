@@ -28,6 +28,12 @@ public final class RustFfiMetricsDelta {
     private final long storeCallbackCalls;
     private final long jniBytesIn;
     private final long jniBytesOut;
+    private final long nodesLoadedFromStore;
+    private final long nodesDecoded;
+    private final long nodesSaved;
+    private final long dirtyNodesSaved;
+    private final long rehydrateRootOnlyCount;
+    private final long rehydrateFullScanFallbackCount;
 
     private RustFfiMetricsDelta(
             long jniCalls,
@@ -37,7 +43,13 @@ public final class RustFfiMetricsDelta {
             long storeCallbackNanos,
             long storeCallbackCalls,
             long jniBytesIn,
-            long jniBytesOut) {
+            long jniBytesOut,
+            long nodesLoadedFromStore,
+            long nodesDecoded,
+            long nodesSaved,
+            long dirtyNodesSaved,
+            long rehydrateRootOnlyCount,
+            long rehydrateFullScanFallbackCount) {
         this.jniCalls = jniCalls;
         this.ffiDecodeNanos = ffiDecodeNanos;
         this.ffiEncodeNanos = ffiEncodeNanos;
@@ -46,6 +58,12 @@ public final class RustFfiMetricsDelta {
         this.storeCallbackCalls = storeCallbackCalls;
         this.jniBytesIn = jniBytesIn;
         this.jniBytesOut = jniBytesOut;
+        this.nodesLoadedFromStore = nodesLoadedFromStore;
+        this.nodesDecoded = nodesDecoded;
+        this.nodesSaved = nodesSaved;
+        this.dirtyNodesSaved = dirtyNodesSaved;
+        this.rehydrateRootOnlyCount = rehydrateRootOnlyCount;
+        this.rehydrateFullScanFallbackCount = rehydrateFullScanFallbackCount;
     }
 
     public static RustFfiMetricsDelta from(RustFfiMetricsSnapshot older, RustFfiMetricsSnapshot newer) {
@@ -57,7 +75,13 @@ public final class RustFfiMetricsDelta {
                 nonNegativeDelta(older.getStoreCallbackNanos(), newer.getStoreCallbackNanos()),
                 nonNegativeDelta(older.getStoreCallbackCalls(), newer.getStoreCallbackCalls()),
                 nonNegativeDelta(older.getJniBytesIn(), newer.getJniBytesIn()),
-                nonNegativeDelta(older.getJniBytesOut(), newer.getJniBytesOut())
+                nonNegativeDelta(older.getJniBytesOut(), newer.getJniBytesOut()),
+                nonNegativeDelta(older.getNodesLoadedFromStore(), newer.getNodesLoadedFromStore()),
+                nonNegativeDelta(older.getNodesDecoded(), newer.getNodesDecoded()),
+                nonNegativeDelta(older.getNodesSaved(), newer.getNodesSaved()),
+                nonNegativeDelta(older.getDirtyNodesSaved(), newer.getDirtyNodesSaved()),
+                nonNegativeDelta(older.getRehydrateRootOnlyCount(), newer.getRehydrateRootOnlyCount()),
+                nonNegativeDelta(older.getRehydrateFullScanFallbackCount(), newer.getRehydrateFullScanFallbackCount())
         );
     }
 
@@ -66,7 +90,7 @@ public final class RustFfiMetricsDelta {
     }
 
     public static RustFfiMetricsDelta empty() {
-        return new RustFfiMetricsDelta(0, 0, 0, 0, 0, 0, 0, 0);
+        return new RustFfiMetricsDelta(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
     public long getJniCalls() {
@@ -99,5 +123,29 @@ public final class RustFfiMetricsDelta {
 
     public long getJniBytesOut() {
         return jniBytesOut;
+    }
+
+    public long getNodesLoadedFromStore() {
+        return nodesLoadedFromStore;
+    }
+
+    public long getNodesDecoded() {
+        return nodesDecoded;
+    }
+
+    public long getNodesSaved() {
+        return nodesSaved;
+    }
+
+    public long getDirtyNodesSaved() {
+        return dirtyNodesSaved;
+    }
+
+    public long getRehydrateRootOnlyCount() {
+        return rehydrateRootOnlyCount;
+    }
+
+    public long getRehydrateFullScanFallbackCount() {
+        return rehydrateFullScanFallbackCount;
     }
 }

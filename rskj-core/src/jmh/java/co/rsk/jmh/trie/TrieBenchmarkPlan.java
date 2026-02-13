@@ -32,6 +32,7 @@ import co.rsk.trie.engine.MutableTrieFactory;
 import co.rsk.trie.engine.TrieEngineType;
 import co.rsk.trie.engine.rust.RustMutableTrie;
 import co.rsk.trie.engine.rust.RustUnitrieImplementation;
+import co.rsk.trie.engine.rust.RustUnitriePerfCounters;
 import org.ethereum.datasource.HashMapDB;
 import org.ethereum.db.MutableRepository;
 import org.ethereum.vm.DataWord;
@@ -86,6 +87,7 @@ public class TrieBenchmarkPlan {
     private TrieStore trieStore;
     private MutableTrieFactory mutableTrieFactory;
     private MutableTrie mutableTrie;
+    private RustUnitriePerfCounters rustFfiCarry = RustUnitriePerfCounters.empty();
     private List<KeyValuePair> massiveUploadEntries = Collections.emptyList();
     private int cursor;
 
@@ -114,6 +116,7 @@ public class TrieBenchmarkPlan {
                 RustUnitrieImplementation.fromConfig(rustImplementation)
         );
         mutableTrie = mutableTrieFactory.create(trieStore, new Trie(trieStore));
+        rustFfiCarry = RustUnitriePerfCounters.empty();
         cursor = 0;
 
         seedStorageSubtree();
@@ -144,7 +147,8 @@ public class TrieBenchmarkPlan {
         }
 
         RustMutableTrie rustMutableTrie = (RustMutableTrie) mutableTrie;
-        return RustFfiMetricsSnapshot.fromCounters(rustMutableTrie.snapshotRustPerfCounters());
+        RustUnitriePerfCounters counters = rustFfiCarry.plus(rustMutableTrie.snapshotRustPerfCounters());
+        return RustFfiMetricsSnapshot.fromCounters(counters);
     }
 
     public RustFfiMetricsDelta diffRustFfiMetrics(RustFfiMetricsSnapshot baseline) {
@@ -168,6 +172,10 @@ public class TrieBenchmarkPlan {
 
     public void saveAndReload() {
         mutableTrie.save();
+        if (mutableTrie instanceof RustMutableTrie) {
+            RustMutableTrie rustMutableTrie = (RustMutableTrie) mutableTrie;
+            rustFfiCarry = rustFfiCarry.plus(rustMutableTrie.snapshotRustPerfCounters());
+        }
         byte[] rootHash = mutableTrie.getHash().getBytes();
         Optional<Trie> maybeRoot = trieStore.retrieve(rootHash);
         Trie root = maybeRoot.orElseThrow(() -> new IllegalStateException("Saved trie root was not found"));

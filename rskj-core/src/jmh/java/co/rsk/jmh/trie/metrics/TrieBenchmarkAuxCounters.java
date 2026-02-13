@@ -42,6 +42,12 @@ public class TrieBenchmarkAuxCounters {
     public long rust_store_callback_calls;
     public long rust_jni_bytes_in;
     public long rust_jni_bytes_out;
+    public long rust_nodes_loaded_from_store;
+    public long rust_nodes_decoded;
+    public long rust_nodes_saved;
+    public long rust_dirty_nodes_saved;
+    public long rust_rehydrate_root_only_count;
+    public long rust_rehydrate_full_scan_fallback_count;
 
     @Setup(Level.Iteration)
     public void reset() {
@@ -59,6 +65,12 @@ public class TrieBenchmarkAuxCounters {
         rust_store_callback_calls = 0;
         rust_jni_bytes_in = 0;
         rust_jni_bytes_out = 0;
+        rust_nodes_loaded_from_store = 0;
+        rust_nodes_decoded = 0;
+        rust_nodes_saved = 0;
+        rust_dirty_nodes_saved = 0;
+        rust_rehydrate_root_only_count = 0;
+        rust_rehydrate_full_scan_fallback_count = 0;
     }
 
     public void record(TrieStoreMetricsDelta delta, RustFfiMetricsDelta ffiDelta) {
@@ -76,5 +88,11 @@ public class TrieBenchmarkAuxCounters {
         rust_store_callback_calls += ffiDelta.getStoreCallbackCalls();
         rust_jni_bytes_in += ffiDelta.getJniBytesIn();
         rust_jni_bytes_out += ffiDelta.getJniBytesOut();
+        rust_nodes_loaded_from_store += ffiDelta.getNodesLoadedFromStore();
+        rust_nodes_decoded += ffiDelta.getNodesDecoded();
+        rust_nodes_saved += ffiDelta.getNodesSaved();
+        rust_dirty_nodes_saved += ffiDelta.getDirtyNodesSaved();
+        rust_rehydrate_root_only_count += ffiDelta.getRehydrateRootOnlyCount();
+        rust_rehydrate_full_scan_fallback_count += ffiDelta.getRehydrateFullScanFallbackCount();
     }
 }

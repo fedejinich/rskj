@@ -217,6 +217,30 @@ public final class TrieBenchmarkReportAnalyzer {
         metrics.rustJniBytesOutPerOp = metrics.rustJniBytesOutPerOp != null
                 ? metrics.rustJniBytesOutPerOp
                 : findSecondaryMetricBySuffix(metrics, "rust_jni_bytes_out");
+
+        metrics.rustNodesLoadedFromStorePerOp = metrics.rustNodesLoadedFromStorePerOp != null
+                ? metrics.rustNodesLoadedFromStorePerOp
+                : findSecondaryMetricBySuffix(metrics, "rust_nodes_loaded_from_store");
+
+        metrics.rustNodesDecodedPerOp = metrics.rustNodesDecodedPerOp != null
+                ? metrics.rustNodesDecodedPerOp
+                : findSecondaryMetricBySuffix(metrics, "rust_nodes_decoded");
+
+        metrics.rustNodesSavedPerOp = metrics.rustNodesSavedPerOp != null
+                ? metrics.rustNodesSavedPerOp
+                : findSecondaryMetricBySuffix(metrics, "rust_nodes_saved");
+
+        metrics.rustDirtyNodesSavedPerOp = metrics.rustDirtyNodesSavedPerOp != null
+                ? metrics.rustDirtyNodesSavedPerOp
+                : findSecondaryMetricBySuffix(metrics, "rust_dirty_nodes_saved");
+
+        metrics.rustRehydrateRootOnlyCountPerOp = metrics.rustRehydrateRootOnlyCountPerOp != null
+                ? metrics.rustRehydrateRootOnlyCountPerOp
+                : findSecondaryMetricBySuffix(metrics, "rust_rehydrate_root_only_count");
+
+        metrics.rustRehydrateFullScanFallbackCountPerOp = metrics.rustRehydrateFullScanFallbackCountPerOp != null
+                ? metrics.rustRehydrateFullScanFallbackCountPerOp
+                : findSecondaryMetricBySuffix(metrics, "rust_rehydrate_full_scan_fallback_count");
     }
 
     private static Double findSecondaryMetricBySuffix(EngineMetrics metrics, String suffix) {
@@ -376,6 +400,12 @@ public final class TrieBenchmarkReportAnalyzer {
             row.put("rustStoreCallbackCallsPerOp", rust.rustStoreCallbackCallsPerOp);
             row.put("rustJniBytesInPerOp", rust.rustJniBytesInPerOp);
             row.put("rustJniBytesOutPerOp", rust.rustJniBytesOutPerOp);
+            row.put("rustNodesLoadedFromStorePerOp", rust.rustNodesLoadedFromStorePerOp);
+            row.put("rustNodesDecodedPerOp", rust.rustNodesDecodedPerOp);
+            row.put("rustNodesSavedPerOp", rust.rustNodesSavedPerOp);
+            row.put("rustDirtyNodesSavedPerOp", rust.rustDirtyNodesSavedPerOp);
+            row.put("rustRehydrateRootOnlyCountPerOp", rust.rustRehydrateRootOnlyCountPerOp);
+            row.put("rustRehydrateFullScanFallbackCountPerOp", rust.rustRehydrateFullScanFallbackCountPerOp);
             row.put("warnings", warnings);
             rows.add(row);
         }
@@ -668,6 +698,12 @@ public final class TrieBenchmarkReportAnalyzer {
         private Double rustStoreCallbackCallsPerOp;
         private Double rustJniBytesInPerOp;
         private Double rustJniBytesOutPerOp;
+        private Double rustNodesLoadedFromStorePerOp;
+        private Double rustNodesDecodedPerOp;
+        private Double rustNodesSavedPerOp;
+        private Double rustDirtyNodesSavedPerOp;
+        private Double rustRehydrateRootOnlyCountPerOp;
+        private Double rustRehydrateFullScanFallbackCountPerOp;
 
         private EngineMetrics(String benchmark, String engine) {
             this.benchmark = benchmark;
@@ -706,6 +742,12 @@ public final class TrieBenchmarkReportAnalyzer {
             metrics.put("rustStoreCallbackCallsPerOp", rustStoreCallbackCallsPerOp);
             metrics.put("rustJniBytesInPerOp", rustJniBytesInPerOp);
             metrics.put("rustJniBytesOutPerOp", rustJniBytesOutPerOp);
+            metrics.put("rustNodesLoadedFromStorePerOp", rustNodesLoadedFromStorePerOp);
+            metrics.put("rustNodesDecodedPerOp", rustNodesDecodedPerOp);
+            metrics.put("rustNodesSavedPerOp", rustNodesSavedPerOp);
+            metrics.put("rustDirtyNodesSavedPerOp", rustDirtyNodesSavedPerOp);
+            metrics.put("rustRehydrateRootOnlyCountPerOp", rustRehydrateRootOnlyCountPerOp);
+            metrics.put("rustRehydrateFullScanFallbackCountPerOp", rustRehydrateFullScanFallbackCountPerOp);
             output.put("metrics", metrics);
             return output;
         }
