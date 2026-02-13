@@ -100,10 +100,18 @@ fn core_trie_bench(criterion: &mut Criterion) {
 
 fn load_corpus() -> Corpus {
     let path = resolve_corpus_path();
-    let payload = fs::read_to_string(&path)
-        .unwrap_or_else(|error| panic!("could not read core workload corpus at {}: {error}", path.display()));
-    serde_json::from_str(&payload)
-        .unwrap_or_else(|error| panic!("invalid core workload corpus at {}: {error}", path.display()))
+    let payload = fs::read_to_string(&path).unwrap_or_else(|error| {
+        panic!(
+            "could not read core workload corpus at {}: {error}",
+            path.display()
+        )
+    });
+    serde_json::from_str(&payload).unwrap_or_else(|error| {
+        panic!(
+            "invalid core workload corpus at {}: {error}",
+            path.display()
+        )
+    })
 }
 
 fn resolve_corpus_path() -> PathBuf {
@@ -170,7 +178,9 @@ fn apply_operation(
         }
         "getvaluehash" | "get_value_hash" | "get-value-hash" => {
             let key = decode_required(&operation.key_hex, "keyHex", "getValueHash");
-            trie.get_value_hash(&key).map(|hash| hash.len()).unwrap_or(0)
+            trie.get_value_hash(&key)
+                .map(|hash| hash.len())
+                .unwrap_or(0)
         }
         "collectkeys" | "collect_keys" | "collect-keys" => {
             let size = operation.size.unwrap_or(0);
@@ -183,8 +193,10 @@ fn apply_operation(
         "savereload" | "save_reload" | "save-reload" => {
             trie.save_to_store(store);
             let root = trie.current_root_hash();
-            let rehydrated = NextUnitrie::from_persisted_root(&root, store)
-                .unwrap_or_else(|error| panic!("could not rehydrate trie from persisted root: {error}"));
+            let rehydrated =
+                NextUnitrie::from_persisted_root(&root, store).unwrap_or_else(|error| {
+                    panic!("could not rehydrate trie from persisted root: {error}")
+                });
             *trie = rehydrated;
             root.len()
         }
@@ -217,8 +229,7 @@ fn decode_hex_value(raw: &str) -> Vec<u8> {
         return Vec::new();
     }
 
-    decode_hex(&normalized)
-        .unwrap_or_else(|error| panic!("invalid hex value '{raw}': {error}"))
+    decode_hex(&normalized).unwrap_or_else(|error| panic!("invalid hex value '{raw}': {error}"))
 }
 
 fn write_manual_summary(corpus: &Corpus) -> Result<(), String> {
@@ -257,8 +268,12 @@ fn write_manual_summary(corpus: &Corpus) -> Result<(), String> {
 
     let output_path = resolve_output_path();
     if let Some(parent) = output_path.parent() {
-        fs::create_dir_all(parent)
-            .map_err(|error| format!("could not create output directory {}: {error}", parent.display()))?;
+        fs::create_dir_all(parent).map_err(|error| {
+            format!(
+                "could not create output directory {}: {error}",
+                parent.display()
+            )
+        })?;
     }
 
     let payload = serde_json::json!({
