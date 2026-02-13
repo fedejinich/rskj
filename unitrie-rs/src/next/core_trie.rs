@@ -7,6 +7,7 @@ use crate::next::node_arena::NodeArena;
 use crate::next::persistence::IncrementalPersistence;
 use crate::next::storage_iteration_cache::StorageIterationCache;
 use crate::node_ref::HASH_SIZE;
+use crate::storage_keys_packed;
 use crate::store_adapter::RawStoreAdapter;
 use std::sync::Arc;
 
@@ -80,9 +81,14 @@ impl NextUnitrie {
     }
 
     pub fn get_storage_keys(&mut self, account_address: &[u8]) -> Vec<Vec<u8>> {
-        self.storage_keys_for_account(account_address)
+        self.storage_keys_bundle_for_account(account_address)
+            .0
             .as_ref()
             .clone()
+    }
+
+    pub fn get_storage_keys_packed(&mut self, account_address: &[u8]) -> Arc<Vec<u8>> {
+        self.storage_keys_bundle_for_account(account_address).1
     }
 
     pub fn root_hash(&mut self) -> [u8; HASH_SIZE] {
@@ -113,19 +119,26 @@ impl NextUnitrie {
         self.hash_state.update(self.inner.current_root_hash());
     }
 
-    fn storage_keys_for_account(&mut self, account_address: &[u8]) -> Arc<Vec<Vec<u8>>> {
-        if let Some(cached_keys) = self
-            .storage_iteration_cache
-            .get(account_address, self.mutation_generation.current())
-        {
-            return cached_keys;
+    fn storage_keys_bundle_for_account(
+        &mut self,
+        account_address: &[u8],
+    ) -> (Arc<Vec<Vec<u8>>>, Arc<Vec<u8>>) {
+        if let (Some(cached_keys), Some(cached_packed)) = (
+            self.storage_iteration_cache
+                .get_keys(account_address, self.mutation_generation.current()),
+            self.storage_iteration_cache
+                .get_packed(account_address, self.mutation_generation.current()),
+        ) {
+            return (cached_keys, cached_packed);
         }
 
         let keys = Arc::new(self.inner.get_storage_keys(account_address));
+        let packed = Arc::new(storage_keys_packed::encode(keys.as_ref()));
         self.storage_iteration_cache.insert(
             account_address.to_vec(),
             self.mutation_generation.current(),
-            Arc::clone(&keys),
+            keys,
+            packed,
         )
     }
 

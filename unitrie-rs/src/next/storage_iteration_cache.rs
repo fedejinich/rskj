@@ -7,6 +7,7 @@ const DEFAULT_CAPACITY: usize = 256;
 struct CacheEntry {
     generation: u64,
     keys: Arc<Vec<Vec<u8>>>,
+    packed: Arc<Vec<u8>>,
 }
 
 #[derive(Debug, Clone)]
@@ -31,11 +32,18 @@ impl StorageIterationCache {
         }
     }
 
-    pub fn get(&self, account_address: &[u8], generation: u64) -> Option<Arc<Vec<Vec<u8>>>> {
+    pub fn get_keys(&self, account_address: &[u8], generation: u64) -> Option<Arc<Vec<Vec<u8>>>> {
         self.entries
             .get(account_address)
             .filter(|entry| entry.generation == generation)
             .map(|entry| Arc::clone(&entry.keys))
+    }
+
+    pub fn get_packed(&self, account_address: &[u8], generation: u64) -> Option<Arc<Vec<u8>>> {
+        self.entries
+            .get(account_address)
+            .filter(|entry| entry.generation == generation)
+            .map(|entry| Arc::clone(&entry.packed))
     }
 
     pub fn insert(
@@ -43,14 +51,21 @@ impl StorageIterationCache {
         account_address: Vec<u8>,
         generation: u64,
         keys: Arc<Vec<Vec<u8>>>,
-    ) -> Arc<Vec<Vec<u8>>> {
+        packed: Arc<Vec<u8>>,
+    ) -> (Arc<Vec<Vec<u8>>>, Arc<Vec<u8>>) {
         if self.capacity == 0 {
-            return keys;
+            return (keys, packed);
         }
 
         self.touch(&account_address);
-        self.entries
-            .insert(account_address.clone(), CacheEntry { generation, keys });
+        self.entries.insert(
+            account_address.clone(),
+            CacheEntry {
+                generation,
+                keys,
+                packed,
+            },
+        );
 
         while self.entries.len() > self.capacity {
             let Some(evicted) = self.order.pop_front() else {
@@ -59,10 +74,11 @@ impl StorageIterationCache {
             self.entries.remove(&evicted);
         }
 
-        self.entries
+        let entry = self
+            .entries
             .get(&account_address)
-            .map(|entry| Arc::clone(&entry.keys))
-            .expect("inserted cache entry must exist")
+            .expect("inserted cache entry must exist");
+        (Arc::clone(&entry.keys), Arc::clone(&entry.packed))
     }
 
     fn touch(&mut self, account_address: &[u8]) {
@@ -88,39 +104,92 @@ mod tests {
         let mut cache = StorageIterationCache::new(16);
         let account = vec![0xaa];
         let keys = Arc::new(vec![vec![0x01], vec![0x02]]);
-        cache.insert(account.clone(), 3, Arc::clone(&keys));
+        let packed = Arc::new(vec![0xfd, 0x01]);
+        cache.insert(account.clone(), 3, Arc::clone(&keys), Arc::clone(&packed));
 
         let hit = cache
-            .get(&account, 3)
+            .get_keys(&account, 3)
             .expect("cache entry should be available");
         assert_eq!(hit.as_ref(), keys.as_ref());
-        assert!(cache.get(&account, 4).is_none());
+        assert!(cache.get_keys(&account, 4).is_none());
+        assert_eq!(
+            cache
+                .get_packed(&account, 3)
+                .expect("packed payload should exist")
+                .as_ref(),
+            packed.as_ref()
+        );
     }
 
     #[test]
     fn evicts_oldest_account_when_capacity_is_exceeded() {
         let mut cache = StorageIterationCache::new(2);
-        cache.insert(vec![0x01], 0, Arc::new(vec![vec![0xa1]]));
-        cache.insert(vec![0x02], 0, Arc::new(vec![vec![0xa2]]));
-        cache.insert(vec![0x03], 0, Arc::new(vec![vec![0xa3]]));
+        cache.insert(
+            vec![0x01],
+            0,
+            Arc::new(vec![vec![0xa1]]),
+            Arc::new(vec![0x01]),
+        );
+        cache.insert(
+            vec![0x02],
+            0,
+            Arc::new(vec![vec![0xa2]]),
+            Arc::new(vec![0x02]),
+        );
+        cache.insert(
+            vec![0x03],
+            0,
+            Arc::new(vec![vec![0xa3]]),
+            Arc::new(vec![0x03]),
+        );
 
-        assert!(cache.get(&[0x01], 0).is_none());
-        assert!(cache.get(&[0x02], 0).is_some());
-        assert!(cache.get(&[0x03], 0).is_some());
+        assert!(cache.get_keys(&[0x01], 0).is_none());
+        assert!(cache.get_keys(&[0x02], 0).is_some());
+        assert!(cache.get_keys(&[0x03], 0).is_some());
     }
 
     #[test]
     fn updating_an_existing_account_refreshes_eviction_order() {
         let mut cache = StorageIterationCache::new(2);
-        cache.insert(vec![0x01], 0, Arc::new(vec![vec![0xa1]]));
-        cache.insert(vec![0x02], 0, Arc::new(vec![vec![0xa2]]));
-        cache.insert(vec![0x01], 1, Arc::new(vec![vec![0xb1]]));
-        cache.insert(vec![0x03], 1, Arc::new(vec![vec![0xc3]]));
+        cache.insert(
+            vec![0x01],
+            0,
+            Arc::new(vec![vec![0xa1]]),
+            Arc::new(vec![0x01]),
+        );
+        cache.insert(
+            vec![0x02],
+            0,
+            Arc::new(vec![vec![0xa2]]),
+            Arc::new(vec![0x02]),
+        );
+        cache.insert(
+            vec![0x01],
+            1,
+            Arc::new(vec![vec![0xb1]]),
+            Arc::new(vec![0x11]),
+        );
+        cache.insert(
+            vec![0x03],
+            1,
+            Arc::new(vec![vec![0xc3]]),
+            Arc::new(vec![0x03]),
+        );
 
-        assert!(cache.get(&[0x02], 1).is_none());
+        assert!(cache.get_keys(&[0x02], 1).is_none());
         assert_eq!(
-            cache.get(&[0x01], 1).expect("entry should exist").as_ref(),
+            cache
+                .get_keys(&[0x01], 1)
+                .expect("entry should exist")
+                .as_ref(),
             &vec![vec![0xb1]]
+        );
+        assert_eq!(
+            cache
+                .get_packed(&[0x01], 1)
+                .expect("entry should exist")
+                .as_ref(),
+            &vec![0x11]
         );
     }
 }

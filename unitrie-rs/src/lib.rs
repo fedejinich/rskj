@@ -8,5 +8,6 @@ pub mod hash;
 pub mod next;
 pub mod node_ref;
 pub mod path;
+pub mod storage_keys_packed;
 pub mod store_adapter;
 pub mod varint;

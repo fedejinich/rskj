@@ -1,13 +1,14 @@
 use crate::core_trie::Unitrie;
 use crate::next::core_trie::NextUnitrie;
+use crate::storage_keys_packed;
 use crate::store_adapter::RawStoreAdapter;
-use crate::varint;
 use dashmap::DashMap;
 use jni::objects::{JByteArray, JClass, JObject, JString, JValue};
 use jni::sys::{jbyteArray, jint, jlong, jlongArray, jobjectArray};
 use jni::JNIEnv;
 use once_cell::sync::Lazy;
 use std::sync::atomic::{AtomicI64, Ordering};
+use std::sync::Arc;
 use std::time::Instant;
 
 static NEXT_HANDLE: AtomicI64 = AtomicI64::new(1);
@@ -105,6 +106,11 @@ enum TrieRuntime {
     Next(Box<NextUnitrie>),
 }
 
+enum PackedStorageKeys {
+    Owned(Vec<u8>),
+    Shared(Arc<Vec<u8>>),
+}
+
 impl TrieRuntime {
     fn new(implementation: RuntimeImplementation) -> Self {
         match implementation {
@@ -181,6 +187,18 @@ impl TrieRuntime {
         match self {
             Self::Legacy(trie) => trie.get_storage_keys(account_address),
             Self::Next(trie) => trie.get_storage_keys(account_address),
+        }
+    }
+
+    fn get_storage_keys_packed(&mut self, account_address: &[u8]) -> PackedStorageKeys {
+        match self {
+            Self::Legacy(trie) => {
+                let keys = trie.get_storage_keys(account_address);
+                PackedStorageKeys::Owned(storage_keys_packed::encode(&keys))
+            }
+            Self::Next(trie) => {
+                PackedStorageKeys::Shared(trie.get_storage_keys_packed(account_address))
+            }
         }
     }
 
@@ -589,22 +607,6 @@ fn bytes_vec_to_jobject_array(env: &mut JNIEnv, values: Vec<Vec<u8>>) -> Option<
     }
 
     Some(array.into_raw())
-}
-
-fn encode_storage_keys_packed(values: &[Vec<u8>]) -> Vec<u8> {
-    let mut payload_size = varint::size_of(values.len() as u64);
-    for value in values {
-        payload_size += varint::size_of(value.len() as u64) + value.len();
-    }
-
-    let mut output = Vec::with_capacity(payload_size);
-    varint::encode_into(values.len() as u64, &mut output);
-    for value in values {
-        varint::encode_into(value.len() as u64, &mut output);
-        output.extend_from_slice(value);
-    }
-
-    output
 }
 
 #[no_mangle]
@@ -1042,33 +1044,35 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeGetS
     let decode_elapsed = elapsed_nanos(decode_started);
     let decode_bytes = len_as_u64(account_address.len());
 
-    let packed_keys =
-        match with_trie_mut_with_decode(handle, decode_elapsed, decode_bytes, |trie| {
-            let core_started = Instant::now();
-            let keys = trie.runtime.get_storage_keys(&account_address);
-            let packed = encode_storage_keys_packed(&keys);
-            trie.counters.add_core_nanos(elapsed_nanos(core_started));
-            packed
-        }) {
-            Ok(packed_keys) => packed_keys,
-            Err(err) => {
-                throw_illegal_argument(&mut env, err);
-                return std::ptr::null_mut();
-            }
-        };
+    match with_trie_mut_with_decode(handle, decode_elapsed, decode_bytes, |trie| {
+        let core_started = Instant::now();
+        let packed = trie.runtime.get_storage_keys_packed(&account_address);
+        trie.counters.add_core_nanos(elapsed_nanos(core_started));
 
-    let encode_started = Instant::now();
-    let output = to_byte_array(&mut env, &packed_keys, "packed storage keys")
-        .unwrap_or(std::ptr::null_mut());
-    if let Some(mut trie_handle) = TRIES.get_mut(&handle) {
-        trie_handle
-            .counters
+        let encode_started = Instant::now();
+        let (output, bytes_out) = match packed {
+            PackedStorageKeys::Owned(bytes) => (
+                to_byte_array(&mut env, &bytes, "packed storage keys")
+                    .unwrap_or(std::ptr::null_mut()),
+                len_as_u64(bytes.len()),
+            ),
+            PackedStorageKeys::Shared(bytes) => (
+                to_byte_array(&mut env, bytes.as_slice(), "packed storage keys")
+                    .unwrap_or(std::ptr::null_mut()),
+                len_as_u64(bytes.len()),
+            ),
+        };
+        trie.counters
             .add_encode_nanos(elapsed_nanos(encode_started));
-        trie_handle
-            .counters
-            .add_jni_bytes_out(len_as_u64(packed_keys.len()));
+        trie.counters.add_jni_bytes_out(bytes_out);
+        output
+    }) {
+        Ok(output) => output,
+        Err(err) => {
+            throw_illegal_argument(&mut env, err);
+            std::ptr::null_mut()
+        }
     }
-    output
 }
 
 #[no_mangle]
@@ -1228,31 +1232,4 @@ pub extern "system" fn Java_co_rsk_trie_engine_rust_RustUnitrieBridge_nativeBenc
     }
     let elapsed = elapsed_nanos(started);
     (elapsed ^ checksum) as jlong
-}
-
-#[cfg(test)]
-mod tests {
-    use super::encode_storage_keys_packed;
-    use crate::varint::decode_from_slice;
-
-    #[test]
-    fn storage_keys_packed_round_trip() {
-        let values = vec![vec![0x01], vec![0xaa, 0xbb], vec![0x10; 260]];
-        let encoded = encode_storage_keys_packed(&values);
-
-        let mut offset = 0usize;
-        let count = decode_from_slice(&encoded, &mut offset).expect("count varint");
-        assert_eq!(count as usize, values.len());
-
-        let mut decoded = Vec::new();
-        for _ in 0..count {
-            let len = decode_from_slice(&encoded, &mut offset).expect("len varint") as usize;
-            let end = offset + len;
-            decoded.push(encoded[offset..end].to_vec());
-            offset = end;
-        }
-
-        assert_eq!(decoded, values);
-        assert_eq!(offset, encoded.len());
-    }
 }
