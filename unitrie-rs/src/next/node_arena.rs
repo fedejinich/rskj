@@ -12,14 +12,11 @@ pub struct NodeArena {
 
 impl NodeArena {
     pub fn mark_dirty_key(&mut self, key: &[u8]) {
-        let node_id = self
-            .key_to_node
-            .entry(key.to_vec())
-            .or_insert_with(|| {
-                let current = self.next_id;
-                self.next_id = self.next_id.saturating_add(1);
-                NodeId(current)
-            });
+        let node_id = self.key_to_node.entry(key.to_vec()).or_insert_with(|| {
+            let current = self.next_id;
+            self.next_id = self.next_id.saturating_add(1);
+            NodeId(current)
+        });
         self.dirty_nodes.insert(*node_id);
     }
 

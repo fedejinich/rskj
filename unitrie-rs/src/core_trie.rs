@@ -144,6 +144,10 @@ impl Unitrie {
             .collect()
     }
 
+    pub fn keys(&self) -> impl Iterator<Item = &Vec<u8>> {
+        self.entries.keys()
+    }
+
     // Matches MutableTrieImpl storage key extraction:
     // accountStoragePrefixKey = [0x00] + secure(addr)[0..10] + addr + [0x00]
     // storage key payload starts after the secure subkey prefix (10 bytes).
@@ -173,6 +177,10 @@ impl Unitrie {
 
     pub fn current_root_hash(&mut self) -> [u8; HASH_SIZE] {
         self.root_hash()
+    }
+
+    pub fn key_count(&self) -> usize {
+        self.entries.len()
     }
 
     pub fn save_to_store<T: RawStoreAdapter>(&mut self, store: &mut T) {

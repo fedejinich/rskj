@@ -1,15 +1,43 @@
+use crate::core_api::{TrieStoreReader, TrieStoreWriter};
+
 pub trait RawStoreAdapter {
     fn load_raw_node(&mut self, _hash: &[u8]) -> Option<Vec<u8>> {
         None
     }
 
     fn load_raw_value(&mut self, hash: &[u8]) -> Option<Vec<u8>> {
-        self.load_raw_node(hash)
+        RawStoreAdapter::load_raw_node(self, hash)
     }
 
     fn save_raw_node(&mut self, hash: &[u8], serialized_node: &[u8]);
 
     fn save_raw_value(&mut self, hash: &[u8], value: &[u8]);
+}
+
+impl<T> TrieStoreReader for T
+where
+    T: RawStoreAdapter + ?Sized,
+{
+    fn load_raw_node(&mut self, hash: &[u8]) -> Option<Vec<u8>> {
+        RawStoreAdapter::load_raw_node(self, hash)
+    }
+
+    fn load_raw_value(&mut self, hash: &[u8]) -> Option<Vec<u8>> {
+        RawStoreAdapter::load_raw_value(self, hash)
+    }
+}
+
+impl<T> TrieStoreWriter for T
+where
+    T: RawStoreAdapter + ?Sized,
+{
+    fn save_raw_node(&mut self, hash: &[u8], serialized_node: &[u8]) {
+        RawStoreAdapter::save_raw_node(self, hash, serialized_node);
+    }
+
+    fn save_raw_value(&mut self, hash: &[u8], value: &[u8]) {
+        RawStoreAdapter::save_raw_value(self, hash, value);
+    }
 }
 
 #[cfg(test)]

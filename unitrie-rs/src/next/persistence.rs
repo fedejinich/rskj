@@ -8,7 +8,12 @@ pub struct IncrementalPersistence {
 }
 
 impl IncrementalPersistence {
-    pub fn save<T: RawStoreAdapter>(&mut self, trie: &mut Unitrie, store: &mut T, dirty_nodes: usize) {
+    pub fn save<T: RawStoreAdapter>(
+        &mut self,
+        trie: &mut Unitrie,
+        store: &mut T,
+        dirty_nodes: usize,
+    ) {
         let current_root = trie.current_root_hash();
         if dirty_nodes == 0 && self.last_saved_root == Some(current_root) {
             return;

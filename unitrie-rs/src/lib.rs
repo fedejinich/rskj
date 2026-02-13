@@ -1,6 +1,8 @@
 pub mod codec_orchid;
 pub mod codec_rskip107;
+pub mod core_api;
 pub mod core_trie;
+#[cfg(feature = "jni")]
 pub mod ffi;
 pub mod hash;
 pub mod next;

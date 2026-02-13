@@ -49,10 +49,8 @@ impl StorageIterationCache {
         }
 
         self.touch(&account_address);
-        self.entries.insert(
-            account_address.clone(),
-            CacheEntry { generation, keys },
-        );
+        self.entries
+            .insert(account_address.clone(), CacheEntry { generation, keys });
 
         while self.entries.len() > self.capacity {
             let Some(evicted) = self.order.pop_front() else {
