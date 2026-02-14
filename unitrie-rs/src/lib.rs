@@ -1,13 +1,7 @@
-pub mod codec_orchid;
-pub mod codec_rskip107;
-pub mod core_api;
-pub mod core_trie;
+pub use unitrie_rs_core::{
+    codec_orchid, codec_rskip107, core_api, core_trie, hash, next, node_ref, path,
+    storage_keys_packed, store_adapter, varint,
+};
+
 #[cfg(feature = "jni")]
 pub mod ffi;
-pub mod hash;
-pub mod next;
-pub mod node_ref;
-pub mod path;
-pub mod storage_keys_packed;
-pub mod store_adapter;
-pub mod varint;
