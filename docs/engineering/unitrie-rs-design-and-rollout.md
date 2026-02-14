@@ -55,6 +55,7 @@ Design goals:
 1. Expose a stable, JNI-free API for embedding in other Rust clients.
 2. Keep `unitrie-rs` as JNI adapter/orchestration crate for RSKj runtime integration.
 3. Validate behavior against both Rust implementations (`legacy-v1`, `next`) and against Java differential replay.
+4. Invert crate dependency direction so `unitrie-rs` depends on `unitrie-rs-core` (never the opposite), keeping consensus logic owned by the reusable crate.
 
 `unitrie-rs-core` API surface:
 - `UnitrieCore`
@@ -336,7 +337,7 @@ V4.3 separates benchmark evidence in three layers:
 2. JNI micro-overhead (`TrieJniOverheadBenchmark`): JNI boundary-only measurements (`noop` + roundtrip payload sizes).
 3. Core-to-core (no JNI):
    - Java core: `TrieJavaCoreBenchmark` using direct `MutableTrieImpl`.
-   - Rust core: `unitrie-rs/benches/core_trie_bench.rs` using direct `NextUnitrie`.
+   - Rust core: `unitrie-rs-core/benches/core_trie_bench.rs` using direct `NextUnitrie`.
    - Shared workload corpus: `benchmarks/unitrie-corpus/workloads-v1.json`.
    - Merged artifact: `result_trie_core_comparison.json`.
 

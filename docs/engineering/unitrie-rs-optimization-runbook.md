@@ -44,14 +44,16 @@ Workload win definition:
 2. CI policy:
    - PRs must not modify `unitrie-rs-legacy-v1`.
 3. Active code path:
-   - `/Users/void_rsk/.codex/worktrees/35ae/rskj/unitrie-rs`
+   - Core implementation: `/Users/void_rsk/.codex/worktrees/35ae/rskj/unitrie-rs-core`
+   - JNI adapter/runtime glue: `/Users/void_rsk/.codex/worktrees/35ae/rskj/unitrie-rs`
 
 ## 3. Optimization loop
 Use this sequence on every optimization cycle:
-1. Implement small change in `unitrie-rs` (`next` path only when possible).
+1. Implement small change in `unitrie-rs-core` (`next` path only when possible); touch `unitrie-rs` only for JNI adapter needs.
 2. Validate spec map:
    - `scripts/unitrie/check_spec_map.sh`
 3. Run Rust tests:
+   - `cargo test --manifest-path unitrie-rs-core/Cargo.toml`
    - `cargo test --manifest-path unitrie-rs/Cargo.toml`
 4. Run focused Java/unitrie tests:
    - `./gradlew :rskj-core:test --tests "co.rsk.config.UnitrieConfigTest" --tests "co.rsk.trie.engine.rust.*"`
@@ -133,7 +135,7 @@ scripts/unitrie/benchmark_deep_3x.sh --mode full
 
 `--mode full` additionally runs:
 1. Java core-only benchmark (`TrieJavaCoreBenchmark`) over shared corpus.
-2. Rust core-only benchmark (`unitrie-rs/benches/core_trie_bench.rs`) over the same corpus.
+2. Rust core-only benchmark (`unitrie-rs-core/benches/core_trie_bench.rs`) over the same corpus.
 3. Merge step via:
 ```bash
 scripts/unitrie/merge_core_benchmarks.py
