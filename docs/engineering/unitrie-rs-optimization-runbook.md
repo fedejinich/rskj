@@ -60,6 +60,14 @@ Use this sequence on every optimization cycle:
 7. If performance improves and parity remains clean, keep change.
 8. If divergence/regression appears, triage and revert/fix before next cycle.
 
+Reusable-core validation command:
+```bash
+scripts/unitrie/validate_reusable_core.sh
+```
+This command enforces:
+1. `unitrie-rs-core` parity checks (`legacy-v1` vs `next`) in Rust.
+2. Java differential corpus replay against Rust for both implementations.
+
 ## 4. Benchmark commands
 ## Fast local sample
 ```bash

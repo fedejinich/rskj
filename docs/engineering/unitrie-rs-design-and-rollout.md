@@ -47,6 +47,23 @@ This phase closes the MVP scope for deterministic parity validation in a bounded
 ## 5. Rust Crate Architecture (`unitrie-rs`)
 Crate path: `/Users/void_rsk/.codex/worktrees/35ae/rskj/unitrie-rs`
 
+### Reusable core crate (`unitrie-rs-core`)
+To make the trie portable outside RSKj runtime, the project now includes:
+- `/Users/void_rsk/.codex/worktrees/35ae/rskj/unitrie-rs-core`
+
+Design goals:
+1. Expose a stable, JNI-free API for embedding in other Rust clients.
+2. Keep `unitrie-rs` as JNI adapter/orchestration crate for RSKj runtime integration.
+3. Validate behavior against both Rust implementations (`legacy-v1`, `next`) and against Java differential replay.
+
+`unitrie-rs-core` API surface:
+- `UnitrieCore`
+- `UnitrieImplementation` (`legacy-v1`, `next`)
+- `RawStoreAdapter`
+- `save_to_store_with_stats` and `snapshot`
+
+This split is specifically intended to unblock future integration work in non-Java hosts (for example, a future Reth integration spike) without coupling to JNI.
+
 ### Modules
 - `core_trie`: trie core behavior, path-compressed structure materialization, persisted-root loading, and save compatibility.
 - `next/core_trie`: next-generation mutable trie facade with incremental dirty tracking.
@@ -197,6 +214,8 @@ Corpus promotion workflow:
 - Differential parity tests (operation replay).
 - Cross read/write compatibility tests (Java↔Rust).
 - Validation run mismatch-path and artifact generation checks.
+- Rust reusable-core parity tests (`legacy-v1` vs `next`) under `unitrie-rs-core/tests`.
+- Java corpus replay test executing both Rust implementations.
 
 ### Acceptance criteria for promotion
 - No deterministic divergence in agreed differential corpus.

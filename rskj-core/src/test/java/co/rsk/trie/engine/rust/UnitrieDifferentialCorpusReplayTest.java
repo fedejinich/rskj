@@ -26,6 +26,8 @@ import co.rsk.trie.Trie;
 import co.rsk.trie.TrieStore;
 import co.rsk.trie.TrieStoreImpl;
 import co.rsk.trie.engine.TrieEngineType;
+import co.rsk.trie.engine.rust.diagnostics.TrieDifferentialRecorder;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bouncycastle.util.encoders.Hex;
 import org.ethereum.datasource.HashMapDB;
@@ -73,7 +75,13 @@ class UnitrieDifferentialCorpusReplayTest {
 
         for (Path corpusFile : corpusFiles) {
             List<CorpusStep> steps = readCorpus(corpusFile);
-            replayCorpus(corpusFile.getFileName().toString(), steps);
+            for (RustUnitrieImplementation implementation : List.of(
+                    RustUnitrieImplementation.LEGACY_V1,
+                    RustUnitrieImplementation.NEXT
+            )) {
+                String corpusRunName = corpusFile.getFileName().toString() + "[" + implementation.getConfigName() + "]";
+                replayCorpus(corpusRunName, steps, implementation);
+            }
         }
     }
 
@@ -85,7 +93,7 @@ class UnitrieDifferentialCorpusReplayTest {
         );
 
         try {
-            replayCorpus("synthetic-mismatch", steps);
+            replayCorpus("synthetic-mismatch", steps, RustUnitrieImplementation.NEXT);
         } catch (IllegalStateException expected) {
             assertEquals("Corpus synthetic-mismatch contains mismatch marker at step 1", expected.getMessage());
             return;
@@ -94,7 +102,10 @@ class UnitrieDifferentialCorpusReplayTest {
         throw new AssertionError("expected mismatch marker to fail replay deterministically");
     }
 
-    private static void replayCorpus(String corpusName, List<CorpusStep> steps) {
+    private static void replayCorpus(
+            String corpusName,
+            List<CorpusStep> steps,
+            RustUnitrieImplementation implementation) {
         for (int i = 0; i < steps.size(); i++) {
             CorpusStep step = steps.get(i);
             if (step.mismatchMessage != null && !step.mismatchMessage.isBlank()) {
@@ -110,7 +121,9 @@ class UnitrieDifferentialCorpusReplayTest {
                 new Trie(rustStore),
                 TrieEngineType.RUST,
                 true,
-                null
+                null,
+                implementation,
+                TrieDifferentialRecorder.noop()
         );
 
         for (CorpusStep step : steps) {
@@ -219,6 +232,7 @@ class UnitrieDifferentialCorpusReplayTest {
     }
 
     @SuppressWarnings("unused")
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private static final class CorpusStep {
         public String op;
         public String keyHex;
