@@ -209,7 +209,7 @@ run_core_to_core() {
   (
     cd "${REPO_ROOT}"
     UNITRIE_RUST_CORE_BENCH_OUTPUT="${RUST_CORE_OUTPUT}" \
-      cargo bench --manifest-path "${REPO_ROOT}/unitrie-rs/Cargo.toml" --bench core_trie_bench
+      cargo bench --manifest-path "${REPO_ROOT}/unitrie-rs-core/Cargo.toml" --bench core_trie_bench
   )
 
   echo "[unitrie] merging core-to-core comparison"
