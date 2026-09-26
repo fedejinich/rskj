@@ -1,0 +1,29 @@
+NODE-05 flags(root{00:01,0000:02}) => 5a full=5a070004500600020401
+HASH-02 emptyHash => 56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421 toMessage=40 keccak(toMessage)=e724d40619441ced66a271e59627b7bcd39c77447a4315561b4d21e7b7c9321c
+NODE-02 parse c001 => 4001
+NODE-02 parse 8001 => 4001
+NODE-02 parse 00 => 40
+NODE-02 parse 0101 => 4001
+PATH-03 parse 5000ff01 => 50008001
+LSH-05 parse 50ff050001 (escape for 5) => 50040001
+LSH-05 parse 50fffd05000001 (non-minimal varint) => 50040001
+LSH-05 parse 50ffff05000000010000000001 (9-byte varint 2^32+5) => 50040001
+LSH-05 parse 50ff0001 (lshared 0 via escape) => 4001
+VAL-06 parse 40||33x00 => 60f39a869f62e75cf5f0bf914688a6b289caf2049435d8e68c5c5e6d05e44913f3000021
+VAL-06 parse 60||32xaa||000001 valueLength => 1 hasLongValue=false
+VAL-06 parse 60||32xaa||000000 isEmptyTrie => true toMessage=40
+EMB-02 parse parent embedding non-terminal => in=4a224811111111111111111111111111111111111111111111111111111111111111110000 out=486bcce597fcb9f2163de5c2a87a51f23539b97b7ba5ff80543e7efd815f0bc49b00
+SER-03 parse 4201 (left-embedded bit, no presence) => 4001
+SER-03 parse 4a01400001 (embedded empty node) => 4001
+EMB-03 root flags/len-byte => 4f2b rootLen=90 leafLen=43
+SIZE-01 root childrenSize => 86 leaf childrenSize=0
+OPS-09 deleteRecursive(01).get(0102) => aa
+VARINT-03 parse 5a07000450060002fd040001 => 5a070004500600020401
+SIZE-03 parse 5a070004500600020501 childrenSize => 5
+NODE-08 root{01:33xab,0101:02} => 7a0701045006020204034ef2adf2deaa46a3b4d9ca2a21a4ab513d60477f6a454ba9dde60a9b3e4803000021 keccak(33xab)=034ef2adf2deaa46a3b4d9ca2a21a4ab513d60477f6a454ba9dde60a9b3e4803
+HASH-04 hash before/after child load => 04f34ee97cf2a14000f85019454fadba552e3f43ccf5c65324fc256cff19b19b / d8921fa4eb08dd7a6e7c2b65fc78ede7ffcdf35b2d4bd02e3da08d20b3d085de equal=false get(00)=01 keccak(parent)=04f34ee97cf2a14000f85019454fadba552e3f43ccf5c65324fc256cff19b19b
+STORE-02 db[emptyHash] => 40
+STORE-07 MultiTrieStore =>  collect1:retrieve=true collect2:retrieve=true collect3:retrieve=false
+OPS-08 => THROWS IllegalArgumentException: The supplied value doesn't fit in a Uint24
+OPS-05 put(k,[]) vs delete(k) hash equal => true
+KEY account/code/storagePrefix/storage(slot0) lengths => 31/32/32/001468288056310c82aa4c000000000000000000000000000000000000000100290decd9548b62a8d60300
