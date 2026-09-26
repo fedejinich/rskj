@@ -31,7 +31,8 @@
   .badge::before { content: attr(data-icon); font-size: 11px; }
   .chip { display: inline-block; background: var(--surface0); border-radius: 6px; padding: 0 6px; font-size: 12px; color: var(--subtext); }
   .digest { display: grid; gap: 8px; }
-  .digest .item { background: var(--mantle); border-left: 3px solid var(--c); border-radius: 8px; padding: 8px 12px; display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 4px 12px; }
+  .digest .item { background: var(--mantle); border-left: 3px solid var(--c); border-radius: 8px; padding: 8px 12px; display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 4px 12px; }
+  .digest .item code { white-space: nowrap; }
   .digest .item .t { font-weight: 600; } .digest .item .d { color: var(--subtext); grid-column: 2; }
   .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 12px 0; }
   input[type=search], select { background: var(--mantle); color: var(--text); border: 1px solid var(--surface1); border-radius: 8px; padding: 6px 10px; font: inherit; }
@@ -170,7 +171,8 @@ function init() {
   document.getElementById("pins").innerHTML = [
     `rskj <code>${esc(M.rskj_commit.slice(0, 12))}</code>`, `RSKIPs <code>${esc(M.rskips_commit.slice(0, 12))}</code>`,
     `JBMC ${esc(M.jbmc_version || "?")}`, `${esc(M.lean_toolchain || "")}`,
-    M.pr_url ? `<a href="${esc(M.pr_url)}" target="_blank" rel="noopener">draft PR</a>` : ""].filter(Boolean).join("<span>·</span>");
+    M.pr_url ? `<a href="${esc(M.pr_url)}" target="_blank" rel="noopener">draft PR</a>` : "",
+    M.coverage ? `traced to both tools: ${M.coverage["lean+jbmc"]}/${M.rows.filter(r => r.stage === 1).length}` : ""].filter(Boolean).join("<span>·</span>");
   const tiles = document.getElementById("tiles");
   tiles.innerHTML = ORDER.filter(s => M.counts[s] || s !== "open").map(s => `<button class="tile s-${s}" data-s="${s}" aria-pressed="false">
       <div class="n">${M.counts[s] || 0}</div><div class="l">${ICON[s]} ${s}</div></button>`).join("");

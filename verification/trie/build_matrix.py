@@ -123,13 +123,16 @@ def main():
             "java_reading": o["java"]["reading"], "java_note": o["java"]["note"],
             "reproducer_hint": o.get("reproducer_hint", ""), "applicability": o.get("applicability", ""),
             "lean": lean, "jbmc": runs, "status": status, "summary": summary(o, lean),
+            "coverage": ("lean+jbmc" if lean and runs else "lean-only" if lean else "jbmc-only" if runs else "none")
+            if o["stage"] == 1 else "stage-2",
         })
     counts = {s: sum(r["status"] == s for r in rows) for s in ["proved", "bounded", "fails", "finding", "open", "stage-2"]}
+    coverage = {c: sum(r["coverage"] == c for r in rows) for c in ["lean+jbmc", "lean-only", "jbmc-only", "none"]}
     matrix = {
         "rskj_commit": RSKJ_COMMIT, "rskips_commit": spec["rskips_commit"], "branch": BRANCH, "pr_url": PR_URL,
         "jbmc_version": jbmc.get("jbmc_version"), "lean_toolchain": (ROOT / "lean/lean-toolchain").read_text().strip()
         if (ROOT / "lean/lean-toolchain").exists() else None,
-        "differential": diff, "counts": counts, "rows": rows,
+        "differential": diff, "counts": counts, "coverage": coverage, "rows": rows,
     }
     (ROOT / "matrix.json").write_text(json.dumps(matrix, indent=1) + "\n")
 
@@ -137,6 +140,7 @@ def main():
           f"rskj `{RSKJ_COMMIT}` · RSKIPs `{spec['rskips_commit']}` · JBMC {matrix['jbmc_version']} · "
           f"{matrix['lean_toolchain']}", "",
           "Status: " + ", ".join(f"**{k}** {v}" for k, v in counts.items()), "",
+          "Coverage (Stage 1): " + ", ".join(f"{k} {v}" for k, v in coverage.items()), "",
           "Lean = unbounded proof over the model; JBMC = bounded check on the real classes (bounds per harness).", "",
           "| Obligation | Kind | Status | Lean | JBMC (bounds) | RSKIP |", "| --- | --- | --- | --- | --- | --- |"]
     for r in rows:
@@ -153,7 +157,7 @@ def main():
     if tpl.exists():
         data = json.dumps(matrix).replace("</", "<\\/")
         (ROOT / "review/index.html").write_text(tpl.read_text().replace("/*MATRIX_DATA*/null", data))
-    print(json.dumps(counts))
+    print(json.dumps(counts), json.dumps(coverage))
 
 
 def bounds_str(b):
