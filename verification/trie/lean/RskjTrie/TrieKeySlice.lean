@@ -36,6 +36,16 @@ def commonPathLoop (a b : TrieKeySlice) (max : Nat) : Nat → Nat → TrieKeySli
       if a.get i != b.get i then a.slice 0 i else commonPathLoop a b max fuel (i + 1)
     else a.slice 0 max
 
+/-- `TrieKeySlice.slice(int from, int to)` *with* Java's argument checks — TrieKeySlice.java:50-70,
+for a view with `offset = 0` and `limit = length()` (the model's slices are their contents). The
+trie code calls the unchecked `slice` only with bounds that pass these checks. -/
+def sliceJ (s : TrieKeySlice) (fr to : Int) : Except Err TrieKeySlice :=
+  if fr < 0 then .error "IllegalArgumentException: The start position must not be lower than 0"
+  else if fr > to then .error "IllegalArgumentException: The start position must not be greater than the end position"
+  else if fr > s.length then .error "IllegalArgumentException: The start position must not exceed the key length"
+  else if to > s.length then .error "IllegalArgumentException: The end position must not exceed the key length"
+  else .ok (s.slice fr.toNat to.toNat)
+
 /-- `TrieKeySlice.commonPath(TrieKeySlice other)` — TrieKeySlice.java:72-81. -/
 def commonPath (a b : TrieKeySlice) : TrieKeySlice :=
   let max := Nat.min (List.length a) (List.length b)

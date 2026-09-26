@@ -48,4 +48,6 @@ get <key> <value|null>              for every distinct key used by put/delete, i
 end
 ```
 
-Hashes are real Keccak-256 on both sides.
+Input tokens (keys, byte strings, addresses) are echoed verbatim. Computed bytes are lowercase hex,
+`-` for an empty array and `null` for an absent value. The Java runner is the reference: where this
+text and `java/DiffRunner.java` disagree, the runner wins. Hashes are real Keccak-256 on both sides.

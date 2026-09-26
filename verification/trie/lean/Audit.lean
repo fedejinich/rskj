@@ -60,3 +60,29 @@ open RskjTrie
 #print axioms TrieKeyMapper.stripLeadingZeroes_zero
 #print axioms TrieKeyMapper.address_recoverable
 #print axioms TrieKeyMapper.storage_recoverable
+-- 11. Phase B: parsed-shape encoder, flags, injectivity, Orchid, deleteRecursive, put errors, save writes
+#print axioms Trie.encP_ok
+#print axioms Trie.toMessage_encP
+#print axioms Trie.fromMessage_dispatch
+#print axioms Trie.fromMessageRskip107_version_blind
+#print axioms Trie.message_injective
+#print axioms Trie.hash_binds_map
+#print axioms Trie.toMessageOrchid_layout
+#print axioms Trie.getHashOrchid_eq
+#print axioms Trie.fromMessageOrchid_orchidS
+#print axioms Trie.fromMessageOrchid_orchidS_long
+#print axioms orchid_trailing
+#print axioms Trie.deleteRecursive_spec
+#print axioms Trie.put_too_long
+#print axioms Trie.save_writes
+#print axioms Trie.saveWrites_content_addressed
+-- 12. Bridge: operational (cache-faithful) layer vs pure layer
+#print axioms Op.readOK
+#print axioms Op.getRec_Rep
+#print axioms Op.putOK
+#print axioms Op.put_bridge
+#print axioms Op.orunOps_bridge
+#print axioms Op.reads_agree
+#print axioms Op.ops_bridge
+#print axioms Op.retrieve_bridge
+-- The obligation theorems (RskjTrie.Obligations.*) are audited by scripts/gen_map.py.

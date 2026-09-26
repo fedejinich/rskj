@@ -126,21 +126,11 @@ theorem splitRank_split (key cp : TrieKeySlice) (s : Trie) (h : s.sharedPath = k
     splitRank s key = 0 := by
   simp [splitRank, h, commonPath_idem]
 
-mutual
-
-/-- `Trie.put(TrieKeySlice key, byte[] value, boolean isRecursiveDelete)` — Trie.java:770-821:
-normalise the value, `internalPut`, then (for deletes only) coalesce a value-less node with a
-single child into that child. -/
-def putSlice (env : Env) (t : Trie) (key : TrieKeySlice) (value : Option Bytes)
-    (isRecursiveDelete : Bool) : Except Err PutRes := do
-  let value := normValue value
-  let r ← t.internalPut env key value isRecursiveDelete
-  -- it's null or it is not a delete operation
-  let trie ← match r with
-    | .null => return .null
-    | .same => pure t
-    | .new n => pure n
-  if value.isSome then return r
+/-- The delete-coalescing at the end of `put(TrieKeySlice, byte[], boolean)` — Trie.java:787-820,
+applied to the `internalPut` result `r` (which denotes the node `trie`): an empty node becomes
+`null`; a value-less node with exactly one child is replaced by that child with the shared path
+`trie.sharedPath ++ [implicit bit] ++ child.sharedPath`. -/
+def coalesce (env : Env) (trie : Trie) (r : PutRes) : Except Err PutRes := do
   if trie.isEmptyTrie then return .null
   -- only coalesce if node has only one child and no value
   if trie.valueLength > 0 then return r
@@ -156,6 +146,23 @@ def putSlice (env : Env) (t : Trie) (key : TrieKeySlice) (value : Option Bytes)
     let newSharedPath := trie.sharedPath.rebuildSharedPath childImplicitByte child.sharedPath
     pure (.new ⟨newSharedPath, child.value, child.left, child.right, child.valueLength,
       child.valueHash, child.childrenSize⟩)
+
+mutual
+
+/-- `Trie.put(TrieKeySlice key, byte[] value, boolean isRecursiveDelete)` — Trie.java:770-821:
+normalise the value, `internalPut`, then (for deletes only) coalesce a value-less node with a
+single child into that child. -/
+def putSlice (env : Env) (t : Trie) (key : TrieKeySlice) (value : Option Bytes)
+    (isRecursiveDelete : Bool) : Except Err PutRes := do
+  let value := normValue value
+  let r ← t.internalPut env key value isRecursiveDelete
+  -- it's null or it is not a delete operation
+  let trie ← match r with
+    | .null => return .null
+    | .same => pure t
+    | .new n => pure n
+  if value.isSome then return r
+  trie.coalesce env r
 termination_by (key.length, splitRank t key, 1)
 decreasing_by apply Prod.Lex.right; apply Prod.Lex.right; omega
 

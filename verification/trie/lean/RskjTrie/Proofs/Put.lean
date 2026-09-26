@@ -278,6 +278,88 @@ theorem splitNode_props (H : Bytes → Bytes) (t : Trie) (hres : t.Resident) (hc
     · exact ⟨trivial, hCn⟩
 
 mutual
+/-- The delete-coalescing step (`Trie.coalesce`, Trie.java:787-820) on a well-formed
+`internalPut` result `N` (denoted by `r`) yields a canonical node with the same contents. -/
+theorem coalesce_spec (env : Env) (t N : Trie) (r : PutRes) (hr : r.node t = some N)
+    (M : List Bool → Option Bytes) (hres : N.Resident) (hcache : N.CacheOK env.H)
+    (hbelow : N.CanonBelow) (hcanon : N.CanonNE ∨ N.value = none) (hCN : ∀ q, N.contents q = M q) :
+    ∃ r', N.coalesce env r = .ok r' ∧
+      (∀ m, r'.node t = some m → m.Resident ∧ m.CacheOK env.H ∧ m.CanonNE) ∧
+      ∀ q, optContents (r'.node t) q = M q := by
+  unfold Trie.coalesce
+  by_cases he : N.isEmptyTrie = true
+  · simp only [he, ↓reduceIte]
+    refine ⟨.null, rfl, fun m hm => by simp [PutRes.node] at hm, fun q => ?_⟩
+    rw [← hCN q, Trie.contents_isEmpty hres he]; rfl
+  · simp only [he, Bool.false_eq_true, ↓reduceIte]
+    by_cases hvl : N.valueLength > 0
+    · simp only [hvl, ↓reduceIte]
+      have hcan : N.CanonNE := by
+        rcases hcanon with h | h
+        · exact h
+        · exact absurd h (by
+            obtain ⟨p, v, l, r, vl, vh, cs⟩ := N
+            rcases hres.1 with ⟨h1, h2⟩ | ⟨x, h1, _, _, _⟩
+            · simp at h2 hvl; omega
+            · simp_all)
+      exact ⟨_, rfl, fun m hm => by
+        rw [hr] at hm; cases hm; exact ⟨hres, hcache, hcan⟩, fun q => by rw [hr]; exact hCN q⟩
+    · simp only [hvl, ↓reduceIte]
+      have hv0 := Trie.value_none_of_resident hres hvl
+      by_cases hlr : (N.left.isEmpty == N.right.isEmpty) = true
+      · simp only [hlr, ↓reduceIte]
+        have hcan : N.CanonNE := by
+          obtain ⟨p, v, l, r, vl, vh, cs⟩ := N
+          simp only [isEmptyTrie, isEmptyTrieOf, hvl, ↓reduceIte] at he
+          refine ⟨Or.inr ⟨?_, ?_⟩, hbelow.1, hbelow.2⟩ <;>
+            (intro h0; subst h0; simp_all [NodeRef.isEmpty])
+        exact ⟨_, rfl, fun m hm => by
+          rw [hr] at hm; cases hm; exact ⟨hres, hcache, hcan⟩, fun q => by rw [hr]; exact hCN q⟩
+      · simp only [hlr, Bool.false_eq_true, ↓reduceIte]
+        obtain ⟨p, v, l, r, vl, vh, cs⟩ := N
+        simp only at hv0 hvl hlr hres hcache hbelow hCN he ⊢
+        subst hv0
+        obtain ⟨_, hrl, hrr⟩ := hres
+        obtain ⟨_, _, hcl, hcr⟩ := hcache
+        cases hle : l.isEmpty
+        · have hre : r.isEmpty = true := by cases hr0 : r.isEmpty <;> simp_all
+          have hr0 := NodeRef.eq_empty_of_isEmpty hre
+          subst hr0
+          cases l with
+          | empty => simp [NodeRef.isEmpty] at hle
+          | hash => simp [NodeRef.Resident] at hrl
+          | node c =>
+            simp only [Bool.not_false, ↓reduceIte, NodeRef.getNode, except_bind_ok,
+              ]
+            refine ⟨_, rfl, fun m hm => ?_, fun q => ?_⟩
+            · simp only [PutRes.node, Option.some.injEq] at hm; subst hm
+              exact ⟨(Trie.Resident_path c _).mpr hrl.1, (Trie.CacheOK_path _ c _).mpr hcl,
+                (Trie.CanonNE_path c _).mpr hbelow.1⟩
+            · rw [← hCN q]
+              have := Trie.contents_merge p false vl vh cs c c.valueLength c.valueHash
+                c.childrenSize q
+              simp only [Bool.false_eq_true, ↓reduceIte] at this
+              simp only [optContents, PutRes.node, rebuildSharedPath]
+              rw [this]
+        · have hl0 := NodeRef.eq_empty_of_isEmpty hle
+          subst hl0
+          cases r with
+          | empty => simp [NodeRef.isEmpty] at hlr
+          | hash => simp [NodeRef.Resident] at hrr
+          | node c =>
+            simp only [Bool.not_true, Bool.false_eq_true, ↓reduceIte,
+              NodeRef.getNode, except_bind_ok]
+            refine ⟨_, rfl, fun m hm => ?_, fun q => ?_⟩
+            · simp only [PutRes.node, Option.some.injEq] at hm; subst hm
+              exact ⟨(Trie.Resident_path c _).mpr hrr.1, (Trie.CacheOK_path _ c _).mpr hcr,
+                (Trie.CanonNE_path c _).mpr hbelow.2⟩
+            · rw [← hCN q]
+              have := Trie.contents_merge p true vl vh cs c c.valueLength c.valueHash
+                c.childrenSize q
+              simp only [↓reduceIte] at this
+              simp only [optContents, PutRes.node, rebuildSharedPath]
+              rw [this]
+
 theorem putSlice_spec (env : Env) (t : Trie) (k : List Bool) (value : Option Bytes)
     (hpre : Pre env.H t k (normValue value)) (hv : VOK (normValue value)) :
     ∃ r, t.putSlice env k value false = .ok r ∧ PostPut env.H t k (normValue value) r := by
@@ -285,172 +367,26 @@ theorem putSlice_spec (env : Env) (t : Trie) (k : List Bool) (value : Option Byt
   rw [putSlice]
   simp only [hr, except_bind_ok]
   obtain ⟨hN, hC⟩ := hpost
-  rcases r with _ | _ | n
-  · -- `this`
-    have hNN := hN t rfl
-    have hCN : ∀ q, t.contents q = upd t.contents k (normValue value) q := fun q => hC q
-    obtain ⟨hres, hcache, hbelow, hsome, hcanon⟩ := hNN
+  have gen : ∀ N, r.node t = some N → ∃ r', (do
+      let trie ← (pure N : Except Err Trie)
+      if (normValue value).isSome = true then pure r else trie.coalesce env r : Except Err PutRes) = .ok r' ∧
+      PostPut env.H t k (normValue value) r' := by
+    intro N hrN
+    obtain ⟨hres, hcache, hbelow, hsome, hcanon⟩ := hN N hrN
     simp only [except_pure, except_bind_ok]
     by_cases hvs : (normValue value).isSome = true
     · simp only [hvs, ↓reduceIte]
-      exact ⟨_, rfl, fun m hm => by
-        simp [PutRes.node] at hm; subst hm; exact ⟨hres, hcache, hsome hvs⟩, hC⟩
+      exact ⟨_, rfl, fun m hm => by rw [hrN] at hm; cases hm; exact ⟨hres, hcache, hsome hvs⟩, hC⟩
     · simp only [hvs, Bool.false_eq_true, ↓reduceIte]
-      by_cases he : t.isEmptyTrie = true
-      · simp only [he, ↓reduceIte]
-        refine ⟨.null, rfl, fun m hm => by simp [PutRes.node] at hm, fun q => ?_⟩
-        rw [← hCN q, Trie.contents_isEmpty hres he]; rfl
-      · simp only [he, Bool.false_eq_true, ↓reduceIte]
-        by_cases hvl : t.valueLength > 0
-        · simp only [hvl, ↓reduceIte]
-          have hcan : t.CanonNE := by
-            rcases hcanon with h | h
-            · exact h
-            · exact absurd h (by
-                obtain ⟨p, v, l, r, vl, vh, cs⟩ := t
-                rcases hres.1 with ⟨h1, h2⟩ | ⟨x, h1, _, _, _⟩
-                · simp at h2 hvl; omega
-                · simp_all)
-          exact ⟨_, rfl, fun m hm => by
-            simp [PutRes.node] at hm; subst hm; exact ⟨hres, hcache, hcan⟩, hC⟩
-        · simp only [hvl, ↓reduceIte]
-          have hv0 := Trie.value_none_of_resident hres hvl
-          by_cases hlr : (t.left.isEmpty == t.right.isEmpty) = true
-          · simp only [hlr, ↓reduceIte]
-            have hcan : t.CanonNE := by
-              obtain ⟨p, v, l, r, vl, vh, cs⟩ := t
-              simp only [isEmptyTrie, isEmptyTrieOf, hvl, ↓reduceIte] at he
-              refine ⟨Or.inr ⟨?_, ?_⟩, hbelow.1, hbelow.2⟩ <;>
-                (intro h0; subst h0; simp_all [NodeRef.isEmpty])
-            exact ⟨_, rfl, fun m hm => by
-              simp [PutRes.node] at hm; subst hm; exact ⟨hres, hcache, hcan⟩, hC⟩
-          · simp only [hlr, Bool.false_eq_true, ↓reduceIte]
-            obtain ⟨p, v, l, r, vl, vh, cs⟩ := t
-            simp only at hv0 hvl hlr hres hcache hbelow hCN he ⊢
-            subst hv0
-            obtain ⟨_, hrl, hrr⟩ := hres
-            obtain ⟨_, _, hcl, hcr⟩ := hcache
-            cases hle : l.isEmpty
-            · have hre : r.isEmpty = true := by cases hr0 : r.isEmpty <;> simp_all
-              have hr0 := NodeRef.eq_empty_of_isEmpty hre
-              subst hr0
-              cases l with
-              | empty => simp [NodeRef.isEmpty] at hle
-              | hash => simp [NodeRef.Resident] at hrl
-              | node c =>
-                simp only [Bool.not_false, ↓reduceIte, NodeRef.getNode, except_bind_ok,
-                  ]
-                refine ⟨_, rfl, fun m hm => ?_, fun q => ?_⟩
-                · simp only [PutRes.node, Option.some.injEq] at hm; subst hm
-                  exact ⟨(Trie.Resident_path c _).mpr hrl.1, (Trie.CacheOK_path _ c _).mpr hcl,
-                    (Trie.CanonNE_path c _).mpr hbelow.1⟩
-                · rw [← hCN q]
-                  have := Trie.contents_merge p false vl vh cs c c.valueLength c.valueHash
-                    c.childrenSize q
-                  simp only [Bool.false_eq_true, ↓reduceIte] at this
-                  simp only [optContents, PutRes.node, rebuildSharedPath]
-                  rw [this]
-            · have hl0 := NodeRef.eq_empty_of_isEmpty hle
-              subst hl0
-              cases r with
-              | empty => simp [NodeRef.isEmpty] at hlr
-              | hash => simp [NodeRef.Resident] at hrr
-              | node c =>
-                simp only [Bool.not_true, Bool.false_eq_true, ↓reduceIte,
-                  NodeRef.getNode, except_bind_ok]
-                refine ⟨_, rfl, fun m hm => ?_, fun q => ?_⟩
-                · simp only [PutRes.node, Option.some.injEq] at hm; subst hm
-                  exact ⟨(Trie.Resident_path c _).mpr hrr.1, (Trie.CacheOK_path _ c _).mpr hcr,
-                    (Trie.CanonNE_path c _).mpr hbelow.2⟩
-                · rw [← hCN q]
-                  have := Trie.contents_merge p true vl vh cs c c.valueLength c.valueHash
-                    c.childrenSize q
-                  simp only [↓reduceIte] at this
-                  simp only [optContents, PutRes.node, rebuildSharedPath]
-                  rw [this]
+      have hCN : ∀ q, N.contents q = upd t.contents k (normValue value) q := by
+        intro q; have := hC q; rw [hrN] at this; exact this
+      obtain ⟨r', h1, h2, h3⟩ := coalesce_spec env t N r hrN _ hres hcache hbelow hcanon hCN
+      exact ⟨r', h1, h2, h3⟩
+  rcases r with _ | _ | n
+  · exact gen t rfl
   · refine ⟨.null, rfl, fun m hm => by simp [PutRes.node] at hm, fun q => ?_⟩
     exact hC q
-  · have hNN := hN n rfl
-    have hCN : ∀ q, n.contents q = upd t.contents k (normValue value) q := fun q => hC q
-    obtain ⟨hres, hcache, hbelow, hsome, hcanon⟩ := hNN
-    simp only [except_pure, except_bind_ok]
-    by_cases hvs : (normValue value).isSome = true
-    · simp only [hvs, ↓reduceIte]
-      exact ⟨_, rfl, fun m hm => by
-        simp [PutRes.node] at hm; subst hm; exact ⟨hres, hcache, hsome hvs⟩, hC⟩
-    · simp only [hvs, Bool.false_eq_true, ↓reduceIte]
-      by_cases he : n.isEmptyTrie = true
-      · simp only [he, ↓reduceIte]
-        refine ⟨.null, rfl, fun m hm => by simp [PutRes.node] at hm, fun q => ?_⟩
-        rw [← hCN q, Trie.contents_isEmpty hres he]; rfl
-      · simp only [he, Bool.false_eq_true, ↓reduceIte]
-        by_cases hvl : n.valueLength > 0
-        · simp only [hvl, ↓reduceIte]
-          have hcan : n.CanonNE := by
-            rcases hcanon with h | h
-            · exact h
-            · exact absurd h (by
-                obtain ⟨p, v, l, r, vl, vh, cs⟩ := n
-                rcases hres.1 with ⟨h1, h2⟩ | ⟨x, h1, _, _, _⟩
-                · simp at h2 hvl; omega
-                · simp_all)
-          exact ⟨_, rfl, fun m hm => by
-            simp [PutRes.node] at hm; subst hm; exact ⟨hres, hcache, hcan⟩, hC⟩
-        · simp only [hvl, ↓reduceIte]
-          have hv0 := Trie.value_none_of_resident hres hvl
-          by_cases hlr : (n.left.isEmpty == n.right.isEmpty) = true
-          · simp only [hlr, ↓reduceIte]
-            have hcan : n.CanonNE := by
-              obtain ⟨p, v, l, r, vl, vh, cs⟩ := n
-              simp only [isEmptyTrie, isEmptyTrieOf, hvl, ↓reduceIte] at he
-              refine ⟨Or.inr ⟨?_, ?_⟩, hbelow.1, hbelow.2⟩ <;>
-                (intro h0; subst h0; simp_all [NodeRef.isEmpty])
-            exact ⟨_, rfl, fun m hm => by
-              simp [PutRes.node] at hm; subst hm; exact ⟨hres, hcache, hcan⟩, hC⟩
-          · simp only [hlr, Bool.false_eq_true, ↓reduceIte]
-            obtain ⟨p, v, l, r, vl, vh, cs⟩ := n
-            simp only at hv0 hvl hlr hres hcache hbelow hCN he ⊢
-            subst hv0
-            obtain ⟨_, hrl, hrr⟩ := hres
-            obtain ⟨_, _, hcl, hcr⟩ := hcache
-            cases hle : l.isEmpty
-            · have hre : r.isEmpty = true := by cases hr0 : r.isEmpty <;> simp_all
-              have hr0 := NodeRef.eq_empty_of_isEmpty hre
-              subst hr0
-              cases l with
-              | empty => simp [NodeRef.isEmpty] at hle
-              | hash => simp [NodeRef.Resident] at hrl
-              | node c =>
-                simp only [Bool.not_false, ↓reduceIte, NodeRef.getNode, except_bind_ok,
-                  ]
-                refine ⟨_, rfl, fun m hm => ?_, fun q => ?_⟩
-                · simp only [PutRes.node, Option.some.injEq] at hm; subst hm
-                  exact ⟨(Trie.Resident_path c _).mpr hrl.1, (Trie.CacheOK_path _ c _).mpr hcl,
-                    (Trie.CanonNE_path c _).mpr hbelow.1⟩
-                · rw [← hCN q]
-                  have := Trie.contents_merge p false vl vh cs c c.valueLength c.valueHash
-                    c.childrenSize q
-                  simp only [Bool.false_eq_true, ↓reduceIte] at this
-                  simp only [optContents, PutRes.node, rebuildSharedPath]
-                  rw [this]
-            · have hl0 := NodeRef.eq_empty_of_isEmpty hle
-              subst hl0
-              cases r with
-              | empty => simp [NodeRef.isEmpty] at hlr
-              | hash => simp [NodeRef.Resident] at hrr
-              | node c =>
-                simp only [Bool.not_true, Bool.false_eq_true, ↓reduceIte,
-                  NodeRef.getNode, except_bind_ok]
-                refine ⟨_, rfl, fun m hm => ?_, fun q => ?_⟩
-                · simp only [PutRes.node, Option.some.injEq] at hm; subst hm
-                  exact ⟨(Trie.Resident_path c _).mpr hrr.1, (Trie.CacheOK_path _ c _).mpr hcr,
-                    (Trie.CanonNE_path c _).mpr hbelow.2⟩
-                · rw [← hCN q]
-                  have := Trie.contents_merge p true vl vh cs c c.valueLength c.valueHash
-                    c.childrenSize q
-                  simp only [↓reduceIte] at this
-                  simp only [optContents, PutRes.node, rebuildSharedPath]
-                  rw [this]
+  · exact gen n rfl
 termination_by (k.length, splitRank t k, 1)
 decreasing_by apply Prod.Lex.right; apply Prod.Lex.right; omega
 

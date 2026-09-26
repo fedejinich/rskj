@@ -42,10 +42,10 @@ theorem Trie.reEnc (env : Env) : ∀ t : Trie, t.Resident → t.ReEnc env
       rw [Trie.internalToMessage, hcsz]
       simp only [Trie.reparse, il1, il2, ir1, ir2, except_bind_ok, NodeRef.isEmpty_reparse]
       rcases hv with ⟨rfl, rfl⟩ | ⟨x, rfl, hx, hpos, _⟩
-      · simp [hasLongValue, Trie.encS, isTerminal, NodeRef.isEmpty_reparse]
+      · simp [valueBytes, hasLongValue, Trie.encS, isTerminal, NodeRef.isEmpty_reparse]
       · by_cases hlong : vl > 32
-        · simp [hasLongValue, hlong, getValueHash, hpos, Trie.encS, isTerminal, NodeRef.isEmpty_reparse]
-        · simp [hasLongValue, hlong, hpos, getValue, Trie.encS, isTerminal, NodeRef.isEmpty_reparse]
+        · simp [valueBytes, hasLongValue, hlong, getValueHash, hpos, Trie.encS, isTerminal, NodeRef.isEmpty_reparse]
+        · simp [valueBytes, hasLongValue, hlong, hpos, getValue, Trie.encS, isTerminal, NodeRef.isEmpty_reparse]
     refine ⟨hcsz, hmsg, ?_⟩
     rw [Trie.isEmbeddable, Trie.isTerminal_reparse]
     split

@@ -22,3 +22,17 @@ import RskjTrie.Proofs.Canonical
 import RskjTrie.Proofs.Hash
 import RskjTrie.Proofs.Store
 import RskjTrie.Proofs.KeyMapper
+import RskjTrie.Operational
+import RskjTrie.MultiTrieStore
+import RskjTrie.MutableRepository
+import RskjTrie.TrieDTO
+import RskjTrie.Proofs.EncP
+import RskjTrie.Proofs.Flags
+import RskjTrie.Proofs.Injective
+import RskjTrie.Proofs.Orchid
+import RskjTrie.Proofs.DeleteRecursive
+import RskjTrie.Proofs.PutErrors
+import RskjTrie.Proofs.StoreWrites
+import RskjTrie.Proofs.Bridge
+import RskjTrie.Proofs.BridgePut
+import RskjTrie.Obligations

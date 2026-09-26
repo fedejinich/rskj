@@ -129,15 +129,15 @@ theorem Trie.encOK (env : Env) : ∀ (t : Trie), t.Resident → t.CacheOK env.H 
       simp only [hcsz]
       simp only [il3, ir3, il1, ir1, except_bind_ok]
       rcases hv with ⟨rfl, rfl⟩ | ⟨x, rfl, hx, hpos, hmax⟩
-      · simp [hasLongValue, Trie.encS, isTerminal]
+      · simp [valueBytes, hasLongValue, Trie.encS, isTerminal]
       · by_cases hlong : vl > 32
         · have hgvh : getValueHash env ⟨p, some x, l, r, vl, vh, cs⟩ = .ok (some (env.H x)) := by
             unfold getValueHash
             rcases hvh x rfl with h | h
             · simp [h, getValue, hpos]
             · simp [h]
-          simp [hasLongValue, hlong, hgvh, Trie.encS, isTerminal]
-        · simp [hasLongValue, hlong, hpos, getValue, Trie.encS, isTerminal]
+          simp [valueBytes, hasLongValue, hlong, hgvh, Trie.encS, isTerminal]
+        · simp [valueBytes, hasLongValue, hlong, hpos, getValue, Trie.encS, isTerminal]
     refine ⟨hcsz, hmsg, ?_, ?_, ?_⟩
     · rw [Trie.isEmbeddable]
       split

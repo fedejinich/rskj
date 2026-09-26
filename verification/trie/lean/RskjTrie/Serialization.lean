@@ -85,6 +85,45 @@ def readHash (bytes : Bytes) (position : Nat) : Except Err Bytes :=
   if bytes.length - position < 32 then .error "IllegalArgumentException: message too short for hash"
   else .ok ((bytes.drop position).take 32)
 
+/-- Shared path of `fromMessageOrchid` (Trie.java:195-205): `(sharedPath, current)`. -/
+def orchidPath (message : Bytes) (lshared : Nat) : Except Err (TrieKeySlice × Nat) := do
+  let current := 6
+  let lencoded := PathEncoder.calculateEncodedLength lshared
+  if lencoded > 0 then do
+    if message.length - current < lencoded then
+      throw "IllegalArgumentException: Left message is too short for encoded shared path"
+    let sp ← TrieKeySlice.fromEncoded message current lshared lencoded
+    pure (sp, current + lencoded)
+  else pure (TrieKeySlice.empty, current)
+
+/-- One child hash of `fromMessageOrchid` (Trie.java:211-223): `(ref, current, nhashes)`. -/
+def orchidChild (message : Bytes) (present : Bool) (current nhashes : Nat) :
+    Except Err (NodeRef Trie × Nat × Nat) := do
+  if present then do
+    let nodeHash ← readHash message current
+    pure (NodeRef.hash nodeHash, current + 32, nhashes + 1)
+  else pure (NodeRef.empty, current, nhashes)
+
+/-- Value of `fromMessageOrchid` (Trie.java:225-254). -/
+def orchidValue (env : Env) (message : Bytes) (hasLongVal : Bool) (sharedPath : TrieKeySlice)
+    (left right : NodeRef Trie) (current offset : Nat) : Except Err Trie := do
+  if hasLongVal then do
+    let valueHash ← readHash message current
+    let value ← match env.db valueHash with
+      | some v => pure v
+      | none => throw "NullPointerException: long value not in store"
+    let lvalue ← Uint24.mk value.length
+    pure (⟨sharedPath, some value, left, right, lvalue, some valueHash, none⟩ : Trie)
+  else do
+    let remaining := message.length - offset
+    if remaining > 0 then do
+      if message.length - current < remaining then
+        throw "IllegalArgumentException: Left message is too short for value"
+      let value := (message.drop current).take remaining
+      let lvalue ← Uint24.mk remaining
+      pure ⟨sharedPath, some value, left, right, lvalue, none, none⟩
+    else pure ⟨sharedPath, none, left, right, 0, none, none⟩
+
 /-- `Trie.fromMessageOrchid(byte[], TrieStore)` — Trie.java:177-257 (pre-RSKIP107 format).
 A long value is read from the store at parse time (`store.retrieveValue`); a missing value makes
 Java throw `NullPointerException` at `value.length`. -/
@@ -95,39 +134,12 @@ def fromMessageOrchid (env : Env) (message : Bytes) : Except Err Trie := do
   let hasLongVal := (flags &&& 0x02) == 2
   let bhashes ← Uint16.decodeToInt message 2
   let lshared ← Uint16.decodeToInt message 4
-  let current := 6
   let lencoded := PathEncoder.calculateEncodedLength lshared
-  let (sharedPath, current) ← if lencoded > 0 then do
-      if message.length - current < lencoded then
-        throw "IllegalArgumentException: Left message is too short for encoded shared path"
-      let sp ← TrieKeySlice.fromEncoded message current lshared lencoded
-      pure (sp, current + lencoded)
-    else pure (TrieKeySlice.empty, current)
-  let (left, current, nhashes) ← if bhashes &&& 0b01 ≠ 0 then do
-      let nodeHash ← readHash message current
-      pure (NodeRef.hash nodeHash, current + 32, 1)
-    else pure (NodeRef.empty, current, 0)
-  let (right, current, nhashes) ← if bhashes &&& 0b10 ≠ 0 then do
-      let nodeHash ← readHash message current
-      pure (NodeRef.hash nodeHash, current + 32, nhashes + 1)
-    else pure (NodeRef.empty, current, nhashes)
+  let (sharedPath, current) ← orchidPath message lshared
+  let (left, current, nhashes) ← orchidChild message (bhashes &&& 0b01 ≠ 0) current 0
+  let (right, current, nhashes) ← orchidChild message (bhashes &&& 0b10 ≠ 0) current nhashes
   let offset := MESSAGE_HEADER_LENGTH + lencoded + nhashes * 32
-  let t ← if hasLongVal then do
-      let valueHash ← readHash message current
-      let value ← match env.db valueHash with
-        | some v => pure v
-        | none => throw "NullPointerException: long value not in store"
-      let lvalue ← Uint24.mk value.length
-      pure (⟨sharedPath, some value, left, right, lvalue, some valueHash, none⟩ : Trie)
-    else do
-      let remaining := message.length - offset
-      if remaining > 0 then do
-        if message.length - current < remaining then
-          throw "IllegalArgumentException: Left message is too short for value"
-        let value := (message.drop current).take remaining
-        let lvalue ← Uint24.mk remaining
-        pure ⟨sharedPath, some value, left, right, lvalue, none, none⟩
-      else pure ⟨sharedPath, none, left, right, 0, none, none⟩
+  let t ← orchidValue env message hasLongVal sharedPath left right current offset
   t.checkValueLength
   pure t
 
@@ -208,6 +220,19 @@ def mkFlags (hasLongVal sharedPresent leftPresent rightPresent leftEmb rightEmb 
   let f := if rightEmb then f ||| 0b00000001 else f
   f
 
+/-- The value part of `internalToMessage` — Trie.java:731-736: `valueHash ++ Uint24(valueLength)`
+for a long value, the value bytes for a short one, nothing for none. -/
+def valueBytes (env : Env) (t : Trie) : Except Err Bytes :=
+  if t.hasLongValue then do
+    match ← t.getValueHash env with
+    | some vh => pure (vh ++ Uint24.encode t.valueLength)
+    | none => throw "NullPointerException"
+  else if t.valueLength > 0 then do
+    match ← t.getValue env with
+    | some v => pure v
+    | none => throw "NullPointerException"
+  else pure []
+
 theorem sizeOf_left_lt (t : Trie) : sizeOf t.left < sizeOf t := by cases t; simp; omega
 theorem sizeOf_right_lt (t : Trie) : sizeOf t.right < sizeOf t := by cases t; simp; omega
 
@@ -219,7 +244,6 @@ mutual
 it, Trie.java:506-512). Java sizes a `ByteBuffer` with `serializedLength()`s and then `put`s the
 same pieces; the model concatenates the pieces. -/
 def Trie.internalToMessage (env : Env) (fuel : Nat) (t : Trie) : Except Err Bytes := do
-  let lvalue := t.valueLength
   let hasLongVal := t.hasLongValue
   let childrenSize ← t.getChildrenSize env fuel
   let leftEmb ← t.left.isEmbeddable env fuel
@@ -229,15 +253,7 @@ def Trie.internalToMessage (env : Env) (fuel : Nat) (t : Trie) : Except Err Byte
   let leftBytes ← t.left.serializeInto env fuel
   let rightBytes ← t.right.serializeInto env fuel
   let csBytes := if !t.isTerminal then VarInt.encode childrenSize else []
-  let valueBytes ← if hasLongVal then do
-      match ← t.getValueHash env with
-      | some vh => pure (vh ++ Uint24.encode lvalue)
-      | none => throw "NullPointerException"
-    else if lvalue > 0 then do
-      match ← t.getValue env with
-      | some v => pure v
-      | none => throw "NullPointerException"
-    else pure []
+  let valueBytes ← t.valueBytes env
   pure (flags :: SharedPathSerializer.serializeInto t.sharedPath ++ leftBytes ++ rightBytes ++
     csBytes ++ valueBytes)
 termination_by (fuel, sizeOf t, 5)

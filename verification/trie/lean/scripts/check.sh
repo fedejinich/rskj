@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Builds the Lean model and proofs from scratch with warnings as errors, checks that no delivered
-# theorem depends on `sorryAx`, that the sources contain no `sorry`/`admit`/`axiom`, runs the
-# Keccak test vectors and the smoke differential cases.
+# theorem depends on `sorryAx`, that the sources contain no `sorry`/`admit`/`axiom`, regenerates
+# obligations-map.json (fails if an obligation lacks a theorem or a theorem uses `sorryAx`), runs
+# the Keccak test vectors and the smoke differential cases.
 #   verification/trie/lean/scripts/check.sh
 set -euo pipefail
 LEAN_DIR="$(cd "$(dirname "$0")/.." && pwd)"
@@ -28,6 +29,12 @@ if grep -q 'sorryAx' <<<"$audit"; then echo "FAIL: a theorem depends on sorryAx"
 if grep -qiE '^.*error' <<<"$audit"; then echo "FAIL: Audit.lean did not compile"; exit 1; fi
 bad="$(grep -oE '\[[^]]*\]' <<<"$audit" | tr -d '[] ' | tr ',' '\n' | sort -u | grep -vxE 'propext|Quot.sound|Classical.choice' || true)"
 if [ -n "$bad" ]; then echo "FAIL: unexpected axioms: $bad"; exit 1; fi
+
+echo "== obligation theorems: map + #print axioms (scripts/gen_map.py)"
+python3 scripts/gen_map.py | grep -vE "depends on axioms|does not depend on any axioms"
+if grep -q sorryAx obligations-map.json; then echo "FAIL: obligations-map.json mentions sorryAx"; exit 1; fi
+bad="$(python3 -c 'import json;print(" ".join(sorted({a for e in json.load(open("obligations-map.json")) for t in e["theorems"] for a in t["axioms"]} - {"propext","Quot.sound","Classical.choice"})))')"
+if [ -n "$bad" ]; then echo "FAIL: unexpected axioms in obligation theorems: $bad"; exit 1; fi
 
 echo "== Keccak-256 test vectors"
 lake env lean test/KeccakTest.lean
