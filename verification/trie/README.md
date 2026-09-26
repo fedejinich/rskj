@@ -5,7 +5,7 @@ Formal verification of the **Java** Unitrie implementation in `rskj-core/src/mai
 
 - **Pinned code:** rskj `ecef55ddf2b79fe5cd84c824118117dd825744b2` (fedejinich/rskj master, 2026-09-26).
   Production code is not modified by this work.
-- **Specification:** the RSKIPs (rsksmart/RSKIPs, read-only clone at commit `c578f4e`). RSKIPs are the spec;
+- **Specification:** the RSKIPs (fedejinich/RSKIPs, the fork of rsksmart/RSKIPs, at commit `c578f4e932854830bb81f3de209eeeda6f7724b1`). RSKIPs are the spec;
   where Java disagrees with an RSKIP that is recorded as a finding, not "fixed".
 - **JBMC** checks the real, compiled rskj classes with bounded model checking.
 - **Lean 4** gives unbounded proofs over a model that mirrors the Java classes one-to-one.

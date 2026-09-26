@@ -63,6 +63,7 @@ public final class DiffRunner {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
         PrintStream out = new PrintStream(new BufferedOutputStream(System.out), false, StandardCharsets.UTF_8);
         TrieKeyMapper mapper = new TrieKeyMapper();
+        HashMapDB db = null;
         TrieStoreImpl store = null;
         Trie trie = null;
         List<String> keys = new ArrayList<>();
@@ -76,7 +77,8 @@ public final class DiffRunner {
             String[] f = line.split(" +");
             switch (f[0]) {
                 case "case" -> {
-                    store = new TrieStoreImpl(new HashMapDB());
+                    db = new HashMapDB();
+                    store = new TrieStoreImpl(db);
                     trie = new Trie(store);
                     keys = new ArrayList<>();
                     step = 0;
@@ -91,6 +93,10 @@ public final class DiffRunner {
                 }
                 case "save" -> store.save(trie);
                 case "reload" -> trie = store.retrieve(trie.getHash().getBytes()).orElseThrow();
+                case "raw" -> db.put(bytes(f[1]), bytes(f[2]));
+                case "load" -> trie = store.retrieve(bytes(f[1])).orElseThrow();
+                case "hash" -> out.println("hash " + hex(trie.getHash().getBytes()));
+                case "getk" -> out.println("getk " + f[1] + " " + hex(trie.get(bytes(f[1]))));
                 case "decode" -> out.println("decode " + f[1] + " " + decode(bytes(f[1]), store));
                 case "keymap-account" -> out.println("keymap account " + f[1] + " "
                         + hex(mapper.getAccountKey(new RskAddress(bytes(f[1])))));

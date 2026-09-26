@@ -14,6 +14,10 @@ put <key> <value>           trie = trie.put(key, value)        (value "-" = empt
 delete <key>                trie = trie.delete(key)
 save                        store.save(trie)
 reload                      trie = store.retrieve(trie.getHash().getBytes()).get()   (only after save, non-empty trie)
+raw <key> <value>           write raw bytes into the store's backing HashMapDB (crafted store content)
+load <hash>                 trie = store.retrieve(hash).get()
+hash                        print the current trie.getHash()
+getk <key>                  print trie.get(key) now (forces lazy loading mid-case)
 decode <bytes>              Trie.fromMessage(bytes, store), re-encoded with toMessage()
 keymap-account <addr20>     TrieKeyMapper.getAccountKey(new RskAddress(addr))
 keymap-code <addr20>        TrieKeyMapper.getCodeKey(...)
@@ -36,6 +40,8 @@ decode <bytes> orchid <path> <left> <right> <value>
                                     0/1 string ("-" if empty), child hashes or "-", value or "null"
                                     (no re-encoding: that would fetch children from the store)
 keymap <op> <args...> <key>         per keymap op
+hash <root>                         per hash op
+getk <key> <value|null>             per getk op
 root <root>                         final trie.getHash()
 msg <message>                       final trie.toMessage()
 get <key> <value|null>              for every distinct key used by put/delete, in first-use order
