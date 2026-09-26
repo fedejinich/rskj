@@ -28,7 +28,7 @@ for f in "$@"; do
   else
     entries+=("{\"name\": \"$name\", \"cases\": $n, \"lines\": $lines, \"pass\": false}")
     echo "FAIL $name: first difference:"
-    diff "$OUT/$name.java.out" "$OUT/$name.lean.out" | head -20
+    diff "$OUT/$name.java.out" "$OUT/$name.lean.out" | head -20 || true
     fail=1
   fi
 done
