@@ -37,6 +37,11 @@ MIN_FREE_PCT = int(os.environ.get("HEAVY_MIN_FREE_PCT", "0"))
 # every evaluation is appended to HEAVY_ADMIT_LOG (default <lock dir>/../admission.log) with its value
 ADMIT_PCT = int(os.environ.get("HEAVY_MIN_FREE_PCT_ADMIT", "0"))
 ADMIT_LOG = os.environ.get("HEAVY_ADMIT_LOG", os.path.join(os.path.dirname(LOCK_DIR), "admission.log"))
+# optional: while that free percentage is below this, the most recently started job of this process is
+# killed (status LOW_MEMORY, not a verdict), one at a time (0 = off, the default)
+KILL_NEWEST_PCT = int(os.environ.get("HEAVY_KILL_NEWEST_PCT", "0"))
+_RUNNING = {}  # job id -> start time, jobs of this process
+_RUNNING_LOCK = threading.Lock()
 
 
 def _alive(pid):
@@ -97,6 +102,16 @@ def _free_pct_ok():
 
 
 def _free_level():
+    """System-wide free memory percentage (kern.memorystatus_level, what memory_pressure prints),
+    read with sysctlbyname so no process is started; -1 if unavailable."""
+    try:
+        import ctypes
+        v = ctypes.c_uint32(0)
+        n = ctypes.c_size_t(4)
+        if ctypes.CDLL(None).sysctlbyname(b"kern.memorystatus_level", ctypes.byref(v), ctypes.byref(n), None, 0) == 0:
+            return int(v.value)
+    except (OSError, AttributeError):
+        pass
     try:
         return int(subprocess.run(["sysctl", "-n", "kern.memorystatus_level"],
                                   capture_output=True, text=True).stdout.strip())
@@ -177,7 +192,8 @@ def _rss_kb(pid):
 
 def run(cmd, tool="jbmc", timeout=None):
     """Runs cmd under the limits. Returns (status, exit_code, output, peak_rss_kb, seconds) with status
-    one of "OK" (finished, any exit code), "TIMEOUT", "EXCEEDED_MEMORY". The deadline kill is a timer
+    one of "OK" (finished, any exit code), "TIMEOUT", "EXCEEDED_MEMORY", "LOW_MEMORY" (see
+    HEAVY_KILL_NEWEST_PCT). The deadline kill is a timer
     independent of the memory poll, and it kills the whole process group. For a killed run, seconds is
     the time the kill was sent; how long the process took to exit afterwards is appended to the output."""
     timeout = timeout or TIMEOUT
@@ -200,6 +216,8 @@ def run(cmd, tool="jbmc", timeout=None):
             timer = threading.Timer(timeout, kill, ("TIMEOUT",))
             timer.daemon = True
             timer.start()
+            with _RUNNING_LOCK:
+                _RUNNING[p.pid] = t0
             peak = 0
             while p.poll() is None:
                 rss = _rss_kb(p.pid)
@@ -207,12 +225,22 @@ def run(cmd, tool="jbmc", timeout=None):
                 if rss > RSS_LIMIT_KB:
                     kill("EXCEEDED_MEMORY")
                     break
+                if KILL_NEWEST_PCT and 0 <= _free_level() < KILL_NEWEST_PCT:
+                    with _RUNNING_LOCK:
+                        newest = max(_RUNNING, key=_RUNNING.get) == p.pid
+                        if newest:
+                            del _RUNNING[p.pid]
+                    if newest:
+                        kill("LOW_MEMORY")
+                        break
                 try:
                     p.wait(timeout=1)
                 except subprocess.TimeoutExpired:
                     pass
             p.wait()
             timer.cancel()
+            with _RUNNING_LOCK:
+                _RUNNING.pop(p.pid, None)
             end = round(time.time() - t0, 2)
             out.seek(0)
             text = out.read()
@@ -240,4 +268,4 @@ if __name__ == "__main__":
     status, code, output, peak, dt = run(args[1:], tool, timeout)
     sys.stdout.write(output)
     sys.stderr.write("heavy_run: status=%s exit=%s peak_rss_kb=%d time_s=%s\n" % (status, code, peak, dt))
-    sys.exit(124 if status == "TIMEOUT" else 137 if status == "EXCEEDED_MEMORY" else code)
+    sys.exit(124 if status == "TIMEOUT" else 137 if status in ("EXCEEDED_MEMORY", "LOW_MEMORY") else code)

@@ -217,6 +217,7 @@ def run(e):
     failed = re.findall(r"^\[(\S+)\] (.*): FAILURE$", out, re.M)
     if status == "TIMEOUT": verdict = "TIMEOUT"
     elif status == "EXCEEDED_MEMORY": verdict = "EXCEEDED_MEMORY"
+    elif status == "LOW_MEMORY": verdict = "LOW_MEMORY"  # killed to protect the host (HEAVY_KILL_NEWEST_PCT); not a verdict
     elif code == 0 and "VERIFICATION SUCCESSFUL" in out: verdict = "SUCCESS"
     elif code == 10 and "VERIFICATION FAILED" in out: verdict = "FAILURE"
     else: verdict = "ERROR"

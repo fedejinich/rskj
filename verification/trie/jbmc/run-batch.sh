@@ -5,9 +5,10 @@
 #
 # Checks SHA256SUMS, unpacks into ./work, runs validation.txt then work.txt through run-jbmc.sh
 # under this executor's limits and copies summary.json, logs and stub lists to ./results/ with
-# results/HOST. Defaults are the MacBook's (set by its own Firstmate): adaptive admission (start a job
-# only if free+inactive memory >= 4 GB cap + 2.5 GB reserve), at most 3 concurrent, 4 GB RSS watchdog,
-# load gate 10, memory-pressure gate, 600 s per harness, caffeinate; any can be overridden by env.
+# results/HOST. Defaults are the MacBook's (set by its own Firstmate): at most 3 concurrent, 8 GB RSS
+# watchdog, start a job only while memory_pressure's free percentage is >= 41, no start below 15, the
+# newest job killed below 10 (LOW_MEMORY, not a verdict), load gate 10, memory-pressure gate, 600 s
+# per harness, caffeinate; any can be overridden by env.
 # memory-hints.tsv gives each id's peak RSS measured on the originating host ("unknown" if never
 # measured). The work-list verdicts count only if the validation ids reproduce the originating host's.
 # If evidence/reference-manifest.json is present, the run stops before work.txt unless this host's
@@ -21,7 +22,9 @@ rm -rf "$W" && mkdir -p "$W/verification"
 tar -xzf trie.tar.gz -C "$W/verification"
 tar -xzf deps.tar.gz -C "$T"
 sed "s|^|$T/|" classpath.rel | paste -sd: - > "$T/.tools/rskj-classpath.txt"
-export HEAVY_JBMC_SLOTS="${HEAVY_JBMC_SLOTS:-3}" HEAVY_RSS_GB="${HEAVY_RSS_GB:-4}" HEAVY_MIN_FREE_GB="${HEAVY_MIN_FREE_GB:-6.5}" \
+export HEAVY_JBMC_SLOTS="${HEAVY_JBMC_SLOTS:-3}" HEAVY_RSS_GB="${HEAVY_RSS_GB:-8}" HEAVY_MIN_FREE_GB="${HEAVY_MIN_FREE_GB:-0}" \
+  HEAVY_MIN_FREE_PCT_ADMIT="${HEAVY_MIN_FREE_PCT_ADMIT:-41}" HEAVY_MIN_FREE_PCT="${HEAVY_MIN_FREE_PCT:-15}" \
+  HEAVY_KILL_NEWEST_PCT="${HEAVY_KILL_NEWEST_PCT:-10}" \
   HEAVY_MAX_LOAD="${HEAVY_MAX_LOAD:-10}" HEAVY_TIMEOUT="${HEAVY_TIMEOUT:-600}" JBMC_JOBS="${JBMC_JOBS:-3}" \
   JDK17="$T/.tools/deps/jdk17"
 mkdir -p "$D/results"

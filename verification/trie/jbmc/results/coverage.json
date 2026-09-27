@@ -3416,7 +3416,7 @@
     "role": "property",
     "verdict": "SUCCESS",
     "pass": true,
-    "time_s": 5.96,
+    "time_s": 3.78,
     "bounds": {
      "unwind": 12,
      "lshared": "1..2^31-1"
@@ -3444,7 +3444,7 @@
     "role": "property",
     "verdict": "SUCCESS",
     "pass": true,
-    "time_s": 5.96,
+    "time_s": 3.78,
     "bounds": {
      "unwind": 12,
      "lshared": "1..2^31-1"
@@ -3462,7 +3462,7 @@
     "role": "property",
     "verdict": "SUCCESS",
     "pass": true,
-    "time_s": 5.96,
+    "time_s": 3.78,
     "bounds": {
      "unwind": 12,
      "lshared": "1..2^31-1"
@@ -3506,7 +3506,7 @@
     "role": "property",
     "verdict": "SUCCESS",
     "pass": true,
-    "time_s": 5.96,
+    "time_s": 3.78,
     "bounds": {
      "unwind": 12,
      "lshared": "1..2^31-1"
@@ -3555,7 +3555,7 @@
     "role": "rskip-reading",
     "verdict": "FAILURE",
     "pass": true,
-    "time_s": 9.1,
+    "time_s": 8.2,
     "bounds": {
      "unwind": 20
     }
@@ -3572,7 +3572,7 @@
     "role": "property",
     "verdict": "SUCCESS",
     "pass": true,
-    "time_s": 4.41,
+    "time_s": 4.78,
     "bounds": {
      "unwind": 10,
      "value": "all 2^64"
@@ -3600,7 +3600,7 @@
     "role": "property",
     "verdict": "SUCCESS",
     "pass": true,
-    "time_s": 5.96,
+    "time_s": 3.78,
     "bounds": {
      "unwind": 12,
      "lshared": "1..2^31-1"
@@ -4144,6 +4144,1026 @@
     }
    },
    {
+    "id": "trie-put-delete-get-part00-00-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 133.81,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=0, HI2=1, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-00-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 136.98,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=0, HI2=1, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-01-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 172.74,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=1, HI2=2, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-01-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 190.8,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=1, HI2=2, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-02-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 170.62,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=2, HI2=3, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-02-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 186.05,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=2, HI2=3, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-03-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 179.98,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=3, HI2=4, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-03-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 175.09,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=3, HI2=4, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-04-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 155.6,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=4, HI2=5, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-04-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 162.0,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=4, HI2=5, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-05-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 188.33,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=5, HI2=6, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-05-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 171.13,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=5, HI2=6, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-06-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 173.39,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=6, HI2=7, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-06-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 176.06,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=6, HI2=7, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-07-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 177.5,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=7, HI2=8, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-07-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 182.61,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=7, HI2=8, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-08-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 216.08,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=8, HI2=9, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-08-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 217.87,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=8, HI2=9, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-09-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 211.19,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=9, HI2=10, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-09-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 200.68,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=9, HI2=10, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-10-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 193.34,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=10, HI2=11, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-10-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 177.82,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=10, HI2=11, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-11-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 205.01,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=11, HI2=12, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-11-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 207.76,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=11, HI2=12, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-00-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 195.95,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=0, HI2=1, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-00-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 198.68,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=0, HI2=1, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-01-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 187.95,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=1, HI2=2, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-01-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 184.54,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=1, HI2=2, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-02-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 224.86,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=2, HI2=3, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-02-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 234.66,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=2, HI2=3, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-03-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 233.28,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=3, HI2=4, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-03-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 217.93,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=3, HI2=4, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-04-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 237.44,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=4, HI2=5, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-04-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 227.95,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=4, HI2=5, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-05-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 196.45,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=5, HI2=6, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-05-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 222.34,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=5, HI2=6, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-06-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 211.66,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=6, HI2=7, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-06-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 224.03,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=6, HI2=7, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-07-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 219.2,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=7, HI2=8, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-07-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 216.76,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=7, HI2=8, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-08-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 236.54,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=8, HI2=9, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-08-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 231.35,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=8, HI2=9, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-09-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 243.79,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=9, HI2=10, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-09-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 229.49,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=9, HI2=10, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-10-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 222.53,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=10, HI2=11, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-10-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 211.65,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=10, HI2=11, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-11-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 204.0,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=11, HI2=12, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-11-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 201.75,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=11, HI2=12, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-00-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 182.1,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=0, HI2=1, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-00-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 191.28,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=0, HI2=1, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-01-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 179.51,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=1, HI2=2, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-01-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 167.81,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=1, HI2=2, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-02-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 163.27,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=2, HI2=3, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-02-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 159.83,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=2, HI2=3, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-03-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 179.42,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=3, HI2=4, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-03-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 173.35,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=3, HI2=4, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-04-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 179.1,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=4, HI2=5, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-04-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 186.95,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=4, HI2=5, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-05-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 192.34,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=5, HI2=6, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-05-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 200.89,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=5, HI2=6, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-06-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 185.2,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=6, HI2=7, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-06-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 196.65,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=6, HI2=7, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-07-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 194.75,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=7, HI2=8, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-07-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 201.44,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=7, HI2=8, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-08-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 230.23,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=8, HI2=9, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-08-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 203.84,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=8, HI2=9, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-09-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 212.19,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=9, HI2=10, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-09-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 211.93,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=9, HI2=10, LO3=1, HI3=2"
+    }
+   },
+   {
     "id": "trie-put-delete-get-part05-07-o00",
     "role": "property",
     "verdict": "SUCCESS",
@@ -4177,9 +5197,1029 @@
     "role": "negative-control",
     "verdict": "FAILURE",
     "pass": true,
-    "time_s": 3.2,
+    "time_s": 12.65,
     "bounds": {
      "unwind": 40
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-00-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 133.81,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=0, HI2=1, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-00-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 136.98,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=0, HI2=1, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-01-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 172.74,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=1, HI2=2, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-01-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 190.8,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=1, HI2=2, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-02-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 170.62,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=2, HI2=3, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-02-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 186.05,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=2, HI2=3, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-03-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 179.98,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=3, HI2=4, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-03-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 175.09,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=3, HI2=4, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-04-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 155.6,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=4, HI2=5, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-04-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 162.0,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=4, HI2=5, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-05-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 188.33,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=5, HI2=6, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-05-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 171.13,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=5, HI2=6, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-06-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 173.39,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=6, HI2=7, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-06-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 176.06,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=6, HI2=7, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-07-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 177.5,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=7, HI2=8, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-07-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 182.61,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=7, HI2=8, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-08-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 216.08,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=8, HI2=9, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-08-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 217.87,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=8, HI2=9, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-09-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 211.19,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=9, HI2=10, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-09-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 200.68,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=9, HI2=10, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-10-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 193.34,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=10, HI2=11, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-10-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 177.82,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=10, HI2=11, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-11-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 205.01,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=11, HI2=12, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-11-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 207.76,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=11, HI2=12, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-00-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 195.95,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=0, HI2=1, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-00-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 198.68,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=0, HI2=1, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-01-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 187.95,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=1, HI2=2, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-01-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 184.54,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=1, HI2=2, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-02-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 224.86,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=2, HI2=3, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-02-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 234.66,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=2, HI2=3, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-03-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 233.28,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=3, HI2=4, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-03-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 217.93,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=3, HI2=4, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-04-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 237.44,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=4, HI2=5, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-04-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 227.95,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=4, HI2=5, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-05-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 196.45,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=5, HI2=6, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-05-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 222.34,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=5, HI2=6, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-06-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 211.66,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=6, HI2=7, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-06-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 224.03,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=6, HI2=7, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-07-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 219.2,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=7, HI2=8, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-07-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 216.76,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=7, HI2=8, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-08-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 236.54,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=8, HI2=9, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-08-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 231.35,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=8, HI2=9, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-09-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 243.79,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=9, HI2=10, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-09-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 229.49,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=9, HI2=10, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-10-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 222.53,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=10, HI2=11, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-10-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 211.65,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=10, HI2=11, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-11-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 204.0,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=11, HI2=12, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-11-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 201.75,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=11, HI2=12, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-00-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 182.1,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=0, HI2=1, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-00-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 191.28,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=0, HI2=1, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-01-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 179.51,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=1, HI2=2, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-01-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 167.81,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=1, HI2=2, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-02-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 163.27,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=2, HI2=3, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-02-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 159.83,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=2, HI2=3, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-03-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 179.42,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=3, HI2=4, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-03-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 173.35,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=3, HI2=4, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-04-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 179.1,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=4, HI2=5, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-04-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 186.95,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=4, HI2=5, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-05-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 192.34,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=5, HI2=6, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-05-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 200.89,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=5, HI2=6, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-06-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 185.2,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=6, HI2=7, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-06-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 196.65,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=6, HI2=7, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-07-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 194.75,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=7, HI2=8, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-07-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 201.44,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=7, HI2=8, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-08-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 230.23,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=8, HI2=9, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-08-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 203.84,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=8, HI2=9, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-09-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 212.19,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=9, HI2=10, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-09-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 211.93,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=9, HI2=10, LO3=1, HI3=2"
     }
    },
    {
@@ -4228,9 +6268,2169 @@
     "role": "negative-control",
     "verdict": "FAILURE",
     "pass": true,
-    "time_s": 2.95,
+    "time_s": 11.21,
     "bounds": {
      "unwind": 40
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part00-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 31.59,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=0, HI=1, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part00-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 83.77,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=0, HI=1, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part00-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 162.22,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=0, HI=1, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part00-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 33.48,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=0, HI=1, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part00-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.99,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=0, HI=1, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part00-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 53.51,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=0, HI=1, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part00-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.39,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=0, HI=1, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part00-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 48.83,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=0, HI=1, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part00-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.59,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=0, HI=1, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part00-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 36.09,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=0, HI=1, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part00-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 36.24,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=0, HI=1, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part00-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 52.97,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=0, HI=1, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part01-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 46.64,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=1, HI=2, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part01-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 27.12,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=1, HI=2, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part01-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 40.37,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=1, HI=2, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part01-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 38.51,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=1, HI=2, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part01-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.32,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=1, HI=2, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part01-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 45.49,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=1, HI=2, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part01-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 40.87,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=1, HI=2, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part01-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 41.41,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=1, HI=2, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part01-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 26.66,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=1, HI=2, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part01-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 28.87,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=1, HI=2, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part01-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 27.65,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=1, HI=2, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part01-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 44.78,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=1, HI=2, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part02-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 40.1,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=2, HI=3, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part02-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 42.84,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=2, HI=3, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part02-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 22.95,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=2, HI=3, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part02-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 31.14,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=2, HI=3, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part02-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 30.74,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=2, HI=3, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part02-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 35.24,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=2, HI=3, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part02-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.48,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=2, HI=3, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part02-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.65,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=2, HI=3, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part02-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 35.04,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=2, HI=3, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part02-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 35.53,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=2, HI=3, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part02-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 35.59,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=2, HI=3, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part02-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 36.06,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=2, HI=3, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part03-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 40.49,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=3, HI=4, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part03-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 46.07,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=3, HI=4, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part03-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.77,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=3, HI=4, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part03-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 28.36,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=3, HI=4, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part03-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 33.24,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=3, HI=4, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part03-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 36.67,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=3, HI=4, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part03-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 30.58,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=3, HI=4, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part03-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.27,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=3, HI=4, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part03-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 31.09,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=3, HI=4, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part03-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 31.01,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=3, HI=4, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part03-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.9,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=3, HI=4, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part03-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 33.47,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=3, HI=4, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part04-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 36.04,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=4, HI=5, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part04-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 45.05,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=4, HI=5, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part04-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.6,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=4, HI=5, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part04-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.04,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=4, HI=5, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part04-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 25.74,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=4, HI=5, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part04-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 36.89,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=4, HI=5, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part04-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.71,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=4, HI=5, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part04-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 33.98,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=4, HI=5, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part04-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.33,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=4, HI=5, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part04-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.04,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=4, HI=5, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part04-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.25,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=4, HI=5, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part04-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 29.07,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=4, HI=5, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part05-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 45.1,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=5, HI=6, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part05-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 48.12,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=5, HI=6, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part05-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 31.55,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=5, HI=6, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part05-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 33.13,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=5, HI=6, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part05-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 36.11,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=5, HI=6, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part05-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 28.07,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=5, HI=6, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part05-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.93,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=5, HI=6, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part05-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 30.5,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=5, HI=6, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part05-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.11,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=5, HI=6, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part05-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 33.82,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=5, HI=6, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part05-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.04,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=5, HI=6, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part05-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 24.51,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=5, HI=6, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part06-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.59,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=6, HI=7, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part06-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 42.04,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=6, HI=7, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part06-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 29.15,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=6, HI=7, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part06-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 29.2,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=6, HI=7, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part06-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 29.26,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=6, HI=7, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part06-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 33.65,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=6, HI=7, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part06-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 22.56,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=6, HI=7, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part06-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 29.22,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=6, HI=7, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part06-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 29.39,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=6, HI=7, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part06-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 29.87,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=6, HI=7, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part06-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 29.69,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=6, HI=7, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part06-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 31.1,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=6, HI=7, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part07-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 49.3,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=7, HI=8, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part07-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 50.67,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=7, HI=8, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part07-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 36.05,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=7, HI=8, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part07-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 37.92,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=7, HI=8, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part07-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 37.34,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=7, HI=8, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part07-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 37.2,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=7, HI=8, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part07-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 33.54,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=7, HI=8, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part07-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 26.41,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=7, HI=8, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part07-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 36.72,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=7, HI=8, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part07-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.69,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=7, HI=8, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part07-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.8,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=7, HI=8, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part07-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 31.49,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=7, HI=8, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part08-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 36.89,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=8, HI=9, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part08-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 29.91,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=8, HI=9, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part08-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 36.59,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=8, HI=9, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part08-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.6,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=8, HI=9, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part08-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 36.57,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=8, HI=9, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part08-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 42.53,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=8, HI=9, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part08-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 30.78,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=8, HI=9, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part08-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 31.81,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=8, HI=9, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part08-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 27.08,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=8, HI=9, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part08-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 28.96,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=8, HI=9, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part08-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 28.76,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=8, HI=9, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part08-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 33.44,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=8, HI=9, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part09-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 39.3,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=9, HI=10, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part09-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 35.27,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=9, HI=10, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part09-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.36,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=9, HI=10, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part09-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 31.91,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=9, HI=10, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part09-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.18,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=9, HI=10, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part09-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 39.73,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=9, HI=10, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part09-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 33.41,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=9, HI=10, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part09-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.39,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=9, HI=10, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part09-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.44,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=9, HI=10, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part09-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 28.79,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=9, HI=10, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part09-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.78,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=9, HI=10, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part09-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.08,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=9, HI=10, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part10-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.4,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=10, HI=11, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part10-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 27.57,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=10, HI=11, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part10-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 30.02,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=10, HI=11, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part10-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 27.89,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=10, HI=11, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part10-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 29.39,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=10, HI=11, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part10-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 35.18,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=10, HI=11, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part10-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 30.74,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=10, HI=11, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part10-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 31.33,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=10, HI=11, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part10-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 29.06,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=10, HI=11, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part10-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 29.62,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=10, HI=11, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part10-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 27.07,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=10, HI=11, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part10-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 33.01,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=10, HI=11, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part11-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 43.47,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=11, HI=12, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part11-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 47.02,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=11, HI=12, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part11-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 29.38,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=11, HI=12, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part11-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 31.28,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=11, HI=12, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part11-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 31.6,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=11, HI=12, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part11-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 26.56,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=11, HI=12, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part11-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 30.87,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=11, HI=12, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part11-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 26.2,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=11, HI=12, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part11-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 31.03,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=11, HI=12, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part11-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 33.83,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=11, HI=12, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part11-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.15,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=11, HI=12, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-part11-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 27.01,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.emptyValueIsDelete with Nondet.LO=11, HI=12, LO2=11, HI2=12"
     }
    }
   ]
@@ -4380,6 +8580,1026 @@
   "status": "holds",
   "entries": [
    {
+    "id": "trie-put-delete-get-part00-00-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 133.81,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=0, HI2=1, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-00-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 136.98,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=0, HI2=1, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-01-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 172.74,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=1, HI2=2, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-01-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 190.8,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=1, HI2=2, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-02-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 170.62,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=2, HI2=3, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-02-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 186.05,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=2, HI2=3, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-03-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 179.98,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=3, HI2=4, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-03-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 175.09,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=3, HI2=4, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-04-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 155.6,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=4, HI2=5, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-04-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 162.0,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=4, HI2=5, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-05-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 188.33,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=5, HI2=6, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-05-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 171.13,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=5, HI2=6, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-06-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 173.39,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=6, HI2=7, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-06-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 176.06,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=6, HI2=7, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-07-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 177.5,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=7, HI2=8, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-07-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 182.61,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=7, HI2=8, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-08-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 216.08,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=8, HI2=9, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-08-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 217.87,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=8, HI2=9, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-09-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 211.19,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=9, HI2=10, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-09-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 200.68,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=9, HI2=10, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-10-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 193.34,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=10, HI2=11, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-10-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 177.82,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=10, HI2=11, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-11-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 205.01,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=11, HI2=12, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part00-11-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 207.76,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=11, HI2=12, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-00-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 195.95,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=0, HI2=1, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-00-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 198.68,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=0, HI2=1, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-01-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 187.95,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=1, HI2=2, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-01-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 184.54,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=1, HI2=2, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-02-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 224.86,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=2, HI2=3, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-02-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 234.66,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=2, HI2=3, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-03-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 233.28,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=3, HI2=4, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-03-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 217.93,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=3, HI2=4, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-04-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 237.44,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=4, HI2=5, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-04-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 227.95,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=4, HI2=5, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-05-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 196.45,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=5, HI2=6, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-05-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 222.34,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=5, HI2=6, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-06-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 211.66,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=6, HI2=7, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-06-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 224.03,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=6, HI2=7, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-07-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 219.2,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=7, HI2=8, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-07-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 216.76,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=7, HI2=8, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-08-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 236.54,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=8, HI2=9, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-08-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 231.35,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=8, HI2=9, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-09-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 243.79,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=9, HI2=10, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-09-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 229.49,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=9, HI2=10, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-10-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 222.53,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=10, HI2=11, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-10-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 211.65,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=10, HI2=11, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-11-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 204.0,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=11, HI2=12, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part01-11-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 201.75,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=11, HI2=12, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-00-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 182.1,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=0, HI2=1, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-00-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 191.28,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=0, HI2=1, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-01-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 179.51,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=1, HI2=2, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-01-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 167.81,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=1, HI2=2, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-02-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 163.27,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=2, HI2=3, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-02-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 159.83,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=2, HI2=3, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-03-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 179.42,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=3, HI2=4, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-03-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 173.35,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=3, HI2=4, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-04-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 179.1,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=4, HI2=5, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-04-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 186.95,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=4, HI2=5, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-05-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 192.34,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=5, HI2=6, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-05-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 200.89,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=5, HI2=6, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-06-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 185.2,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=6, HI2=7, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-06-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 196.65,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=6, HI2=7, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-07-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 194.75,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=7, HI2=8, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-07-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 201.44,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=7, HI2=8, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-08-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 230.23,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=8, HI2=9, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-08-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 203.84,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=8, HI2=9, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-09-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 212.19,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=9, HI2=10, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part02-09-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 211.93,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=9, HI2=10, LO3=1, HI3=2"
+    }
+   },
+   {
     "id": "trie-put-delete-get-part05-07-o00",
     "role": "property",
     "verdict": "SUCCESS",
@@ -4460,14 +9680,14 @@
  {
   "obligation": "TRIE-SER-01",
   "reading": "conforms",
-  "status": "check",
+  "status": "holds",
   "entries": [
    {
     "id": "trie-message-roundtrip-neg",
     "role": "negative-control",
     "verdict": "FAILURE",
     "pass": true,
-    "time_s": 3.66,
+    "time_s": 8.71,
     "bounds": {
      "unwind": 40
     }
@@ -4505,14 +9725,1008 @@
     }
    },
    {
-    "id": "trie-message-roundtrip-part05",
+    "id": "trie-message-roundtrip-part00-01",
     "role": "property",
-    "verdict": "TIMEOUT",
-    "pass": false,
-    "time_s": 600.01,
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 320.9,
     "bounds": {
      "unwind": 40,
-     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=5, HI=6"
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=0, HI=1, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part00-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 214.4,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=0, HI=1, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part00-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 269.76,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=0, HI=1, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part00-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 219.91,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=0, HI=1, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part00-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 112.63,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=0, HI=1, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part00-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 139.1,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=0, HI=1, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part00-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 75.81,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=0, HI=1, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part00-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 85.81,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=0, HI=1, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part00-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 53.96,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=0, HI=1, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part00-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 33.23,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=0, HI=1, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part00-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 22.05,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=0, HI=1, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part01-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 518.92,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=1, HI=2, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part01-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 395.73,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=1, HI=2, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part01-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 345.54,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=1, HI=2, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part01-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 263.8,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=1, HI=2, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part01-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 204.29,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=1, HI=2, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part01-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 156.48,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=1, HI=2, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part01-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 76.7,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=1, HI=2, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part01-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 59.7,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=1, HI=2, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part01-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 40.4,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=1, HI=2, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part01-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 25.31,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=1, HI=2, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part02-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 481.76,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=2, HI=3, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part02-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 377.64,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=2, HI=3, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part02-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 277.67,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=2, HI=3, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part02-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 238.5,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=2, HI=3, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part02-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 164.72,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=2, HI=3, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part02-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 122.5,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=2, HI=3, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part02-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 89.45,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=2, HI=3, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part02-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 50.58,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=2, HI=3, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part02-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 27.21,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=2, HI=3, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part03-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 382.62,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=3, HI=4, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part03-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 300.41,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=3, HI=4, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part03-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 232.13,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=3, HI=4, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part03-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 176.56,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=3, HI=4, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part03-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 121.64,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=3, HI=4, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part03-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 80.25,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=3, HI=4, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part03-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 45.47,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=3, HI=4, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part03-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 25.39,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=3, HI=4, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part04-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 297.27,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=4, HI=5, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part04-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 233.16,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=4, HI=5, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part04-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 174.98,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=4, HI=5, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part04-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 123.58,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=4, HI=5, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part04-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 79.96,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=4, HI=5, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part04-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 44.26,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=4, HI=5, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part04-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 26.84,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=4, HI=5, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part05-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 225.85,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=5, HI=6, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part05-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 154.27,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=5, HI=6, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part05-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 127.34,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=5, HI=6, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part05-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 82.04,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=5, HI=6, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part05-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 50.4,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=5, HI=6, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part05-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 23.36,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=5, HI=6, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part06-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 173.51,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=6, HI=7, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part06-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 129.14,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=6, HI=7, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part06-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 84.47,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=6, HI=7, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part06-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 45.86,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=6, HI=7, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part06-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 26.57,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=6, HI=7, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part07-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 130.97,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=7, HI=8, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part07-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 85.27,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=7, HI=8, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part07-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 47.47,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=7, HI=8, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part07-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 26.37,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=7, HI=8, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part08-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 82.58,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=8, HI=9, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part08-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 46.43,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=8, HI=9, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part08-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 27.27,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=8, HI=9, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part09-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 49.64,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=9, HI=10, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part09-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 27.43,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=9, HI=10, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part10-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 29.74,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=10, HI=11, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part11-12",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 14.87,
+    "bounds": {
+     "unwind": 40,
+     "flags": [
+      "--max-field-sensitivity-array-size",
+      "512"
+     ],
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=11, HI=12, LO2=12, HI2=13"
     }
    }
   ]

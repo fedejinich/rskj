@@ -153,7 +153,7 @@
       "verdict": "SUCCESS",
       "pass": true,
       "exit_code": 0,
-      "time_s": 5.96,
+      "time_s": 3.78,
       "bounds": {
         "unwind": 12,
         "lshared": "1..2^31-1"
@@ -163,10 +163,10 @@
       "reproducer": null,
       "stub_audit": "none on property path",
       "host": "void-rsk.local",
-      "peak_rss_mb": 523,
+      "peak_rss_mb": 521,
       "limits": {
-        "jbmc_slots": 5,
-        "rss_gb": 6.0,
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
         "max_load": 16.0,
         "timeout_s": 600
       },
@@ -346,7 +346,7 @@
       "verdict": "SUCCESS",
       "pass": true,
       "exit_code": 0,
-      "time_s": 4.41,
+      "time_s": 4.78,
       "bounds": {
         "unwind": 10,
         "value": "all 2^64"
@@ -356,10 +356,10 @@
       "reproducer": null,
       "stub_audit": "none on property path",
       "host": "void-rsk.local",
-      "peak_rss_mb": 522,
+      "peak_rss_mb": 521,
       "limits": {
-        "jbmc_slots": 5,
-        "rss_gb": 6.0,
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
         "max_load": 16.0,
         "timeout_s": 600
       },
@@ -2321,7 +2321,7 @@
       "verdict": "FAILURE",
       "pass": true,
       "exit_code": 10,
-      "time_s": 9.1,
+      "time_s": 8.2,
       "bounds": {
         "unwind": 20
       },
@@ -2334,8 +2334,8 @@
       "host": "void-rsk.local",
       "peak_rss_mb": 575,
       "limits": {
-        "jbmc_slots": 5,
-        "rss_gb": 6.0,
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
         "max_load": 16.0,
         "timeout_s": 600
       },
@@ -3658,6 +3658,2391 @@
       ],
       "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
       "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_0_7_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part00-07-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_0_7_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 182.61,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=7, HI2=8, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[0], deleted key = KEYS[7]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1977,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_0_7_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part00-08-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_0_8_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 216.08,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=8, HI2=9, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[0], deleted key = KEYS[8]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1953,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_0_8_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part00-08-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_0_8_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 217.87,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=8, HI2=9, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[0], deleted key = KEYS[8]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1973,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_0_8_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part00-09-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_0_9_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 211.19,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=9, HI2=10, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[0], deleted key = KEYS[9]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1962,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_0_9_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part00-09-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_0_9_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 200.68,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=9, HI2=10, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[0], deleted key = KEYS[9]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1816,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_0_9_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part00-10-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_0_10_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 193.34,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=10, HI2=11, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[0], deleted key = KEYS[10]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1550,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_0_10_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part00-10-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_0_10_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 177.82,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=10, HI2=11, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[0], deleted key = KEYS[10]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1987,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_0_10_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part00-11-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_0_11_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 205.01,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=11, HI2=12, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[0], deleted key = KEYS[11]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1854,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_0_11_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part00-11-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_0_11_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 207.76,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=0, HI=1, LO2=11, HI2=12, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[0], deleted key = KEYS[11]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1770,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_0_11_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-00-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_0_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 195.95,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=0, HI2=1, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[0]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1757,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_0_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-00-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_0_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 198.68,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=0, HI2=1, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[0]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1680,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_0_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-01-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_1_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 187.95,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=1, HI2=2, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[1]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1424,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_1_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-01-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_1_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 184.54,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=1, HI2=2, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[1]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1725,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_1_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-02-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_2_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 224.86,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=2, HI2=3, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[2]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1422,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_2_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-02-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_2_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 234.66,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=2, HI2=3, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[2]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1599,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_2_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-03-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_3_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 233.28,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=3, HI2=4, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[3]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1527,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_3_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-03-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_3_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 217.93,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=3, HI2=4, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[3]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1534,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_3_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-04-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_4_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 237.44,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=4, HI2=5, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[4]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1436,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_4_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-04-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_4_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 227.95,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=4, HI2=5, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[4]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1734,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_4_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-05-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_5_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 196.45,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=5, HI2=6, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[5]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1571,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_5_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-05-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_5_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 222.34,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=5, HI2=6, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[5]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1618,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_5_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-06-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_6_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 211.66,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=6, HI2=7, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[6]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1717,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_6_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-06-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_6_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 224.03,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=6, HI2=7, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[6]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1696,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_6_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-07-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_7_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 219.2,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=7, HI2=8, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[7]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1858,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_7_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-07-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_7_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 216.76,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=7, HI2=8, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[7]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1466,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_7_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-08-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_8_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 236.54,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=8, HI2=9, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[8]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 2339,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_8_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-08-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_8_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 231.35,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=8, HI2=9, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[8]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 2388,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_8_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-09-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_9_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 243.79,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=9, HI2=10, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[9]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1512,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_9_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-09-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_9_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 229.49,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=9, HI2=10, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[9]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1620,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_9_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-10-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_10_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 222.53,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=10, HI2=11, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[10]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1498,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_10_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-10-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_10_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 211.65,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=10, HI2=11, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[10]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 2787,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_10_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-11-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_11_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 204.0,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=11, HI2=12, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[11]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1983,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_11_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part01-11-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_1_11_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 201.75,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=1, HI=2, LO2=11, HI2=12, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[1], deleted key = KEYS[11]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1826,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_1_11_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-00-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_0_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 182.1,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=0, HI2=1, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[0]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1793,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_0_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-00-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_0_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 191.28,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=0, HI2=1, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[0]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1473,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_0_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-01-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_1_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 179.51,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=1, HI2=2, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[1]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1822,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_1_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-01-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_1_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 167.81,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=1, HI2=2, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[1]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1963,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_1_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-02-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_2_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 163.27,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=2, HI2=3, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[2]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1985,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_2_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-02-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_2_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 159.83,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=2, HI2=3, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[2]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1700,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_2_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-03-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_3_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 179.42,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=3, HI2=4, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[3]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1840,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_3_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-03-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_3_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 173.35,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=3, HI2=4, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[3]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1789,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_3_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-04-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_4_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 179.1,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=4, HI2=5, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[4]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1777,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_4_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-04-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_4_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 186.95,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=4, HI2=5, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[4]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1803,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_4_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-05-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_5_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 192.34,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=5, HI2=6, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[5]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1870,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_5_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-05-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_5_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 200.89,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=5, HI2=6, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[5]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1804,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_5_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-06-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_6_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 185.2,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=6, HI2=7, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[6]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1721,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_6_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-06-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_6_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 196.65,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=6, HI2=7, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[6]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1869,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_6_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-07-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_7_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 194.75,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=7, HI2=8, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[7]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1934,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_7_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-07-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_7_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 201.44,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=7, HI2=8, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[7]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1961,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_7_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-08-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_8_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 230.23,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=8, HI2=9, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[8]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1729,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_8_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-08-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_8_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 203.84,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=8, HI2=9, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[8]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1869,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_8_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-09-o00",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_9_o0",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 212.19,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=9, HI2=10, LO3=0, HI3=1"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[9]; all second keys and probes in KEYS; deletion via 0 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1838,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_9_o0 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
+    },
+    {
+      "id": "trie-put-delete-get-part02-09-o01",
+      "obligations": [
+        "TRIE-OPS-04",
+        "TRIE-OPS-05",
+        "TRIE-OPS-08"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "trie_put_delete_get_2_9_o1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 211.93,
+      "bounds": {
+        "unwind": 40,
+        "flags": [
+          "--max-field-sensitivity-array-size",
+          "512"
+        ],
+        "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=2, HI=3, LO2=9, HI2=10, LO3=1, HI3=2"
+      },
+      "note": "split part of trie-put-delete-get: first key = KEYS[2], deleted key = KEYS[9]; all second keys and probes in KEYS; deletion via 1 (0 = delete(k), 1 = put(k, empty))",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 1553,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.trie_put_delete_get_2_9_o1 --unwinding-assertions --static-values models/static-values.json --unwind 40 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --max-field-sensitivity-array-size 512"
     },
     {
       "id": "trie-put-delete-get-part05-07-o00",
