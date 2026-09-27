@@ -23,6 +23,7 @@ public class HashHarness {
             Trie t1 = new Trie().put(K[i], Nondet.b(0x0a));
             assert Nondet.same(t1.getHash().getBytes(), k(t1.toMessage()));
             for (int j = i + 1; j < K.length; j++) {
+                if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part (oracle table size)
                 Trie t2 = t1.put(K[j], Nondet.rep(33, 0x0b));
                 assert Nondet.same(t2.getHash().getBytes(), k(t2.toMessage()));
             }
@@ -66,6 +67,7 @@ public class HashHarness {
             Trie t1 = new Trie().put(K[i], v1);
             for (int j = i; j < K.length; j++) {
                 byte[] v2 = Nondet.bytes(1);
+                if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part
                 Trie t2 = new Trie().put(K[j], v2);
                 if (t1.getHash().equals(t2.getHash())) {
                     assert i == j && Nondet.same(v1, v2);
@@ -95,8 +97,9 @@ public class HashHarness {
         assert Nondet.same(t.getValueHash().getBytes(), k(t.toMessage()));
     }
 
-    /** TRIE-HASH-05: getHashOrchid(s) == keccak(toMessageOrchid(s)) for non-empty tries of 1..2 keys
-     *  of KEYS (both s), and the empty trie's Orchid hash is getHash()'s EMPTY_HASH. */
+    /** TRIE-HASH-05: getHashOrchid(s) == keccak(toMessageOrchid(s)) for non-empty tries of 2 keys
+     *  of KEYS, each s on a fresh trie, and the empty trie's Orchid hash is getHash()'s EMPTY_HASH.
+     *  Narrowed to one s per trie instance: the Orchid hash cache ignores s (orchidCacheIgnoresSecure). */
     public static void orchidHash() {
         Keccak256Helper.concreteOutputs = true;
         assert new Trie().getHashOrchid(false).equals(new Trie().getHash());
@@ -104,12 +107,21 @@ public class HashHarness {
         byte[][] K = Nondet.KEYS;
         for (int i = Nondet.LO; i < Math.min(Nondet.HI, K.length); i++) {
             for (int j = i + 1; j < K.length; j += 3) {
-                Trie t = new Trie().put(K[i], Nondet.b(0x0a)).put(K[j], Nondet.b(0x0b));
                 for (boolean s : new boolean[] {false, true}) {
+                    Trie t = new Trie().put(K[i], Nondet.b(0x0a)).put(K[j], Nondet.b(0x0b));
                     assert Nondet.same(t.getHashOrchid(s).getBytes(), k(t.toMessageOrchid(s)));
                 }
             }
         }
+    }
+
+    /** TRIE-HASH-05 as stated, for both s on one trie: after getHashOrchid(false), getHashOrchid(true)
+     *  returns the cached false hash (Trie.java:382-383), not keccak(toMessageOrchid(true)). */
+    public static void orchidCacheIgnoresSecure() {
+        Keccak256Helper.concreteOutputs = true;
+        Trie t = new Trie().put(Nondet.b(1), Nondet.b(0x0a));
+        t.getHashOrchid(false);
+        assert Nondet.same(t.getHashOrchid(true).getBytes(), k(t.toMessageOrchid(true)));
     }
 
     public static void orchidHashNegative() {

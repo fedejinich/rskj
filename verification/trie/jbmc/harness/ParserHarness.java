@@ -142,12 +142,15 @@ public class ParserHarness {
      *  other than 02 with the low 6 bits zero, f 01 parses as a leaf with value 01. */
     public static void versionNotChecked() {
         Keccak256Helper.consistent = false;
-        for (int i = 0; i < NODE02.length; i++) {
+        // SplitHarness: LO/HI select the reproducers, LO2/HI2 = [0, 1) the symbolic version prefix
+        for (int i = Nondet.LO; i < Math.min(Nondet.HI, NODE02.length); i++) {
             assert Nondet.same(reencode(NODE02[i]), NODE02_OUT[i]);
         }
-        int top = CProver.nondetInt();
-        CProver.assume(top >= 0 && top <= 3);
-        assert Nondet.same(reencode(Nondet.b(top << 6, 0x01)), Nondet.b(0x40, 0x01));
+        if (Nondet.in2(0)) {
+            int top = CProver.nondetInt();
+            CProver.assume(top >= 0 && top <= 3);
+            assert Nondet.same(reencode(Nondet.b(top << 6, 0x01)), Nondet.b(0x40, 0x01));
+        }
     }
 
     public static void versionNotCheckedRskip() {
@@ -264,6 +267,7 @@ public class ParserHarness {
     public static void parserTotal() {
         Keccak256Helper.consistent = false;
         for (int n = 0; n <= MAX_MALFORMED; n++) {
+            if (n < Nondet.LO || n >= Nondet.HI) continue; // SplitHarness: one message length per part
             byte[] m = Nondet.bytes(n);
             try {
                 Trie.fromMessage(m, null);
@@ -274,9 +278,11 @@ public class ParserHarness {
     }
 
     /** Negative control: claims every 2-byte message is rejected. */
+    /** Fails: the leaf 40 01 (NODE02_OUT) parses, so rejects is false (concrete; two symbolic bytes
+     *  exceeded the time limit). */
     public static void parserTotalNegative() {
         Keccak256Helper.consistent = false;
-        assert rejects(Nondet.bytes(2));
+        assert rejects(Nondet.b(0x40, 0x01));
     }
 
     static final byte[] SER05 = Nondet.b(0x50, 0xff, 0xfe, 0xff, 0xff, 0xff, 0x7f);

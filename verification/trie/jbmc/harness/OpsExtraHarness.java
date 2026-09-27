@@ -34,6 +34,7 @@ public class OpsExtraHarness {
             Trie t1 = new Trie().put(K[i], Nondet.bytes(1));
             for (int j = 0; j < K.length; j++) {
                 Trie t = t1.put(K[j], Nondet.bytes(1));
+                if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part
                 for (byte[] kd : K) {
                     byte[] d = t.delete(kd).toMessage();
                     Trie e = t.put(kd, new byte[0]);
@@ -57,6 +58,7 @@ public class OpsExtraHarness {
         for (int i = Nondet.LO; i < Math.min(Nondet.HI, K.length); i++) {
             for (int j = 0; j < K.length; j++) {
                 Trie t = new Trie().put(K[i], Nondet.bytes(1)).put(K[j], Nondet.bytes(1));
+                if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part
                 byte[] m = t.toMessage();
                 byte[][] before = new byte[K.length][];
                 for (int q = 0; q < K.length; q++) {
@@ -111,6 +113,7 @@ public class OpsExtraHarness {
         for (int i = Nondet.LO; i < Math.min(Nondet.HI, K.length); i++) {
             for (int j = 0; j < K.length; j++) {
                 Trie t = new Trie().put(K[i], Nondet.bytes(1)).put(K[j], Nondet.bytes(1));
+                if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part
                 for (byte[] k : new byte[][] {K[i], K[j]}) {
                     Trie d = t.deleteRecursive(k);
                     for (byte[] q : K) {
@@ -170,6 +173,7 @@ public class OpsExtraHarness {
             canonical(t1.delete(K[i]), true);
             for (int j = 0; j < K.length; j++) {
                 Trie t2 = t1.put(K[j], Nondet.bytes(1));
+                if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part
                 canonical(t2, true);
                 for (int l = 0; l < K.length; l++) {
                     canonical(t2.delete(K[l]), true);
@@ -218,6 +222,7 @@ public class OpsExtraHarness {
         for (int i = Nondet.LO; i < Math.min(Nondet.HI, K.length); i++) {
             for (int j = i + 1; j < K.length; j++) {
                 byte[] v1 = Nondet.bytes(1), v2 = Nondet.bytes(1);
+                if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part
                 Trie a = new Trie().put(K[i], v1).put(K[j], v2);
                 Trie b = new Trie().put(K[j], v2).put(K[i], v1);
                 assert sameTree(a, b);
@@ -247,6 +252,7 @@ public class OpsExtraHarness {
         byte[][] K = Nondet.KEYS;
         for (int i = Nondet.LO; i < Math.min(Nondet.HI, K.length); i++) {
             for (int j = i + 1; j < K.length; j++) {
+                if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part (oracle table size)
                 Trie a = new Trie().put(K[i], Nondet.b(0x0a)).put(K[j], Nondet.b(0x0b));
                 Trie b = new Trie().put(K[j], Nondet.b(0x0b)).put(K[i], Nondet.b(0x0a));
                 assert a.getHash().equals(b.getHash());

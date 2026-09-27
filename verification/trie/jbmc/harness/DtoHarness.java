@@ -16,6 +16,7 @@ public class DtoHarness {
         byte[][] K = Nondet.KEYS;
         for (int i = Nondet.LO; i < Math.min(Nondet.HI, K.length); i++) {
             for (int j = i; j < K.length; j += 3) {
+                if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part (oracle table size)
                 TrieStoreImpl s = new TrieStoreImpl(new MemoryKeyValueDataSource());
                 Trie t = new Trie(s).put(K[i], Nondet.b(0x0a)).put(K[j], Nondet.b(0x0b));
                 s.save(t);

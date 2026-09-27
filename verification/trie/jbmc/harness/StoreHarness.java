@@ -30,6 +30,7 @@ public class StoreHarness {
         byte[][] K = Nondet.KEYS;
         for (int i = Nondet.LO; i < Math.min(Nondet.HI, K.length); i++) {
             for (int j = -1; j < K.length; j += 4) {
+                if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part (oracle table size)
                 for (boolean lv : new boolean[] {false, true}) {
                     TrieStoreImpl s = new TrieStoreImpl(new MemoryKeyValueDataSource());
                     Trie t = build(s, i, j, lv);
@@ -68,6 +69,7 @@ public class StoreHarness {
         byte[][] K = Nondet.KEYS;
         for (int i = Nondet.LO; i < Math.min(Nondet.HI, K.length); i++) {
             for (int j = -1; j < K.length; j += 4) {
+                if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part (oracle table size)
                 for (boolean lv : new boolean[] {false, true}) {
                     MemoryKeyValueDataSource db = new MemoryKeyValueDataSource();
                     TrieStoreImpl s = new TrieStoreImpl(db);
@@ -127,6 +129,7 @@ public class StoreHarness {
         byte[][] K = Nondet.KEYS;
         for (int i = Nondet.LO; i < Math.min(Nondet.HI, K.length); i++) {
             for (int j = i + 1; j < K.length; j += 2) {
+                if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part
                 for (boolean lv : new boolean[] {false, true}) {
                     MemoryKeyValueDataSource db = new MemoryKeyValueDataSource();
                     TrieStoreImpl s = new TrieStoreImpl(db);

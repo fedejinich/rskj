@@ -138,6 +138,7 @@ public class NodeHarness {
             for (int vl : TrieOpsHarness.FIRST_VALUE_LENGTHS) {
                 Trie t1 = new Trie().put(K[i], Nondet.bytes(vl));
                 for (int j = 0; j < K.length; j++) {
+                    if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part
                     if (j != i) {
                         checkTree(t1.put(K[j], Nondet.bytes(1)));
                     }
@@ -153,6 +154,7 @@ public class NodeHarness {
         for (int i = Nondet.LO; i < Math.min(Nondet.HI, K.length); i++) {
             for (int j = i + 1; j < K.length; j++) {
                 Trie t2 = new Trie().put(K[i], Nondet.bytes(1)).put(K[j], Nondet.bytes(1));
+                if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part
                 for (int l = j + 1; l < K.length; l++) {
                     Trie t3 = t2.put(K[l], Nondet.bytes(1));
                     checkTree(t3);
@@ -183,6 +185,7 @@ public class NodeHarness {
             Trie a = new Trie().put(K[i], Nondet.bytes(1)).put(K[(i + 1) % K.length], Nondet.bytes(1));
             for (int j = 0; j < K.length; j++) {
                 Trie b = new Trie().put(K[j], Nondet.bytes(1));
+                if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part
                 Trie[] cands = {b, b.put(K[(j + 1) % K.length], Nondet.bytes(1))};
                 for (Trie c : cands) {
                     if (Nondet.same(a.toMessage(), c.toMessage())) {

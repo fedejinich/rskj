@@ -14,6 +14,7 @@ SEVERITY = {
     "TRIE-PATH-04": "Medium", "TRIE-LSH-06": "Medium", "TRIE-VARINT-03": "Medium", "TRIE-EMB-02": "Medium",
     "TRIE-NODE-02": "Medium", "TRIE-SER-03": "Medium", "TRIE-SIZE-03": "Medium", "TRIE-VAL-05": "Medium",
     "TRIE-VAL-06": "Medium", "TRIE-HASH-04": "Medium", "TRIE-STORE-06": "Medium",
+    "TRIE-HASH-05": "Medium",  # Orchid hash cache ignores the secure flag; latent (callers pass false)
     # fixed, deterministic behaviour that differs from the RSKIP text
     "TRIE-KEY-05": "Low", "TRIE-KEY-10": "Low", "TRIE-EMB-03": "Low", "TRIE-NODE-04": "Low",
     "TRIE-NODE-07": "Low", "TRIE-NODE-08": "Low", "TRIE-STORE-02": "Low", "TRIE-OPS-09": "Low",

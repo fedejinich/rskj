@@ -56,6 +56,12 @@ final class Nondet {
     static int LO3 = 0;
     static int HI3 = Integer.MAX_VALUE;
 
+    /** Whether a harness's own second-level index j is in this split part: always unless LO2/HI2 are
+     *  set. Used as a filter inside stepped or negative-start loops, so their enumeration is unchanged. */
+    static boolean in2(int j) {
+        return HI2 == Integer.MAX_VALUE || (LO2 <= j && j < HI2);
+    }
+
     static final byte[][] KEYS = {
         {}, {0x00}, {(byte) 0x80}, {0x01}, {0x10}, {(byte) 0xff}, {0x7f}, {(byte) 0xfe},
         {0x00, 0x00}, {0x00, (byte) 0x80}, {0x00, 0x01}, {(byte) 0xff, 0x7f},

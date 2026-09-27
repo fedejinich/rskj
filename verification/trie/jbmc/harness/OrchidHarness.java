@@ -49,9 +49,11 @@ public class OrchidHarness {
         byte[][] K = Nondet.KEYS;
         for (int i = Nondet.LO; i < Math.min(Nondet.HI, K.length); i++) {
             for (int j = i + 1; j < K.length; j += 3) {
+                if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part (oracle table size)
                 for (boolean lv : new boolean[] {false, true}) {
-                    Trie t = new Trie().put(K[i], lv ? Nondet.rep(33, 0x0c) : Nondet.b(0x0a)).put(K[j], Nondet.b(0x0b));
+                    // a fresh trie per flag: the Orchid hash cache ignores the flag (HashHarness.orchidCacheIgnoresSecure)
                     for (boolean s : new boolean[] {false, true}) {
+                        Trie t = new Trie().put(K[i], lv ? Nondet.rep(33, 0x0c) : Nondet.b(0x0a)).put(K[j], Nondet.b(0x0b));
                         layout(t, s);
                     }
                 }
@@ -74,15 +76,17 @@ public class OrchidHarness {
         byte[][] K = Nondet.KEYS;
         for (int i = Nondet.LO; i < Math.min(Nondet.HI, K.length); i++) {
             for (int j = i + 1; j < K.length; j += 3) {
+                if (!Nondet.in2(j)) continue; // SplitHarness: one second key per part (oracle table size)
                 for (boolean lv : new boolean[] {false, true}) {
-                    MemoryKeyValueDataSource db = new MemoryKeyValueDataSource();
-                    TrieStoreImpl store = new TrieStoreImpl(db);
-                    byte[] v = lv ? Nondet.rep(33, 0x0c) : Nondet.b(0x0a);
-                    Trie t = new Trie(store).put(K[i], v).put(K[j], Nondet.b(0x0b));
-                    if (lv) {
-                        store.saveValue(v);
-                    }
+                    // a fresh trie per flag: the Orchid hash cache ignores the flag (HashHarness.orchidCacheIgnoresSecure)
                     for (boolean s : new boolean[] {false, true}) {
+                        MemoryKeyValueDataSource db = new MemoryKeyValueDataSource();
+                        TrieStoreImpl store = new TrieStoreImpl(db);
+                        byte[] v = lv ? Nondet.rep(33, 0x0c) : Nondet.b(0x0a);
+                        Trie t = new Trie(store).put(K[i], v).put(K[j], Nondet.b(0x0b));
+                        if (lv) {
+                            store.saveValue(v);
+                        }
                         Trie u = Trie.fromMessage(t.toMessageOrchid(s), store);
                         assert u.getSharedPath().length() == t.getSharedPath().length();
                         for (int x = 0; x < t.getSharedPath().length(); x++) {
