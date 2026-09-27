@@ -59,14 +59,17 @@ def main():
     w("- JBMC time over the recorded results: %.1f h (%s)." % (secs / 3600, ", ".join("%s %d" % kv for kv in hosts.items())))
     w("- Every property result is bounded (see Bounds); `holds` means no counterexample exists within "
       "those bounds on the real compiled rskj classes, with unwinding assertions proving every loop bound "
-      "sufficient. It is not an unbounded proof; the Lean development covers the general case.")
+      "sufficient, subject to the declared oracle/environment models. It is not an unbounded proof. "
+      "Lean proves separate statements under its hypotheses; see `../lean/MODEL.md` for gaps.")
+    w("- Stub audits still requiring review: %d. Expected verdicts alone do not close these entries." %
+      sum(r.get("stub_audit") != "none on property path" for r in done))
     w("")
     w("## Findings")
     w("")
     w(RUBRIC)
     w("")
     pend_f = [c["obligation"] for c in cov if c["obligation"] in SEVERITY and c["status"] != "refuted-as-expected"]
-    w("Findings with a JBMC result are listed; RSKIP readings still without a result: %s." % (", ".join(pend_f) or "none"))
+    w("Findings with completed JBMC coverage are listed; findings whose full JBMC coverage is not yet accepted: %s." % (", ".join(pend_f) or "none"))
     w("")
     w("| obligation | severity | finding | RSKIP | Java | JBMC evidence | reproducer |")
     w("|---|---|---|---|---|---|---|")
@@ -108,7 +111,11 @@ def main():
       ", ".join("%s %d" % kv for kv in splits.most_common()))
     w("- Runs go through `heavy_run.py` (shared lock, memory watchdog, admission and timeout); each run "
       "writes `results/invocation-manifest.json` (argv, classpath and source digests, versions) so a "
-      "second executor's results are merged only when its invocation is identical (`merge-batch.py`).")
+      "second executor's invocation must be checked against its original reference before `merge-batch.py` "
+      "is called. The merger itself checks only validation verdicts, not manifest identity.")
+    w("- [Batch 4 provenance](evidence-b4/README.md): exact original reference/executor match; harness/model "
+      "sources match commit `6642bf537`. Its selected operation bodies are unchanged, but its aggregate "
+      "harness classpath is historical, not identical to the current tree.")
     w("")
     w("## Bounds and narrowings")
     w("")
@@ -119,6 +126,9 @@ def main():
         n = (e.get("note") or "") + " " + json.dumps(e.get("bounds", {}))
         if "Narrowed" in n or "fixed" in n and e.get("role") == "property" and not e.get("split_of"):
             w("- `%s`: %s" % (e["id"], e.get("note") or json.dumps(e.get("bounds"))))
+    w("- [Split audit and correction queue](audits/coverage-reconciliation.md): six empty-domain sentinels "
+      "do not count as extra tested cases. `format3` omits third-key deletion, and three `savedEntries` "
+      "choices overwrite the first key. These advertised-domain gaps remain open after existing batches finish.")
     w("- Key universe: multi-key trie harnesses enumerate the 12 keys of `Nondet.KEYS` with symbolic values "
       "of fixed lengths (1, 32, 33 bytes); key harnesses use symbolic 20-byte addresses and 32-byte words "
       "by leading-zero class.")

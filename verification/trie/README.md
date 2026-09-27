@@ -8,7 +8,9 @@ Formal verification of the **Java** Unitrie implementation in `rskj-core/src/mai
 - **Specification:** the RSKIPs (fedejinich/RSKIPs, the fork of rsksmart/RSKIPs, at commit `c578f4e932854830bb81f3de209eeeda6f7724b1`). RSKIPs are the spec;
   where Java disagrees with an RSKIP that is recorded as a finding, not "fixed".
 - **JBMC** checks the real, compiled rskj classes with bounded model checking.
-- **Lean 4** gives unbounded proofs over a model that mirrors the Java classes one-to-one.
+- **Lean 4** proves theorems over a model of the Java classes, under the hypotheses shown per theorem.
+  [MODEL.md](lean/MODEL.md) records abstractions, fuel limits and gaps; a cache-free theorem alone
+  does not prove the corresponding stateful Java behaviour.
 - **Differential tests** run the same case vectors on the real Java classes and on the executable
   Lean model and require byte-identical output (root hashes, serialized nodes, lookups).
 
@@ -52,7 +54,13 @@ Lean: `leanprover/lean4:v4.34.1` (core only, no Mathlib). JBMC: CBMC 6.11.0
 
 | Status | Meaning |
 | --- | --- |
-| `proved` | Lean proves it for all inputs over the model **and** JBMC passes on the real classes within the stated bounds |
+| `proved` | Lean proves the model statement under its listed hypotheses, all declared JBMC entries pass within bounds, negative controls exist and stub audits pass |
 | `bounded` | Holds within the JBMC bounds on the real classes; no complete Lean proof |
 | `fails` | Java does not satisfy the obligation as the RSKIP states it; reproducer attached |
 | `finding` | RSKIP text is ambiguous/inconsistent or silent and the behaviour Java actually has is recorded (and verified); reproducer attached |
+| `open` | Required evidence is missing, incomplete or not accepted; resource stops and untriaged failures are not counterexamples |
+
+The matrix separately reports complete JBMC coverage and pending entries, including every declared
+split part. `fails` and `finding` record counterevidence without implying all other checks finished.
+The [b6-b8 audit](jbmc/audits/b6-b8-split-audit.md) records six no-op sentinel entries and two bounded-domain
+limits. Batch source snapshots remain unchanged while they run.

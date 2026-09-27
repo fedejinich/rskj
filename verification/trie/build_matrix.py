@@ -7,14 +7,15 @@ Outputs: matrix.json, matrix.md, review/index.html (review/template.html with th
 
 Status per Stage-1 obligation (see README "Status definitions"):
   fails    Java is shown not to satisfy a requirement/derived obligation (Lean counterexample, a
-           JBMC rskip-reading harness failing as expected, or a counterexample to a property harness)
+           JBMC rskip-reading harness failing as expected)
   finding  ambiguity: the RSKIP is unclear/inconsistent/silent and Java's actual behaviour is verified
-  proved   Lean proves it for all inputs and every JBMC property harness passes
+  proved   Lean proves the model statement under its hypotheses; all declared JBMC checks pass
   bounded  JBMC property harnesses pass; no complete Lean proof
   open     anything else (missing or failing evidence): the goal is not met while any row is open
 """
 import json
 import re
+from functools import cache
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -56,24 +57,37 @@ def java_link(ref):
     return (ref.replace("rskj-core/src/main/java/", ""), f"{RSKJ_REPO}/{RSKJ_COMMIT}/{path}{anchor}")
 
 
+@cache
+def harness_methods(path):
+    methods = {}
+    for i, line in enumerate(path.read_text().splitlines(), 1):
+        match = re.search(r"\bstatic\s+.*?\b(\w+)\s*\(", line)
+        if match:
+            methods.setdefault(match[1], i)
+    return methods
+
+
 def harness_url(run):
     f = ROOT / "jbmc/harness" / f"{run.get('class', '')}.java"
     if not f.exists():
         return f"{TREE}/jbmc/harness"
-    for i, line in enumerate(f.read_text().splitlines(), 1):
-        if re.search(rf"\b{re.escape(run.get('method', ''))}\s*\(", line) and "static" in line:
-            return f"{TREE}/jbmc/harness/{f.name}#L{i}"
-    return f"{TREE}/jbmc/harness/{f.name}"
+    line = harness_methods(f).get(run.get("method", ""))
+    return f"{TREE}/jbmc/harness/{f.name}" + (f"#L{line}" if line else "")
 
 
 def decorate(lean, runs):
     for t in (lean or {}).get("theorems", []):
-        t["url"] = f"{TREE}/lean/{t.get('file', '')}" + (f"#L{t['line']}" if t.get("line") else "")
+        t["url"] = f"{TREE}/{t.get('file', '')}" + (f"#L{t['line']}" if t.get("line") else "")
     for r in runs:
-        r["url"] = harness_url(r)
+        r["url"] = r.get("harness_source_url") or harness_url(r)
+        if r.get("evidence_manifest"):
+            r["evidence_manifest_url"] = f"{TREE}/{r['evidence_manifest']}"
         if r.get("reproducer"):
-            rel = str(r["reproducer"]).split("verification/trie/")[-1]
-            r["reproducer_url"] = f"{TREE}/{rel if rel.startswith('jbmc/') else 'jbmc/' + rel}"
+            paths = r["reproducer"] if isinstance(r["reproducer"], list) else [r["reproducer"]]
+            r["reproducer_links"] = []
+            for path in paths:
+                rel = path.split("verification/trie/")[-1]
+                r["reproducer_links"].append((Path(path).stem, f"{TREE}/{rel if rel.startswith('jbmc/') else 'jbmc/' + rel}"))
 
 
 def summary(o, lean):
@@ -85,12 +99,16 @@ def classify(o, lean, runs):
     props = [r for r in runs if r.get("role") == "property"]
     readings = [r for r in runs if r.get("role") == "rskip-reading"]
     negs = [r for r in runs if r.get("role") == "negative-control"]
-    j_prop_ok = bool(props) and all(r.get("pass") for r in props) and all(r.get("pass") for r in negs)
-    j_refutes = any(r.get("pass") for r in readings)
-    j_prop_fail = any(r.get("verdict") == "FAILURE" for r in props)  # counterexample to a property
+    def checked(r):
+        return r.get("pass") is True and r.get("stub_audit") == "none on property path"
+
+    j_prop_ok = bool(props) and bool(negs) and all(checked(r) for r in runs)
+    j_refutes = any(checked(r) and r.get("verdict") == "FAILURE" for r in readings)
     lean_status = (lean or {}).get("lean_status", "none")
-    diverges = lean_status == "refuted" or j_refutes or j_prop_fail
-    verified = lean_status in ("proved", "refuted") or j_prop_ok or j_prop_fail
+    # An arbitrary property FAILURE can be an unwind/oracle/harness failure, not a Java finding.
+    # Counterexamples require a reviewed RSKIP-reading harness or a Lean counterexample theorem.
+    diverges = lean_status == "refuted" or j_refutes
+    verified = lean_status in ("proved", "refuted") or j_prop_ok or j_refutes
     if not verified:
         return "open"
     if o["kind"] == "ambiguity":
@@ -108,10 +126,14 @@ def main():
     spec = load("spec/obligations.json", None)
     lean_map = {e["id"]: e for e in load("lean/obligations-map.json", [])}
     jbmc = load("jbmc/results/summary.json", {"results": []})
+    entries = load("jbmc/harnesses.json", {"harnesses": []})["harnesses"]
+    results = {r["id"]: r for r in jbmc["results"]}
+    # Missing split parts must remain visible and must never count as passing evidence.
+    all_runs = [{**e, **results.get(e["id"], {"verdict": "PENDING", "pass": False})} for e in entries]
     diff = load("differential/results/summary.json", {})
     rows = []
     for o in spec["obligations"]:
-        runs = [r for r in jbmc.get("results", []) if o["id"] in r.get("obligations", [])]
+        runs = [dict(r) for r in all_runs if o["id"] in r.get("obligations", [])]
         lean = lean_map.get(o["id"])
         decorate(lean, runs)
         status = classify(o, lean, runs) if o["stage"] == 1 else "stage-2"
@@ -123,9 +145,17 @@ def main():
             "java_reading": o["java"]["reading"], "java_note": o["java"]["note"],
             "reproducer_hint": o.get("reproducer_hint", ""), "applicability": o.get("applicability", ""),
             "lean": lean, "jbmc": runs, "status": status, "summary": summary(o, lean),
+            "coverage_notes": (["format3 checks deletion of the first and second keys, not the third; the missing deletion check is queued after live batches settle."]
+                if any(r.get("split_of") == "node-format-3" for r in runs) else []) +
+                (["Three savedEntries index choices overwrite the first key instead of creating three distinct keys; distinct-key corrections are queued after live batches settle."]
+                if any(r.get("split_of") == "store-saved-entries" for r in runs) else []),
+            "jbmc_complete": bool(runs) and all(r.get("pass") is True and r.get("stub_audit") == "none on property path" for r in runs),
             "coverage": ("lean+jbmc" if lean and runs else "lean-only" if lean else "jbmc-only" if runs else "none")
             if o["stage"] == 1 else "stage-2",
         })
+    for row in rows:
+        if row["coverage_notes"] and row["status"] in ("proved", "bounded"):
+            row["status"] = "open"
     counts = {s: sum(r["status"] == s for r in rows) for s in ["proved", "bounded", "fails", "finding", "open", "stage-2"]}
     coverage = {c: sum(r["coverage"] == c for r in rows) for c in ["lean+jbmc", "lean-only", "jbmc-only", "none"]}
     matrix = {
@@ -133,6 +163,8 @@ def main():
         "jbmc_version": jbmc.get("jbmc_version"), "lean_toolchain": (ROOT / "lean/lean-toolchain").read_text().strip()
         if (ROOT / "lean/lean-toolchain").exists() else None,
         "differential": diff, "counts": counts, "coverage": coverage, "rows": rows,
+        "jbmc_entries": len(entries), "jbmc_pending": sum(r["verdict"] == "PENDING" for r in all_runs),
+        "jbmc_complete_obligations": sum(r["stage"] == 1 and r["jbmc_complete"] for r in rows),
     }
     (ROOT / "matrix.json").write_text(json.dumps(matrix, indent=1) + "\n")
 
@@ -141,7 +173,12 @@ def main():
           f"{matrix['lean_toolchain']}", "",
           "Status: " + ", ".join(f"**{k}** {v}" for k, v in counts.items()), "",
           "Coverage (Stage 1): " + ", ".join(f"{k} {v}" for k, v in coverage.items()), "",
-          "Lean = unbounded proof over the model; JBMC = bounded check on the real classes (bounds per harness).", "",
+          "Lean proves statements under the listed model hypotheses; JBMC checks the real classes within each harness bound.", "",
+          f"JBMC declared-entry completion for {matrix['jbmc_complete_obligations']}/{sum(r['stage'] == 1 for r in rows)} Stage-1 obligations; "
+          f"{matrix['jbmc_pending']}/{matrix['jbmc_entries']} harness entries pending. Findings do not imply complete coverage.", "",
+          "Declared-entry completion is not exhaustive input coverage: six split entries are empty-domain sentinels; "
+          "format3 omits third-key deletion and three savedEntries cases overwrite the first key. "
+          "See [scope reconciliation and queued corrections](jbmc/audits/coverage-reconciliation.md).", "",
           "| Obligation | Kind | Status | Lean | JBMC (bounds) | RSKIP |", "| --- | --- | --- | --- | --- | --- |"]
     for r in rows:
         lean = r["lean"] or {}

@@ -14,7 +14,13 @@
   *, *::before, *::after { box-sizing: border-box; }
   body { margin: 0; background: var(--base); color: var(--text); font: 14px/1.5 -apple-system, "Segoe UI", Inter, sans-serif; }
   main { max-width: 1320px; margin: 0 auto; padding: 24px 16px 64px; }
-  a { color: var(--blue); text-decoration: none; } a:hover { text-decoration: underline; }
+  a { color: var(--blue); text-decoration: none; text-underline-offset: 3px; } a:hover { text-decoration: underline; }
+  :focus-visible { outline: 2px solid var(--lavender); outline-offset: 3px; }
+  ::selection { background: var(--lavender); color: var(--crust); }
+  input { caret-color: var(--lavender); }
+  input::placeholder { color: var(--subtext); }
+  html { scrollbar-color: var(--surface1) var(--base); }
+  table, .tiles { font-variant-numeric: tabular-nums; }
   h1 { font-size: 22px; margin: 0 0 4px; } h2 { font-size: 16px; margin: 28px 0 10px; color: var(--lavender); }
   code, .mono { font-family: var(--mono); font-size: 12.5px; overflow-wrap: anywhere; }
   .pins { color: var(--subtext); font-size: 12.5px; display: flex; flex-wrap: wrap; gap: 4px 18px; }
@@ -25,7 +31,7 @@
   .tile .n { font-size: 28px; font-weight: 700; line-height: 1.1; }
   .tile .l { color: var(--subtext); font-size: 12.5px; }
   .s-proved { --c: var(--green); } .s-bounded { --c: var(--sky); } .s-fails { --c: var(--red); }
-  .s-finding { --c: var(--yellow); } .s-open { --c: var(--overlay0); } .s-stage-2 { --c: var(--mauve); }
+  .s-finding { --c: var(--yellow); } .s-open { --c: var(--subtext); } .s-stage-2 { --c: var(--mauve); }
   .tile .n { color: var(--c); }
   .badge { display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--c); color: var(--c); border-radius: 999px; padding: 0 8px; font-size: 12px; white-space: nowrap; }
   .badge::before { content: attr(data-icon); font-size: 11px; }
@@ -50,7 +56,7 @@
   .detail-grid .wide { grid-column: 1 / -1; }
   blockquote { margin: 0; padding: 6px 10px; border-left: 3px solid var(--surface1); color: var(--subtext); white-space: pre-wrap; font-size: 13px; }
   ul.plain { list-style: none; margin: 0; padding: 0; } ul.plain li { margin: 2px 0; }
-  .ok { color: var(--green); } .bad { color: var(--red); } .warn { color: var(--yellow); } .muted { color: var(--overlay0); }
+  .ok { color: var(--green); } .bad { color: var(--red); } .warn { color: var(--yellow); } .muted { color: var(--subtext); }
   .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px 18px; color: var(--subtext); font-size: 13px; }
   @media (max-width: 720px) { .detail-grid { grid-template-columns: minmax(0, 1fr); } .digest .item { grid-template-columns: minmax(0, 1fr); } .digest .item .d { grid-column: 1; } }
 </style>
@@ -58,12 +64,15 @@
 <body>
 <main>
   <header>
-    <h1>rskj Unitrie: Java vs RSKIPs, verified with Lean and JBMC</h1>
+    <h1>rskj Unitrie verification: Java against the RSKIPs</h1>
     <div class="pins" id="pins"></div>
-    <p class="lede">Each row is one obligation extracted from the RSKIPs (the specification). Lean proves it
-      for all inputs over a model that mirrors the Java classes; JBMC checks it on the real compiled
-      classes within the stated bounds. Keccak-256 is treated as an ideal opaque function in both.
-      Click a row for the quote, citations, theorems, harnesses and reproducers.</p>
+    <p class="lede">Each row traces an RSKIP obligation to a Lean theorem and a bounded JBMC check on the real Java classes.
+      Lean results depend on the listed hypotheses and model abstractions; they are not a proof of unrestricted Java execution.
+      Hash properties assume an ideal opaque Keccak. Expand a row to inspect its evidence and limits.</p>
+    <p class="lede" id="coverage" role="status"></p>
+    <p class="lede">Scope still open: six split entries are empty-domain sentinels, not extra tested cases.
+      The three-key format harness omits third-key deletion; three saved-entry cases overwrite the first key.
+      Corrections and reruns are queued after live batches settle; existing batch snapshots remain unchanged.</p>
   </header>
 
   <section class="tiles" id="tiles" aria-label="Status counts"></section>
@@ -77,22 +86,23 @@
     <select id="area" aria-label="Area"><option value="">All areas</option></select>
     <select id="kind" aria-label="Kind"><option value="">All kinds</option></select>
     <select id="stage" aria-label="Stage"><option value="">All stages</option><option>1</option><option>2</option></select>
-    <span class="count" id="count"></span>
+    <button type="button" class="tile" id="clear">Clear filters</button>
+    <span class="count" id="count" aria-live="polite"></span>
   </div>
   <div class="tablewrap">
     <table>
-      <thead><tr><th>Obligation</th><th>Title</th><th>Kind</th><th>Status</th><th>Lean (unbounded)</th><th>JBMC (bounded)</th><th>RSKIP</th></tr></thead>
+      <thead><tr><th>Obligation</th><th>Title</th><th>Kind</th><th>Status</th><th>Lean (model)</th><th>JBMC (bounded)</th><th>RSKIP</th></tr></thead>
       <tbody id="rows"></tbody>
     </table>
   </div>
 
   <h2>How to read the status</h2>
   <div class="legend">
-    <div><span class="badge s-proved" data-icon="✓">proved</span> Lean proof for all inputs and every JBMC property harness passes on the real classes.</div>
+    <div><span class="badge s-proved" data-icon="✓">proved</span> Lean proof under its stated hypotheses, every declared JBMC check complete, negative controls pass and stubs audited.</div>
     <div><span class="badge s-bounded" data-icon="≤">bounded</span> JBMC passes within its bounds; no complete Lean proof.</div>
     <div><span class="badge s-fails" data-icon="✗">fails</span> Java does not do what the RSKIP requires; reproducer attached.</div>
     <div><span class="badge s-finding" data-icon="!">finding</span> The RSKIP is ambiguous, inconsistent or silent; Java's actual behaviour is verified and recorded.</div>
-    <div><span class="badge s-open" data-icon="…">open</span> Evidence still missing.</div>
+    <div><span class="badge s-open" data-icon="…">open</span> Evidence missing, incomplete or not yet accepted. A resource stop is not a counterexample.</div>
     <div><span class="badge s-stage-2" data-icon="→">stage-2</span> Inclusion proofs: follow-up, out of scope.</div>
   </div>
   <div id="diff" class="lede"></div>
@@ -127,7 +137,8 @@ function detail(r) {
   const runs = r.jbmc.map(x => `<li><a href="${esc(x.url)}" target="_blank" rel="noopener"><code>${esc(x.class)}.${esc(x.method)}</code></a>
       <span class="chip">${esc(x.role)}</span> expect ${esc(x.expect)} → <span class="${verdictClass(x)}">${esc(x.verdict || x.status)}</span>
       <div class="muted">${esc(Object.entries(x.bounds || {}).filter(([k]) => k !== "flags").map(([k, v]) => `${k}=${v}`).join(", "))}${x.time_s != null ? ` · ${x.time_s}s` : ""}${x.stub_audit ? ` · stubs: ${esc(x.stub_audit)}` : ""}</div>
-      ${x.reproducer_url ? `<div><a href="${esc(x.reproducer_url)}" target="_blank" rel="noopener">reproducer</a></div>` : ""}</li>`).join("");
+      ${x.evidence_manifest_url ? `<div>${link([`Executor manifest · source ${x.verified_source_commit.slice(0, 9)}`, x.evidence_manifest_url])}</div>` : ""}
+      ${x.reproducer_links ? `<div>${x.reproducer_links.map(link).join(" · ")}</div>` : ""}</li>`).join("");
   return `<div class="detail-grid">
     <div class="wide"><h3>Statement</h3>${esc(r.statement)}</div>
     <div><h3>RSKIP text (${esc(r.rskip)}, ${esc(r.section)})</h3><blockquote>${esc(r.quote)}</blockquote>
@@ -136,7 +147,7 @@ function detail(r) {
       <div class="muted">spec reading: ${esc(r.java_reading)} — ${esc(r.java_note)}</div></div>
     <div><h3>Lean</h3>${thms ? `<ul class="plain">${thms}</ul>` : '<span class="muted">no theorem</span>'}
       ${l.note ? `<div class="muted">${esc(l.note)}</div>` : ""}</div>
-    <div><h3>JBMC</h3>${runs ? `<ul class="plain">${runs}</ul>` : '<span class="muted">no harness</span>'}</div>
+    <div><h3>JBMC</h3>${(r.coverage_notes || []).map(n => `<p>${esc(n)}</p>`).join("")}${runs ? `<ul class="plain">${runs}</ul>` : '<span class="muted">no harness</span>'}</div>
     ${r.reproducer_hint ? `<div class="wide"><h3>Reproducer</h3><code>${esc(r.reproducer_hint)}</code></div>` : ""}
     ${r.summary ? `<div class="wide"><h3>Verdict</h3>${esc(r.summary)}</div>` : ""}
   </div>`;
@@ -153,7 +164,7 @@ function render() {
   const shown = M.rows.filter(matches);
   body.innerHTML = shown.map((r, i) => `<tr class="row" data-i="${M.rows.indexOf(r)}" tabindex="0" aria-expanded="false">
       <td>${esc(r.id)}</td><td>${esc(r.title)}</td><td><span class="chip">${esc(r.kind)}</span></td><td>${badge(r.status)}</td>
-      <td>${leanCell(r)}</td><td>${jbmcCell(r)}</td><td>${r.rskip_links.slice(0, 2).map(link).join(", ")}</td></tr>`).join("");
+      <td>${leanCell(r)}</td><td>${jbmcCell(r)}</td><td>${r.rskip_links.slice(0, 2).map(link).join(", ")}</td></tr>`).join("") || '<tr><td colspan="7">No obligations match these filters. Clear filters to see all obligations.</td></tr>';
   document.getElementById("count").textContent = `${shown.length} of ${M.rows.length}`;
   for (const tr of body.querySelectorAll("tr.row")) {
     const toggle = e => {
@@ -168,6 +179,13 @@ function render() {
   }
 }
 function init() {
+  document.getElementById("coverage").textContent = `JBMC declared-entry completion for ${M.jbmc_complete_obligations}/${M.rows.filter(r => r.stage === 1).length} Stage-1 obligations. ${M.jbmc_pending}/${M.jbmc_entries} harness entries still pending. A finding does not mean the rest of that obligation's checks are complete.`;
+  document.getElementById("clear").addEventListener("click", () => {
+    statusFilter = "";
+    for (const id of ["q", "area", "kind", "stage"]) document.getElementById(id).value = "";
+    for (const tile of document.querySelectorAll(".tiles .tile")) tile.setAttribute("aria-pressed", "false");
+    render();
+  });
   document.getElementById("pins").innerHTML = [
     `rskj <code>${esc(M.rskj_commit.slice(0, 12))}</code>`, `RSKIPs <code>${esc(M.rskips_commit.slice(0, 12))}</code>`,
     `JBMC ${esc(M.jbmc_version || "?")}`, `${esc(M.lean_toolchain || "")}`,
