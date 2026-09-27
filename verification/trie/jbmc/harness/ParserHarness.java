@@ -90,18 +90,46 @@ public class ParserHarness {
      * VarInt(v).encode() parses with getChildrenSize().value == v and the field is consumed exactly
      * (fromMessage throws if any byte remains, Trie.java:340-342).
      */
-    public static void treeSizeVarInt() {
-        Keccak256Helper.consistent = false;
+    /** VarInt size classes (unsigned): [0,253) 1 byte, [253,2^16) 3, [2^16,2^32) 5, [2^32,2^64) 9. */
+    static final long[] VARINT_FROM = {0L, 253L, 1L << 16, 1L << 32};
+    static final int[] VARINT_LEN = {1, 3, 5, 9};
+
+    /** v in size class c: unsigned VARINT_FROM[c] <= v < VARINT_FROM[c + 1] (the last class is open). */
+    static long varIntOfClass(int c) {
         long v = CProver.nondetLong();
-        byte[] m = Nondet.cat(Nondet.b(0x48), Nondet.bytes(32), new VarInt(v).encode());
-        Trie t = Trie.fromMessage(m, null);
-        assert t.getChildrenSize().value == v;
+        CProver.assume((v ^ Long.MIN_VALUE) >= (VARINT_FROM[c] ^ Long.MIN_VALUE));
+        if (c < 3) {
+            CProver.assume((v ^ Long.MIN_VALUE) < (VARINT_FROM[c + 1] ^ Long.MIN_VALUE));
+        }
+        return v;
     }
 
+    /** The encoding of v in class c, copied to that class's length. The length is asserted, not
+     *  assumed (a wrong class table fails instead of excluding values), and the copy has a concrete
+     *  length, so every length parsed from the message stays concrete for symbolic execution. */
+    static byte[] encodeOfClass(long v, int c) {
+        byte[] enc = new VarInt(v).encode();
+        assert enc.length == VARINT_LEN[c];
+        return java.util.Arrays.copyOf(enc, VARINT_LEN[c]);
+    }
+
+    /** For every long v (split by size class, Nondet.LO/HI), the tree size field VarInt(v).encode()
+     *  parses back to v. */
+    public static void treeSizeVarInt() {
+        Keccak256Helper.consistent = false;
+        for (int c = Nondet.LO; c < Math.min(Nondet.HI, VARINT_LEN.length); c++) {
+            long v = varIntOfClass(c);
+            byte[] m = Nondet.cat(Nondet.b(0x48), Nondet.bytes(32), encodeOfClass(v, c));
+            Trie t = Trie.fromMessage(m, null);
+            assert t.getChildrenSize().value == v;
+        }
+    }
+
+    /** Negative control: claims every parsed tree size is < 253 (false from the 3-byte class on). */
     public static void treeSizeVarIntNegative() {
         Keccak256Helper.consistent = false;
-        long v = CProver.nondetLong();
-        byte[] m = Nondet.cat(Nondet.b(0x48), Nondet.bytes(32), new VarInt(v).encode());
+        long v = varIntOfClass(1);
+        byte[] m = Nondet.cat(Nondet.b(0x48), Nondet.bytes(32), encodeOfClass(v, 1));
         assert Trie.fromMessage(m, null).getChildrenSize().value < 253;
     }
 

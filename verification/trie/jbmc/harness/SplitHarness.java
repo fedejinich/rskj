@@ -4104,6 +4104,30 @@ public class SplitHarness {
         TrieOpsHarness.emptyValueIsDelete();
     }
 
+    public static void parser_tree_size_varint_0() {
+        Nondet.LO = 0;
+        Nondet.HI = 1;
+        ParserHarness.treeSizeVarInt();
+    }
+
+    public static void parser_tree_size_varint_1() {
+        Nondet.LO = 1;
+        Nondet.HI = 2;
+        ParserHarness.treeSizeVarInt();
+    }
+
+    public static void parser_tree_size_varint_2() {
+        Nondet.LO = 2;
+        Nondet.HI = 3;
+        ParserHarness.treeSizeVarInt();
+    }
+
+    public static void parser_tree_size_varint_3() {
+        Nondet.LO = 3;
+        Nondet.HI = 4;
+        ParserHarness.treeSizeVarInt();
+    }
+
     public static void trie_message_roundtrip_0_1() {
         Nondet.LO = 0;
         Nondet.HI = 1;

@@ -1380,20 +1380,20 @@
       "verdict": "SUCCESS",
       "pass": true,
       "exit_code": 0,
-      "time_s": 11.49,
+      "time_s": 12.17,
       "bounds": {
         "unwind": 80,
-        "address": "2 symbolic bytes + 18 x 0x11"
+        "address": "1 symbolic byte + 19 x 0x11 (20 symbolic bytes: 600 s limit)"
       },
-      "note": "cache-hit path of TrieKeyMapper (real JDK HashMap); address with 2 symbolic bytes, 18 fixed",
+      "note": "cache-hit path of TrieKeyMapper (real JDK HashMap); address with 1 symbolic byte, 19 fixed",
       "status": "supported",
       "reproducer": null,
       "stub_audit": "none on property path",
       "host": "void-rsk.local",
-      "peak_rss_mb": 577,
+      "peak_rss_mb": 580,
       "limits": {
-        "jbmc_slots": 5,
-        "rss_gb": 6.0,
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
         "max_load": 16.0,
         "timeout_s": 600
       },
@@ -2416,31 +2416,31 @@
       "command": "jbmc ParserHarness -cp $JBMC_CP --function ParserHarness.varintNonMinimalRskip --unwinding-assertions --static-values models/static-values.json --unwind 20 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --trace"
     },
     {
-      "id": "parser-tree-size-varint",
+      "id": "parser-tree-size-varint-part00",
       "obligations": [
         "TRIE-VARINT-02"
       ],
       "role": "property",
-      "class": "ParserHarness",
-      "method": "treeSizeVarInt",
+      "class": "SplitHarness",
+      "method": "parser_tree_size_varint_0",
       "expect": "SUCCESS",
-      "verdict": "TIMEOUT",
-      "pass": false,
-      "exit_code": -9,
-      "time_s": 599.92,
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 15.28,
       "bounds": {
         "unwind": 20,
-        "value": "all 2^64"
+        "split": "ParserHarness.treeSizeVarInt with Nondet.LO=0, HI=1"
       },
-      "note": "every 64-bit treeSize v: Trie.readVarInt returns v and consumes exactly the VarInt",
+      "note": "split part of parser-tree-size-varint: VarInt size class 0 (unsigned [0,253), [253,2^16), [2^16,2^32), [2^32,2^64) -> 1, 3, 5, 9 bytes); every long in it",
       "status": "supported",
       "reproducer": null,
       "stub_audit": "none on property path",
       "host": "void-rsk.local",
-      "peak_rss_mb": 3886,
+      "peak_rss_mb": 466,
       "limits": {
-        "jbmc_slots": 5,
-        "rss_gb": 6.0,
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
         "max_load": 16.0,
         "timeout_s": 600
       },
@@ -2452,7 +2452,124 @@
         "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
       ],
       "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
-      "command": "jbmc ParserHarness -cp $JBMC_CP --function ParserHarness.treeSizeVarInt --unwinding-assertions --static-values models/static-values.json --unwind 20 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$"
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.parser_tree_size_varint_0 --unwinding-assertions --static-values models/static-values.json --unwind 20 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$"
+    },
+    {
+      "id": "parser-tree-size-varint-part01",
+      "obligations": [
+        "TRIE-VARINT-02"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "parser_tree_size_varint_1",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 7.79,
+      "bounds": {
+        "unwind": 20,
+        "split": "ParserHarness.treeSizeVarInt with Nondet.LO=1, HI=2"
+      },
+      "note": "split part of parser-tree-size-varint: VarInt size class 1 (unsigned [0,253), [253,2^16), [2^16,2^32), [2^32,2^64) -> 1, 3, 5, 9 bytes); every long in it",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 578,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.parser_tree_size_varint_1 --unwinding-assertions --static-values models/static-values.json --unwind 20 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$"
+    },
+    {
+      "id": "parser-tree-size-varint-part02",
+      "obligations": [
+        "TRIE-VARINT-02"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "parser_tree_size_varint_2",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 7.86,
+      "bounds": {
+        "unwind": 20,
+        "split": "ParserHarness.treeSizeVarInt with Nondet.LO=2, HI=3"
+      },
+      "note": "split part of parser-tree-size-varint: VarInt size class 2 (unsigned [0,253), [253,2^16), [2^16,2^32), [2^32,2^64) -> 1, 3, 5, 9 bytes); every long in it",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 570,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.parser_tree_size_varint_2 --unwinding-assertions --static-values models/static-values.json --unwind 20 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$"
+    },
+    {
+      "id": "parser-tree-size-varint-part03",
+      "obligations": [
+        "TRIE-VARINT-02"
+      ],
+      "role": "property",
+      "class": "SplitHarness",
+      "method": "parser_tree_size_varint_3",
+      "expect": "SUCCESS",
+      "verdict": "SUCCESS",
+      "pass": true,
+      "exit_code": 0,
+      "time_s": 6.26,
+      "bounds": {
+        "unwind": 20,
+        "split": "ParserHarness.treeSizeVarInt with Nondet.LO=3, HI=4"
+      },
+      "note": "split part of parser-tree-size-varint: VarInt size class 3 (unsigned [0,253), [253,2^16), [2^16,2^32), [2^32,2^64) -> 1, 3, 5, 9 bytes); every long in it",
+      "status": "supported",
+      "reproducer": null,
+      "stub_audit": "none on property path",
+      "host": "void-rsk.local",
+      "peak_rss_mb": 582,
+      "limits": {
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
+        "max_load": 16.0,
+        "timeout_s": 600
+      },
+      "failed_properties": [],
+      "stubs": [
+        "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+        "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+        "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+        "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+      ],
+      "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+      "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.parser_tree_size_varint_3 --unwinding-assertions --static-values models/static-values.json --unwind 20 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$"
     },
     {
       "id": "parser-tree-size-varint-neg",
@@ -2463,10 +2580,10 @@
       "class": "ParserHarness",
       "method": "treeSizeVarIntNegative",
       "expect": "FAILURE",
-      "verdict": "TIMEOUT",
-      "pass": false,
-      "exit_code": -9,
-      "time_s": 599.92,
+      "verdict": "FAILURE",
+      "pass": true,
+      "exit_code": 10,
+      "time_s": 7.73,
       "bounds": {
         "unwind": 20
       },
@@ -2475,14 +2592,16 @@
       "reproducer": null,
       "stub_audit": "none on property path",
       "host": "void-rsk.local",
-      "peak_rss_mb": 3891,
+      "peak_rss_mb": 548,
       "limits": {
-        "jbmc_slots": 5,
-        "rss_gb": 6.0,
+        "jbmc_slots": 6,
+        "rss_gb": 12.0,
         "max_load": 16.0,
         "timeout_s": 600
       },
-      "failed_properties": [],
+      "failed_properties": [
+        "java::ParserHarness.treeSizeVarIntNegative:()V.assertion.1"
+      ],
       "stubs": [
         "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
         "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
@@ -24220,5 +24339,5 @@
       "command": "jbmc SplitHarness -cp $JBMC_CP --function SplitHarness.key_injective_4_4 --unwinding-assertions --static-values models/static-values.json --unwind 80 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$"
     }
   ],
-  "all_pass": false
+  "all_pass": true
 }

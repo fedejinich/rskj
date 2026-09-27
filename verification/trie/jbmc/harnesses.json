@@ -555,9 +555,9 @@
    "method": "accountKeyCached",
    "unwind": 80,
    "expect": "SUCCESS",
-   "note": "cache-hit path of TrieKeyMapper (real JDK HashMap); address with 2 symbolic bytes, 18 fixed",
+   "note": "cache-hit path of TrieKeyMapper (real JDK HashMap); address with 1 symbolic byte, 19 fixed",
    "bounds": {
-    "address": "2 symbolic bytes + 18 x 0x11"
+    "address": "1 symbolic byte + 19 x 0x11 (20 symbolic bytes: 600 s limit)"
    }
   },
   {
@@ -929,18 +929,67 @@
    }
   },
   {
-   "id": "parser-tree-size-varint",
+   "id": "parser-tree-size-varint-part00",
    "obligations": [
     "TRIE-VARINT-02"
    ],
    "role": "property",
-   "class": "ParserHarness",
-   "method": "treeSizeVarInt",
+   "class": "SplitHarness",
+   "method": "parser_tree_size_varint_0",
    "unwind": 20,
    "expect": "SUCCESS",
-   "note": "every 64-bit treeSize v: Trie.readVarInt returns v and consumes exactly the VarInt",
+   "split_of": "parser-tree-size-varint",
+   "note": "split part of parser-tree-size-varint: VarInt size class 0 (unsigned [0,253), [253,2^16), [2^16,2^32), [2^32,2^64) -> 1, 3, 5, 9 bytes); every long in it",
    "bounds": {
-    "value": "all 2^64"
+    "split": "ParserHarness.treeSizeVarInt with Nondet.LO=0, HI=1"
+   }
+  },
+  {
+   "id": "parser-tree-size-varint-part01",
+   "obligations": [
+    "TRIE-VARINT-02"
+   ],
+   "role": "property",
+   "class": "SplitHarness",
+   "method": "parser_tree_size_varint_1",
+   "unwind": 20,
+   "expect": "SUCCESS",
+   "split_of": "parser-tree-size-varint",
+   "note": "split part of parser-tree-size-varint: VarInt size class 1 (unsigned [0,253), [253,2^16), [2^16,2^32), [2^32,2^64) -> 1, 3, 5, 9 bytes); every long in it",
+   "bounds": {
+    "split": "ParserHarness.treeSizeVarInt with Nondet.LO=1, HI=2"
+   }
+  },
+  {
+   "id": "parser-tree-size-varint-part02",
+   "obligations": [
+    "TRIE-VARINT-02"
+   ],
+   "role": "property",
+   "class": "SplitHarness",
+   "method": "parser_tree_size_varint_2",
+   "unwind": 20,
+   "expect": "SUCCESS",
+   "split_of": "parser-tree-size-varint",
+   "note": "split part of parser-tree-size-varint: VarInt size class 2 (unsigned [0,253), [253,2^16), [2^16,2^32), [2^32,2^64) -> 1, 3, 5, 9 bytes); every long in it",
+   "bounds": {
+    "split": "ParserHarness.treeSizeVarInt with Nondet.LO=2, HI=3"
+   }
+  },
+  {
+   "id": "parser-tree-size-varint-part03",
+   "obligations": [
+    "TRIE-VARINT-02"
+   ],
+   "role": "property",
+   "class": "SplitHarness",
+   "method": "parser_tree_size_varint_3",
+   "unwind": 20,
+   "expect": "SUCCESS",
+   "split_of": "parser-tree-size-varint",
+   "note": "split part of parser-tree-size-varint: VarInt size class 3 (unsigned [0,253), [253,2^16), [2^16,2^32), [2^32,2^64) -> 1, 3, 5, 9 bytes); every long in it",
+   "bounds": {
+    "split": "ParserHarness.treeSizeVarInt with Nondet.LO=3, HI=4"
    }
   },
   {

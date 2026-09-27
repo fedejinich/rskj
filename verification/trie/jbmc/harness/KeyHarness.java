@@ -31,8 +31,9 @@ public class KeyHarness {
     }
 
     /** TRIE-KEY-01, cache path: a second getAccountKey for an equal address (HashMap hit, real JDK
-     *  HashMap) returns the same key; address with 1 symbolic byte (the hash-code multiplication
-     *  chain over 20 symbolic bytes is too hard for the solver within minutes). */
+     *  HashMap) returns the same key. Narrowed: address with 1 symbolic byte and 19 x 0x11. With 20
+     *  symbolic bytes the run reached the 600 s limit (the HashMap hash-code multiplication chain over
+     *  20 symbolic bytes); key-account-key checks the key formula for every 20-byte address. */
     public static void accountKeyCached() {
         byte[] a = Nondet.cat(Nondet.bytes(1), Nondet.rep(19, 0x11));
         TrieKeyMapper m = new TrieKeyMapper();
