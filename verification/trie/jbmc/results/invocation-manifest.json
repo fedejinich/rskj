@@ -1,7 +1,7 @@
 {
  "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
  "jdk_version": "openjdk version \"17.0.17\" 2025-10-21\nOpenJDK Runtime Environment Homebrew (build 17.0.17+0)\nOpenJDK 64-Bit Server VM Homebrew (build 17.0.17+0, mixed mode, sharing)",
- "source_commit": "6642bf537a3c841912a73f36cf5915697f2c1e1a (uncommitted changes under verification/trie/jbmc)",
+ "source_commit": "d40a8ee629fd0a7eda081b91fbaff2027d705ec1 (uncommitted changes under verification/trie/jbmc)",
  "classpath": [
   {
    "entry": "$HERE/build/harness",
@@ -82,7 +82,7 @@
   "models/src/org/ethereum/crypto/Keccak256Helper.java": "759567ba3cf1d3faf36e2d038d061ac2a3a3881c7bc3520821a1ca19d394afbd",
   "models/src/org/slf4j/LoggerFactory.java": "396dfb2baba7ff791cd4233dcbd4b58ad12c5aee8da7a03157526a141eb5afa4",
   "harnesses.json": "1f92294dcf83b35a4461898c1d43d52948ccd0c05e03452e2b0fcd7cfb5be14e",
-  "run-jbmc.sh": "7eafd9ddc4626b84873c889aa199556dc754755950a60c339b178daafd35e11c",
+  "run-jbmc.sh": "59943003f6b01f0525b1350382d3a719b6715e8b9eb3934d76d804c92c3f5555",
   "heavy_run.py": "52c7fb4ede35dfdb744f14aa534b6c165db4333f3461ab77f04335914a5dca48",
   "invocation.py": "c698963a2fecd1561ce64206efcdd5f59e9a931b2d8dbd984b693ce0b6377e69"
  },
