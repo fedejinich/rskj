@@ -9,6 +9,7 @@ from unittest.mock import patch
 import build_matrix as m
 sys.path.insert(0, str(Path(__file__).parent / "jbmc"))
 import coverage as jbmc_coverage
+import reproducers
 
 obligation = {"id": "TRIE-TEST-01", "stage": 1, "area": "TEST", "kind": "requirement",
               "title": "Test", "statement": "Test", "quote": "Test", "rskip": "RSKIP107",
@@ -27,6 +28,13 @@ assert m.classify(obligation, lean, [{**prop, "pass": False, "verdict": "FAILURE
 assert m.classify(obligation, lean, [prop]) == "open"  # absent negative control
 
 with tempfile.TemporaryDirectory() as tmp, patch.object(m, "ROOT", Path(tmp)):
+    cases = Path(tmp) / "differential/cases/reproducers.cases"
+    cases.parent.mkdir(parents=True)
+    cases.write_text("# TRIE-HASH-04\n# continuation comment\ncase hash\nhash\nend\n"
+                     "# TRIE-HASH-02\ncase empty\nend\n")
+    with patch.object(reproducers, "TRIE", tmp):
+        assert reproducers._cases("TRIE-HASH-04") == ["case hash", "hash", "end"]
+        assert reproducers._cases("TRIE-HASH-02") == ["case empty", "end"]
     inputs = {
         "spec/obligations.json": {"rskips_commit": "test", "obligations": [obligation]},
         "lean/obligations-map.json": [lean],
