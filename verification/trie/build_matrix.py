@@ -6,9 +6,8 @@ Inputs:  spec/obligations.json, lean/obligations-map.json, jbmc/results/summary.
 Outputs: matrix.json, matrix.md, review/index.html (review/template.html with the matrix inlined)
 
 Status per Stage-1 obligation (see README "Status definitions"):
-  fails    Java is shown not to satisfy a requirement/derived obligation (Lean counterexample, a
-           JBMC rskip-reading harness failing as expected)
-  finding  ambiguity: the RSKIP is unclear/inconsistent/silent and Java's actual behaviour is verified
+  fails    A Lean model counterexample or audited JBMC rskip-reading refutes the stated obligation
+  finding  RSKIP ambiguity examined in the Lean model or with audited bounded Java evidence
   proved   Lean proves the model statement under its hypotheses; all declared JBMC checks pass
   bounded  JBMC property harnesses pass; no complete Lean proof
   open     anything else (missing or failing evidence): the goal is not met while any row is open
@@ -174,6 +173,7 @@ def main():
           "Status: " + ", ".join(f"**{k}** {v}" for k, v in counts.items()), "",
           "Coverage (Stage 1): " + ", ".join(f"{k} {v}" for k, v in coverage.items()), "",
           "Lean proves statements under the listed model hypotheses; JBMC checks the real classes within each harness bound.", "",
+          "A fails/finding status may rest on Lean model evidence alone. Java verdicts and stub audits are separate evidence.", "",
           f"JBMC declared-entry completion for {matrix['jbmc_complete_obligations']}/{sum(r['stage'] == 1 for r in rows)} Stage-1 obligations; "
           f"{matrix['jbmc_pending']}/{matrix['jbmc_entries']} harness entries pending. Findings do not imply complete coverage.", "",
           "Declared-entry completion is not exhaustive input coverage: six split entries are empty-domain sentinels; "

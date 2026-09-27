@@ -100,8 +100,8 @@
   <div class="legend">
     <div><span class="badge s-proved" data-icon="✓">proved</span> Lean proof under its stated hypotheses, every declared JBMC check complete, negative controls pass and stubs audited.</div>
     <div><span class="badge s-bounded" data-icon="≤">bounded</span> JBMC passes within its bounds; no complete Lean proof.</div>
-    <div><span class="badge s-fails" data-icon="✗">fails</span> Java does not do what the RSKIP requires; reproducer attached.</div>
-    <div><span class="badge s-finding" data-icon="!">finding</span> The RSKIP is ambiguous, inconsistent or silent; Java's actual behaviour is verified and recorded.</div>
+    <div><span class="badge s-fails" data-icon="✗">fails</span> A Lean model counterexample or audited bounded Java counterexample refutes the stated obligation.</div>
+    <div><span class="badge s-finding" data-icon="!">finding</span> The RSKIP is ambiguous, inconsistent or silent. Supporting evidence may be a Lean model result alone; inspect Java verdicts and stub audits separately.</div>
     <div><span class="badge s-open" data-icon="…">open</span> Evidence missing, incomplete or not yet accepted. A resource stop is not a counterexample.</div>
     <div><span class="badge s-stage-2" data-icon="→">stage-2</span> Inclusion proofs: follow-up, out of scope.</div>
   </div>

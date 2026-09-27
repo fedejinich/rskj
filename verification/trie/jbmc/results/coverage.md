@@ -55,11 +55,11 @@ Six split sentinels have no legal pair and are not extra tested cases. The forma
 | TRIE-OPS-01 | conforms | holds | ops-empty-trie (property, SUCCESS); ops-empty-trie-neg (negative-control, FAILURE) | {"key_bytes":"0..3 symbolic"} |
 | TRIE-OPS-02 | conforms | holds | trie-single-key-put-get (property, SUCCESS); trie-single-key-put-get-neg (negative-control, FAILURE); trie-put-get-neg (negative-control, FAILURE); trie-put-get (property, 12/12 parts as expected) | {"key_bytes":"0..2 symbolic","values":"1,32,33 bytes"}; {} |
 | TRIE-OPS-03 | conforms | check | trie-single-key-put-get (property, SUCCESS); trie-put-get (property, 12/12 parts as expected) | {"key_bytes":"0..2 symbolic","values":"1,32,33 bytes"}; {} |
-| TRIE-OPS-04 | conforms | pending | trie-single-key-delete (property, SUCCESS); trie-single-key-delete-neg (negative-control, FAILURE); trie-put-delete-get (property, 179/288 parts as expected, 109 without result) | "KEYS (12)"; {} |
-| TRIE-OPS-05 | conforms | pending | trie-put-delete-get-neg (negative-control, FAILURE); trie-put-delete-get (property, 179/288 parts as expected, 109 without result) | {} |
+| TRIE-OPS-04 | conforms | holds | trie-single-key-delete (property, SUCCESS); trie-single-key-delete-neg (negative-control, FAILURE); trie-put-delete-get (property, 288/288 parts as expected) | "KEYS (12)"; {} |
+| TRIE-OPS-05 | conforms | holds | trie-put-delete-get-neg (negative-control, FAILURE); trie-put-delete-get (property, 288/288 parts as expected) | {} |
 | TRIE-OPS-06 | conforms | pending | trie-single-key-delete (property, SUCCESS); trie-empty-value-is-delete-neg (negative-control, FAILURE); trie-empty-value-is-delete (property, 144/144 parts as expected); ops-empty-and-null-are-delete (property, 0/144 parts as expected, 144 without result) | "KEYS (12)"; {} |
 | TRIE-OPS-07 | conforms | check | trie-put-get (property, 12/12 parts as expected) | {} |
-| TRIE-OPS-08 | conforms | pending | ops-immutable-neg (negative-control, FAILURE); trie-put-delete-get (property, 179/288 parts as expected, 109 without result); ops-immutable (property, 0/144 parts as expected, 144 without result) | {} |
+| TRIE-OPS-08 | conforms | pending | ops-immutable-neg (negative-control, FAILURE); trie-put-delete-get (property, 288/288 parts as expected); ops-immutable (property, 0/144 parts as expected, 144 without result) | {} |
 | TRIE-OPS-09 | conforms | pending | ops-delete-recursive-branch (property, SUCCESS); ops-delete-recursive-rskip (rskip-reading, FAILURE); ops-delete-recursive (property, 0/144 parts as expected, 144 without result) | {} |
 | TRIE-CMP-01 | conforms | pending | ops-canonical-shape-neg (negative-control, FAILURE); ops-canonical-shape (property, 0/144 parts as expected, 144 without result) |  |
 | TRIE-CMP-02 | conforms | pending | ops-history-independent-neg (negative-control, FAILURE); ops-history-independent (property, 0/67 parts as expected, 67 without result) |  |

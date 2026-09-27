@@ -56,8 +56,8 @@ Lean: `leanprover/lean4:v4.34.1` (core only, no Mathlib). JBMC: CBMC 6.11.0
 | --- | --- |
 | `proved` | Lean proves the model statement under its listed hypotheses, all declared JBMC entries pass within bounds, negative controls exist and stub audits pass |
 | `bounded` | Holds within the JBMC bounds on the real classes; no complete Lean proof |
-| `fails` | Java does not satisfy the obligation as the RSKIP states it; reproducer attached |
-| `finding` | RSKIP text is ambiguous/inconsistent or silent and the behaviour Java actually has is recorded (and verified); reproducer attached |
+| `fails` | A Lean model counterexample or audited bounded Java counterexample refutes the stated obligation; inspect the supporting tool evidence |
+| `finding` | RSKIP text is ambiguous, inconsistent or silent; the recorded evidence may be a Lean model result alone, not a completed Java check |
 | `open` | Required evidence is missing, incomplete or not accepted; resource stops and untriaged failures are not counterexamples |
 
 The matrix separately reports complete JBMC coverage and pending entries, including every declared
