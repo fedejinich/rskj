@@ -10,3 +10,4 @@ results/key-family.txt
 results/summary.json.tmp
 results/summary.json.lock
 results/rerun-old.txt
+results/hosts/
