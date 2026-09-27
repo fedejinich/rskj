@@ -21,6 +21,10 @@ NS = "RskjTrie.Obligations."
 # counterexample refutes the *other* reading.
 PROVED_DESPITE_CX = {"TRIE-KEY-07", "TRIE-PATH-01", "TRIE-PATH-02", "TRIE-VAL-04", "TRIE-HASH-02"}
 PARTIAL = {
+    "TRIE-HASH-05": "The theorem proves the cache-free encoder equation, not Java's stateful Orchid hash. "
+                    "Java caches getHashOrchid(isSecure) without keying on isSecure (Trie.java:382-392); "
+                    "calling false then true reuses the false hash. Neither Lean layer models hashOrchid. "
+                    "JBMC hash-orchid-cache-flag records the counterexample; the same-flag bridge remains open.",
     "TRIE-OPS-08": "Pure layer: tries are immutable Lean values, so t is unchanged by t.put(...) and its "
                    "get/getHash are functions of its contents. Operational layer (trie_ops_08_operational): the "
                    "receiver whose caches put mutates still represents t, so its getHash/get are unchanged. Not "
@@ -39,8 +43,9 @@ NOTES = {
                    "probe) leaves the trie unchanged. trie_ops_09_sanity proves the reproducer_hint run.",
     "TRIE-VAL-03": "Proved for nodes with the value in memory and consistent caches (every node of a reachable "
                    "trie). For a node parsed from a crafted store the property fails: see TRIE-VAL-06.",
-    "TRIE-HASH-03": "Ideal-hash hypotheses: H injective (all inputs) and 32-byte outputs; keys shorter than 2^28 "
-                    "bytes (shared paths fit Java's int).",
+    "TRIE-HASH-03": "Ideal-hash hypotheses: 32-byte outputs, collision freedom only on the finite list of "
+                    "messages and values from the two tries, plus the empty-root input 80; keys shorter than "
+                    "2^28 bytes (shared paths fit Java's int). Global injectivity is not assumed.",
     "TRIE-HASH-04": "Refuted on the crafted store of cases/reproducers.cases (repro-hash-04-*), operational "
                     "layer, decide +kernel with real Keccak-256; outputs equal Java's. The java-behaviour "
                     "theorem proves, via the operational/pure bridge, that for a store written by save the "

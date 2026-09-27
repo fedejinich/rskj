@@ -45,15 +45,17 @@ theorem pathsOK_of_reachable (env : Env) (t : Trie) (ht : Reachable env t)
   have := hk k (by rw [Trie.get_eq_contents env _ ht.WF.1]; intro e; simp only [Except.ok.injEq] at e; exact hq e)
   rw [fromKey_length]; omega
 
-/-- TRIE-HASH-03: assuming `H` is injective and yields 32 bytes, reachable tries (with keys shorter
-than `2^28` bytes) with equal `getHash()` have the same key → value map. -/
-theorem trie_hash_03 (env : Env) (hH : ∀ x, (env.H x).length = 32) (hinj : ∀ x y, env.H x = env.H y → x = y)
+/-- TRIE-HASH-03: assuming `H` yields 32 bytes and has no collisions on the two tries' finite
+messages and values, reachable tries with keys shorter than `2^28` bytes and equal `getHash()`
+have the same key → value map. No global injectivity assumption on a fixed-width hash. -/
+theorem trie_hash_03 (env : Env) (hH : ∀ x, (env.H x).length = 32)
     (t1 t2 : Trie) (h1 : Reachable env t1) (h2 : Reachable env t2)
     (k1 : ∀ k, t1.get env k ≠ .ok none → k.length < 2 ^ 28) (k2 : ∀ k, t2.get env k ≠ .ok none → k.length < 2 ^ 28)
+    (hinj : InjOn env.H (t1.vals env.H ++ t2.vals env.H ++ [[0x80]]))
     (heq : t1.getHash env = t2.getHash env) : ∀ k, t1.get env k = t2.get env k := by
   have hc := Trie.hash_binds_map env hH t1 t2 h1.WF h2.WF (pathsOK_of_reachable env t1 h1 k1)
     (pathsOK_of_reachable env t2 h2 k2) (t1.vals env.H ++ t2.vals env.H ++ [[0x80]])
-    (fun a _ b _ e => hinj a b e) (fun x hx => by simp [hx]) (fun x hx => by simp [hx]) (by simp) heq
+    hinj (fun x hx => by simp [hx]) (fun x hx => by simp [hx]) (by simp) heq
   intro k
   rw [Trie.get_eq_contents env _ h1.WF.1, Trie.get_eq_contents env _ h2.WF.1, hc]
 
@@ -124,8 +126,9 @@ theorem trie_hash_04_rskip_counterexample :
     hash04 ≠ hash04loaded := by
   refine ⟨(okEq_iff _ _).1 ?_, (okEq_iff _ _).1 ?_, by decide⟩ <;> decide +kernel
 
-/-- TRIE-HASH-05: `getHashOrchid(s) = H(toMessageOrchid(s))` for non-empty nodes and `EMPTY_HASH`
-for the empty node; the Orchid message references children by their Orchid hashes. -/
+/-- TRIE-HASH-05, cache-free layer only: `getHashOrchid(s) = H(toMessageOrchid(s))` for non-empty
+nodes and `EMPTY_HASH` for the empty node. This does not establish the Java obligation across
+flag changes: Java's `hashOrchid` cache ignores `s`, and that cache is not modelled here. -/
 theorem trie_hash_05 (env : Env) (s : Bool) (t : Trie) :
     t.getHashOrchidF env FUEL s = if t.isEmptyTrie then .ok (env.H [0x80]) else env.H <$> t.toMessageOrchidF env FUEL s :=
   Trie.getHashOrchid_eq env FUEL s t

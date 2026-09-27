@@ -77,7 +77,7 @@ methods live together in `Serialization.lean`.
 | `Keccak256Helper.keccak256` | parameter `Env.H`; theorems assume only what they state (32-byte output, injectivity on the written values); `Keccak.lean` for execution | – | – |
 | `NodeReference{lazyNode, lazyHash}` | pure: `NodeRef.empty` / `.node t` / `.hash h`; operational: `ORef.empty` / `.node t lazyHash` / `.hash h` | Pure: `.node t` = `lazyNode ≠ null`, `.hash h` = not loaded, and a load is not cached. After `getNode()` loads a hashed reference Java caches `lazyNode`, and `isEmbeddable()` (NodeReference.java:141-148) then depends on the loaded node, so the parent's message/hash can change (`TRIE-HASH-04`). The operational layer caches it (`.hash h` becomes `.node t (some h)`) and reproduces Java (`repro-hash-04-loaded`, and `trie_hash_04_rskip_counterexample`). The bridge proves the pure layer exact whenever every hashed child is non-embeddable, e.g. for stores written by `save` (`retrieve_bridge`, `trie_hash_04`). | for a node read from a store it wrote itself, loading a hashed child never makes `isEmbeddable()` true |
 | `NodeReference(store, node, null)` with an empty node | `NodeRef.ofNode` → `.empty` | NodeReference.java:44-55. | – |
-| caches `Trie.hash`, `encoded`, `valueHash` (when the value is present), `NodeReference.lazyHash`, retrieved long `value` | pure: not modelled (recomputed); operational: fields of `OTrie`/`ORef` | Each is a function of the node contents in represented objects (`Rep`); `hash`/`encoded` computed *before* a lazy child is loaded are not invalidated afterwards (Java), which the operational layer reproduces. `hashOrchid` is not cached in either layer (only used for pre-RSKIP126 roots). | same as above |
+| caches `Trie.hash`, `encoded`, `valueHash` (when the value is present), `NodeReference.lazyHash`, retrieved long `value` | pure: not modelled (recomputed); operational: fields of `OTrie`/`ORef` | Each is a function of the node contents in represented objects (`Rep`); `hash`/`encoded` computed *before* a lazy child is loaded are not invalidated afterwards (Java), which the operational layer reproduces. `hashOrchid` is not cached in either layer. Java's cache ignores `isSecure` (Trie.java:382-392), so changing that flag can return an earlier flag's hash. TRIE-HASH-05 is therefore partial: its theorem covers only the cache-free equation, not this stateful behaviour. | same as above; Orchid cache counterexample tracked by `hash-orchid-cache-flag` |
 | `Trie.childrenSize` (nullable) | `Option Nat` | Not a pure cache: it is serialized. The model keeps it and mirrors the incremental update (Trie.java:891-910); `childrenSize_from_scratch` proves it equals the from-scratch value in well-formed tries. | – |
 | `valueHash` when `value == null` (lazy long value) | `valueHash : Option Bytes` | the only link to the value in the store. | – |
 | `Trie.saved` / `wasSaved()` / `markAsSaved()` | pure: not modelled, `save` always walks resident nodes; operational: `OTrie.saved`, set by `retrieve` and `save`, `save` returns at once for saved nodes (TrieStoreImpl.java:93-95) | Pure: a node marked saved was written under the same key with the same bytes, as were its long values and non-embedded descendants, so rewriting is a no-op on the map. The flag is observable through `MultiTrieStore.collect` (TRIE-STORE-06: nothing is copied), modelled on the operational layer. | – |
@@ -94,6 +94,13 @@ Helper definitions factor code that Java writes inline, with the same control fl
 `retrieveNodeOrEmpty`/`replaceChild` (Trie.java:878-881, 891-910); `coalesce` (Trie.java:787-820);
 `valueBytes` (Trie.java:731-736); `saveTail`/`saveRef` (TrieStoreImpl.java:106-118, 120-143).
 The differential output was re-checked after each.
+
+## Hash assumptions
+
+`trie_hash_03` assumes 32-byte hash outputs and collision freedom only on the finite list
+of messages and values in the two compared tries, plus the empty-root input `80`.
+It does not assume global injectivity from arbitrary byte strings to 32-byte digests,
+which is impossible. This is an ideal-hash hypothesis, not a theorem about real Keccak.
 
 ## Operational layer: aliasing
 

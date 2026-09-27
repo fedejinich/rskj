@@ -1591,16 +1591,16 @@
    {
     "name": "RskjTrie.Obligations.trie_hash_03",
     "file": "lean/RskjTrie/Obligations/Hash.lean",
-    "line": 50,
+    "line": 51,
     "role": "obligation",
     "status": "proved",
     "hypotheses": [
      "∀ (x : RskjTrie.Bytes), List.length (env.H x) = 32",
-     "∀ (x y : RskjTrie.Bytes), env.H x = env.H y → x = y",
      "RskjTrie.Obligations.Reachable env t1",
      "RskjTrie.Obligations.Reachable env t2",
      "∀ (k : RskjTrie.Bytes), RskjTrie.Trie.get env t1 k ≠ Except.ok none → List.length k < 2 ^ 28",
      "∀ (k : RskjTrie.Bytes), RskjTrie.Trie.get env t2 k ≠ Except.ok none → List.length k < 2 ^ 28",
+     "RskjTrie.InjOn env.H (RskjTrie.Trie.vals env.H t1 ++ RskjTrie.Trie.vals env.H t2 ++ [[128]])",
      "RskjTrie.Trie.getHash env t1 = RskjTrie.Trie.getHash env t2"
     ],
     "axioms": [
@@ -1611,7 +1611,7 @@
    }
   ],
   "lean_status": "proved",
-  "note": "Ideal-hash hypotheses: H injective (all inputs) and 32-byte outputs; keys shorter than 2^28 bytes (shared paths fit Java's int)."
+  "note": "Ideal-hash hypotheses: 32-byte outputs, collision freedom only on the finite list of messages and values from the two tries, plus the empty-root input 80; keys shorter than 2^28 bytes (shared paths fit Java's int). Global injectivity is not assumed."
  },
  {
   "id": "TRIE-HASH-04",
@@ -1619,7 +1619,7 @@
    {
     "name": "RskjTrie.Obligations.trie_hash_04",
     "file": "lean/RskjTrie/Obligations/Hash.lean",
-    "line": 66,
+    "line": 68,
     "role": "java-behaviour",
     "status": "proved",
     "hypotheses": [
@@ -1634,7 +1634,7 @@
    {
     "name": "RskjTrie.Obligations.trie_hash_04_rskip_counterexample",
     "file": "lean/RskjTrie/Obligations/Hash.lean",
-    "line": 121,
+    "line": 123,
     "role": "rskip-counterexample",
     "status": "proved",
     "hypotheses": [],
@@ -1653,7 +1653,7 @@
    {
     "name": "RskjTrie.Obligations.trie_hash_05",
     "file": "lean/RskjTrie/Obligations/Hash.lean",
-    "line": 129,
+    "line": 132,
     "role": "obligation",
     "status": "proved",
     "hypotheses": [],
@@ -1663,8 +1663,8 @@
     ]
    }
   ],
-  "lean_status": "proved",
-  "note": ""
+  "lean_status": "partial",
+  "note": "The theorem proves the cache-free encoder equation, not Java's stateful Orchid hash. Java caches getHashOrchid(isSecure) without keying on isSecure (Trie.java:382-392); calling false then true reuses the false hash. Neither Lean layer models hashOrchid. JBMC hash-orchid-cache-flag records the counterexample; the same-flag bridge remains open."
  },
  {
   "id": "TRIE-SER-01",
