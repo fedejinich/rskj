@@ -211,7 +211,8 @@ def _thermal_cap():
 
 
 def _gradle_running():
-    r = subprocess.run(["pgrep", "-f", "GradleDaemon|GradleWrapperMain|gradle-launcher"], capture_output=True)
+    # Brackets prevent concurrent pgrep probes from matching each other's argv.
+    r = subprocess.run(["pgrep", "-f", "[G]radleDaemon|[G]radleWrapperMain|[g]radle-launcher"], capture_output=True)
     return r.returncode == 0
 
 

@@ -5,7 +5,7 @@ returning, so without the flock transaction both callers see the same empty queu
 jbmc at cap 1 (never mixed) and jbmc vs jbmc at a thermal cap of 1 with 3 configured slots.
     python3 heavy_run_race_check.py    # exit 0 iff no case over-admits
 """
-import os, sys, tempfile, threading, time
+import os, re, sys, tempfile, threading, time
 from unittest.mock import patch
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -33,6 +33,21 @@ def race(tools, slots, thermal):
             t.join(10)
         return sorted(os.path.basename(g) for g in got if g)
 
+
+# pgrep excludes itself, but not another thread's identical pgrep process.
+# Match every real Gradle launcher, never the command line of a concurrent probe.
+with patch.object(h.subprocess, "run") as probe:
+    probe.return_value.returncode = 1
+    assert not h._gradle_running()
+    argv = probe.call_args.args[0]
+    pattern = argv[-1]
+    assert not re.search(pattern, " ".join(argv))
+    for launcher in ("org.gradle.launcher.daemon.bootstrap.GradleDaemon",
+                     "org.gradle.wrapper.GradleWrapperMain", "gradle-launcher-8.jar"):
+        assert re.search(pattern, "java " + launcher)
+    probe.return_value.returncode = 0
+    assert h._gradle_running()
+print("Gradle probe matches launchers, not other probes: ok")
 
 ok = True
 for tools, slots, thermal in [(("lean", "jbmc"), 1, False), (("jbmc", "jbmc"), 3, True)]:
