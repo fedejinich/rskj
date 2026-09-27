@@ -1,0 +1,4616 @@
+[
+ {
+  "obligation": "TRIE-KEY-01",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "key-account-key",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 9.1,
+    "bounds": {
+     "unwind": 80,
+     "address": "all 20-byte"
+    }
+   },
+   {
+    "id": "key-account-key-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 6.04,
+    "bounds": {
+     "unwind": 80
+    }
+   },
+   {
+    "id": "key-account-key-cached",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 11.49,
+    "bounds": {
+     "unwind": 80,
+     "address": "2 symbolic bytes + 18 x 0x11"
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-KEY-02",
+  "reading": "conforms",
+  "status": "refuted-as-expected",
+  "entries": [
+   {
+    "id": "key-secure-prefix",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.53,
+    "bounds": {
+     "unwind": 80,
+     "input_bytes": "0,1,20,32"
+    }
+   },
+   {
+    "id": "key-secure-prefix-rskip",
+    "role": "rskip-reading",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 5.31,
+    "bounds": {
+     "unwind": 80
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-KEY-03",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "key-code-key",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 10.64,
+    "bounds": {
+     "unwind": 80,
+     "address": "all 20-byte"
+    }
+   },
+   {
+    "id": "key-code-key-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 7.2,
+    "bounds": {
+     "unwind": 80
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-KEY-04",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "key-storage-prefix-key",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 10.25,
+    "bounds": {
+     "unwind": 80,
+     "address": "all 20-byte"
+    }
+   },
+   {
+    "id": "key-storage-prefix-key-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 6.2,
+    "bounds": {
+     "unwind": 80
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-KEY-05",
+  "reading": "diverges",
+  "status": "refuted-as-expected",
+  "entries": [
+   {
+    "id": "key-storage-root-value",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 28.48,
+    "bounds": {
+     "unwind": 300
+    }
+   },
+   {
+    "id": "key-storage-root-value-rskip",
+    "role": "rskip-reading",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 25.74,
+    "bounds": {
+     "unwind": 300
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-KEY-06",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "key-storage-key-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 7.73,
+    "bounds": {
+     "unwind": 80
+    }
+   },
+   {
+    "id": "key-storage-key-part00-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 18.05,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=0, HI=1, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "key-storage-key-part00-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 18.5,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=0, HI=1, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "key-storage-key-part00-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 18.57,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=0, HI=1, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "key-storage-key-part01-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 20.45,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=1, HI=2, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "key-storage-key-part01-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 20.72,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=1, HI=2, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "key-storage-key-part01-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 20.94,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=1, HI=2, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "key-storage-key-part02-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 17.44,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=2, HI=3, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "key-storage-key-part02-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 17.6,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=2, HI=3, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "key-storage-key-part02-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 16.96,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=2, HI=3, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "key-storage-key-part03-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 14.66,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=3, HI=4, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "key-storage-key-part03-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 15.34,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=3, HI=4, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "key-storage-key-part03-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 15.3,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=3, HI=4, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "key-storage-key-part04-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 15.23,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=4, HI=5, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "key-storage-key-part04-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 15.71,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=4, HI=5, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "key-storage-key-part04-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 14.49,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=4, HI=5, LO2=2, HI2=3"
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-KEY-07",
+  "reading": "unclear",
+  "status": "refuted-as-expected",
+  "entries": [
+   {
+    "id": "key-storage-hash-input",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 6.95,
+    "bounds": {
+     "unwind": 80
+    }
+   },
+   {
+    "id": "key-storage-hash-input-rskip",
+    "role": "rskip-reading",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 7.03,
+    "bounds": {
+     "unwind": 80
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-KEY-08",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "key-strip-leading-zeroes-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 5.0,
+    "bounds": {
+     "unwind": 80
+    }
+   },
+   {
+    "id": "key-strip-leading-zeroes-part00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 13.11,
+    "bounds": {
+     "unwind": 80,
+     "split": "KeyHarness.stripLeadingZeroes with Nondet.LO=0, HI=3"
+    }
+   },
+   {
+    "id": "key-strip-leading-zeroes-part03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 13.04,
+    "bounds": {
+     "unwind": 80,
+     "split": "KeyHarness.stripLeadingZeroes with Nondet.LO=3, HI=6"
+    }
+   },
+   {
+    "id": "key-strip-leading-zeroes-part06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 12.7,
+    "bounds": {
+     "unwind": 80,
+     "split": "KeyHarness.stripLeadingZeroes with Nondet.LO=6, HI=9"
+    }
+   },
+   {
+    "id": "key-strip-leading-zeroes-part09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 12.65,
+    "bounds": {
+     "unwind": 80,
+     "split": "KeyHarness.stripLeadingZeroes with Nondet.LO=9, HI=12"
+    }
+   },
+   {
+    "id": "key-strip-leading-zeroes-part12",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 11.64,
+    "bounds": {
+     "unwind": 80,
+     "split": "KeyHarness.stripLeadingZeroes with Nondet.LO=12, HI=15"
+    }
+   },
+   {
+    "id": "key-strip-leading-zeroes-part15",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 10.02,
+    "bounds": {
+     "unwind": 80,
+     "split": "KeyHarness.stripLeadingZeroes with Nondet.LO=15, HI=18"
+    }
+   },
+   {
+    "id": "key-strip-leading-zeroes-part18",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 9.33,
+    "bounds": {
+     "unwind": 80,
+     "split": "KeyHarness.stripLeadingZeroes with Nondet.LO=18, HI=21"
+    }
+   },
+   {
+    "id": "key-strip-leading-zeroes-part21",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 9.33,
+    "bounds": {
+     "unwind": 80,
+     "split": "KeyHarness.stripLeadingZeroes with Nondet.LO=21, HI=24"
+    }
+   },
+   {
+    "id": "key-strip-leading-zeroes-part24",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 8.43,
+    "bounds": {
+     "unwind": 80,
+     "split": "KeyHarness.stripLeadingZeroes with Nondet.LO=24, HI=27"
+    }
+   },
+   {
+    "id": "key-strip-leading-zeroes-part27",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 8.38,
+    "bounds": {
+     "unwind": 80,
+     "split": "KeyHarness.stripLeadingZeroes with Nondet.LO=27, HI=30"
+    }
+   },
+   {
+    "id": "key-strip-leading-zeroes-part30",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 7.57,
+    "bounds": {
+     "unwind": 80,
+     "split": "KeyHarness.stripLeadingZeroes with Nondet.LO=30, HI=33"
+    }
+   },
+   {
+    "id": "key-storage-key-part00-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 18.05,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=0, HI=1, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "key-storage-key-part00-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 18.5,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=0, HI=1, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "key-storage-key-part00-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 18.57,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=0, HI=1, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "key-storage-key-part01-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 20.45,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=1, HI=2, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "key-storage-key-part01-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 20.72,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=1, HI=2, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "key-storage-key-part01-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 20.94,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=1, HI=2, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "key-storage-key-part02-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 17.44,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=2, HI=3, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "key-storage-key-part02-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 17.6,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=2, HI=3, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "key-storage-key-part02-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 16.96,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=2, HI=3, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "key-storage-key-part03-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 14.66,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=3, HI=4, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "key-storage-key-part03-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 15.34,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=3, HI=4, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "key-storage-key-part03-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 15.3,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=3, HI=4, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "key-storage-key-part04-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 15.23,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=4, HI=5, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "key-storage-key-part04-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 15.71,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=4, HI=5, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "key-storage-key-part04-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 14.49,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.storageKey with Nondet.LO=4, HI=5, LO2=2, HI2=3"
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-KEY-09",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "key-injective-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 6.99,
+    "bounds": {
+     "unwind": 80
+    }
+   },
+   {
+    "id": "key-injective-part00-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 97.78,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=0, HI=1, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "key-injective-part00-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 104.81,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=0, HI=1, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "key-injective-part00-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 107.03,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=0, HI=1, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "key-injective-part00-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 86.29,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=0, HI=1, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "key-injective-part00-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 98.25,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=0, HI=1, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "key-injective-part01-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 101.36,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=1, HI=2, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "key-injective-part01-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 155.12,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=1, HI=2, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "key-injective-part01-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 97.23,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=1, HI=2, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "key-injective-part01-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 97.75,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=1, HI=2, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "key-injective-part01-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 93.04,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=1, HI=2, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "key-injective-part02-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 104.13,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=2, HI=3, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "key-injective-part02-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 96.91,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=2, HI=3, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "key-injective-part02-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 120.97,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=2, HI=3, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "key-injective-part02-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 98.2,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=2, HI=3, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "key-injective-part02-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 104.02,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=2, HI=3, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "key-injective-part03-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 104.62,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=3, HI=4, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "key-injective-part03-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 100.85,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=3, HI=4, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "key-injective-part03-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 101.54,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=3, HI=4, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "key-injective-part03-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 123.55,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=3, HI=4, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "key-injective-part03-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 104.45,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=3, HI=4, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "key-injective-part04-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 103.56,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=4, HI=5, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "key-injective-part04-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 109.5,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=4, HI=5, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "key-injective-part04-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 96.25,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=4, HI=5, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "key-injective-part04-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 102.55,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=4, HI=5, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "key-injective-part04-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 103.72,
+    "bounds": {
+     "unwind": 80,
+     "unwindset": "java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:33,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:76,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:76",
+     "split": "KeyHarness.injective with Nondet.LO=4, HI=5, LO2=4, HI2=5"
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-KEY-10",
+  "reading": "diverges",
+  "status": "refuted-as-expected",
+  "entries": [
+   {
+    "id": "key-storage-root-value",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 28.48,
+    "bounds": {
+     "unwind": 300
+    }
+   },
+   {
+    "id": "key-storage-root-type-byte-rskip",
+    "role": "rskip-reading",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 31.64,
+    "bounds": {
+     "unwind": 300
+    }
+   },
+   {
+    "id": "key-values-stored-as-given",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 20.68,
+    "bounds": {
+     "unwind": 40
+    }
+   },
+   {
+    "id": "key-value-type-byte-rskip",
+    "role": "rskip-reading",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 7.2,
+    "bounds": {
+     "unwind": 40
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-PATH-01",
+  "reading": "unclear",
+  "status": "refuted-as-expected",
+  "entries": [
+   {
+    "id": "keyslice-from-key",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 3.78,
+    "bounds": {
+     "unwind": 66,
+     "key_bytes": "0..8"
+    }
+   },
+   {
+    "id": "keyslice-from-key-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 2.31,
+    "bounds": {
+     "unwind": 66
+    }
+   },
+   {
+    "id": "path-msb-first-rskip",
+    "role": "rskip-reading",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 2.19,
+    "bounds": {
+     "unwind": 12
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-PATH-02",
+  "reading": "unclear",
+  "status": "refuted-as-expected",
+  "entries": [
+   {
+    "id": "path-branch-bit",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 52.52,
+    "bounds": {
+     "unwind": 20
+    }
+   },
+   {
+    "id": "path-branch-bit-rskip",
+    "role": "rskip-reading",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 4.29,
+    "bounds": {
+     "unwind": 20
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-PATH-03",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "path-encoder-roundtrip",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 44.16,
+    "bounds": {
+     "unwind": 66,
+     "bits": "0..64"
+    }
+   },
+   {
+    "id": "path-encoder-roundtrip-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 7.98,
+    "bounds": {
+     "unwind": 66
+    }
+   },
+   {
+    "id": "path-encoder-decode-encode",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 87.8,
+    "bounds": {
+     "unwind": 66,
+     "bits": "0..64"
+    }
+   },
+   {
+    "id": "path-encoder-decode-encode-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 6.95,
+    "bounds": {
+     "unwind": 66
+    }
+   },
+   {
+    "id": "shared-path-roundtrip",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 15.07,
+    "bounds": {
+     "unwind": 42,
+     "bits": "1..40"
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-PATH-04",
+  "reading": "diverges",
+  "status": "refuted-as-expected",
+  "entries": [
+   {
+    "id": "path-encoder-decode-encode",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 87.8,
+    "bounds": {
+     "unwind": 66,
+     "bits": "0..64"
+    }
+   },
+   {
+    "id": "parser-path-padding",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 3.93,
+    "bounds": {
+     "unwind": 20
+    }
+   },
+   {
+    "id": "parser-path-padding-rskip",
+    "role": "rskip-reading",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 3.73,
+    "bounds": {
+     "unwind": 20
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-PATH-05",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "keyslice-slice",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 7.14,
+    "bounds": {
+     "unwind": 14,
+     "backing_bits": 12
+    }
+   },
+   {
+    "id": "keyslice-slice-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 1.96,
+    "bounds": {
+     "unwind": 14
+    }
+   },
+   {
+    "id": "keyslice-common-path",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 3.37,
+    "bounds": {
+     "unwind": 14,
+     "backing_bits": 12
+    }
+   },
+   {
+    "id": "keyslice-common-path-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 2.49,
+    "bounds": {
+     "unwind": 14
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 54.72,
+    "bounds": {
+     "unwind": 28
+    }
+   },
+   {
+    "id": "keyslice-left-pad",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 247.98,
+    "bounds": {
+     "unwind": 30,
+     "backing_bits": 12
+    }
+   },
+   {
+    "id": "keyslice-left-pad-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 4.22,
+    "bounds": {
+     "unwind": 30
+    }
+   },
+   {
+    "id": "keyslice-from-encoded",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 15.11,
+    "bounds": {
+     "unwind": 34,
+     "backing_bits": 12
+    }
+   },
+   {
+    "id": "keyslice-from-encoded-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 3.36,
+    "bounds": {
+     "unwind": 34
+    }
+   },
+   {
+    "id": "keyslice-from-key",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 3.78,
+    "bounds": {
+     "unwind": 66,
+     "key_bytes": "0..8"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part00-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 17.25,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:2,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:2",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=0, HI=1, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part00-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 15.13,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:3,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:3",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=0, HI=1, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part00-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 24.27,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:4,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:4",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=0, HI=1, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part00-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 26.3,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:5,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:5",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=0, HI=1, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part00-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.37,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:6,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:6",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=0, HI=1, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part00-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 44.54,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:7,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:7",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=0, HI=1, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part00-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 29.33,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:8,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:8",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=0, HI=1, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part00-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 39.46,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:9,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:9",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=0, HI=1, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part00-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 44.45,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:10,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:10",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=0, HI=1, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part00-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 47.49,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:11,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:11",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=0, HI=1, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part00-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 49.49,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:12,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:12",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=0, HI=1, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part00-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 57.68,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:13,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:13",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=0, HI=1, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part00-12",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 53.78,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:14,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:14",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=0, HI=1, LO2=12, HI2=13"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part01-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 13.13,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:3,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:3",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=1, HI=2, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part01-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 23.31,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:4,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:4",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=1, HI=2, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part01-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 30.28,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:5,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:5",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=1, HI=2, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part01-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 36.39,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:6,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:6",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=1, HI=2, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part01-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 35.36,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:7,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:7",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=1, HI=2, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part01-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 44.46,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:8,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:8",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=1, HI=2, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part01-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 50.54,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:9,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:9",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=1, HI=2, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part01-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 37.39,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:10,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:10",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=1, HI=2, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part01-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 71.82,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:11,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:11",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=1, HI=2, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part01-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 47.55,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:12,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:12",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=1, HI=2, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part01-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 58.65,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:13,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:13",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=1, HI=2, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part01-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 50.64,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:14,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:14",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=1, HI=2, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part01-12",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 55.62,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:15,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:15",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=1, HI=2, LO2=12, HI2=13"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part02-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 22.25,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:4,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:4",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=2, HI=3, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part02-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.48,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:5,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:5",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=2, HI=3, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part02-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 40.47,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:6,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:6",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=2, HI=3, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part02-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 48.5,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:7,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:7",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=2, HI=3, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part02-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 45.42,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:8,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:8",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=2, HI=3, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part02-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 67.85,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:9,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:9",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=2, HI=3, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part02-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 59.71,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:10,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:10",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=2, HI=3, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part02-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 64.71,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:11,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:11",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=2, HI=3, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part02-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 60.73,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:12,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:12",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=2, HI=3, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part02-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 96.26,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:13,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:13",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=2, HI=3, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part02-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 83.98,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:14,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:14",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=2, HI=3, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part02-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 56.53,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:15,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:15",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=2, HI=3, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part02-12",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 82.9,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:16,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:16",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=2, HI=3, LO2=12, HI2=13"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part03-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 21.3,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:5,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:5",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=3, HI=4, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part03-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.37,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:6,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:6",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=3, HI=4, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part03-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 39.45,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:7,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:7",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=3, HI=4, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part03-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 35.36,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:8,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:8",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=3, HI=4, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part03-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 33.31,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:9,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:9",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=3, HI=4, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part03-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 67.77,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:10,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:10",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=3, HI=4, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part03-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 48.55,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:11,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:11",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=3, HI=4, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part03-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 47.42,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:12,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:12",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=3, HI=4, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part03-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 61.63,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:13,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:13",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=3, HI=4, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part03-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 51.49,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:14,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:14",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=3, HI=4, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part03-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 69.59,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:15,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:15",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=3, HI=4, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part03-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 55.44,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:16,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:16",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=3, HI=4, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part03-12",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 58.49,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:17,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:17",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=3, HI=4, LO2=12, HI2=13"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part04-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 23.18,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:6,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:6",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=4, HI=5, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part04-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.28,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:7,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:7",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=4, HI=5, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part04-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 30.3,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:8,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:8",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=4, HI=5, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part04-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 41.37,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:9,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:9",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=4, HI=5, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part04-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 38.32,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:10,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:10",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=4, HI=5, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part04-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 50.46,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:11,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:11",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=4, HI=5, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part04-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 47.45,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:12,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:12",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=4, HI=5, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part04-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 48.43,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:13,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:13",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=4, HI=5, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part04-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 74.72,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:14,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:14",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=4, HI=5, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part04-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 74.67,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:15,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:15",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=4, HI=5, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part04-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 66.62,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:16,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:16",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=4, HI=5, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part04-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 72.61,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:17,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:17",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=4, HI=5, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part04-12",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 59.53,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:18,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:18",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=4, HI=5, LO2=12, HI2=13"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part05-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 31.33,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:7,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:7",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=5, HI=6, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part05-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 37.34,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:8,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:8",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=5, HI=6, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part05-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 39.31,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:9,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:9",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=5, HI=6, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part05-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 39.37,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:10,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:10",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=5, HI=6, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part05-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 37.35,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:11,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:11",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=5, HI=6, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part05-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 77.74,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:12,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:12",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=5, HI=6, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part05-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 77.86,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:13,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:13",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=5, HI=6, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part05-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 66.65,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:14,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:14",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=5, HI=6, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part05-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 72.63,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:15,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:15",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=5, HI=6, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part05-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 57.5,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:16,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:16",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=5, HI=6, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part05-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 72.62,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:17,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:17",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=5, HI=6, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part05-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 77.7,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:18,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:18",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=5, HI=6, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part05-12",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 64.55,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:19,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:19",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=5, HI=6, LO2=12, HI2=13"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part06-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 27.21,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:8,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:8",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=6, HI=7, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part06-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 41.36,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:9,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:9",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=6, HI=7, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part06-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 41.35,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:10,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:10",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=6, HI=7, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part06-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 48.42,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:11,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:11",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=6, HI=7, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part06-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 55.65,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:12,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:12",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=6, HI=7, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part06-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 80.88,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:13,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:13",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=6, HI=7, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part06-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 77.93,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:14,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:14",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=6, HI=7, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part06-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 72.84,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:15,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:15",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=6, HI=7, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part06-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 69.68,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:16,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:16",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=6, HI=7, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part06-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 83.74,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:17,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:17",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=6, HI=7, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part06-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 75.64,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:18,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:18",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=6, HI=7, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part06-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 67.64,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:19,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:19",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=6, HI=7, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part06-12",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 78.74,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:20,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:20",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=6, HI=7, LO2=12, HI2=13"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part07-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 29.28,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:9,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:9",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=7, HI=8, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part07-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 37.3,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:10,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:10",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=7, HI=8, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part07-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 51.4,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:11,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:11",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=7, HI=8, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part07-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 63.55,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:12,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:12",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=7, HI=8, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part07-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 63.55,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:13,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:13",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=7, HI=8, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part07-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 66.54,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:14,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:14",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=7, HI=8, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part07-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 71.61,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:15,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:15",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=7, HI=8, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part07-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 70.76,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:16,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:16",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=7, HI=8, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part07-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 75.83,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:17,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:17",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=7, HI=8, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part07-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 106.29,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:18,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:18",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=7, HI=8, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part07-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 85.05,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:19,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:19",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=7, HI=8, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part07-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 89.09,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:20,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:20",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=7, HI=8, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part07-12",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 61.76,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:21,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:21",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=7, HI=8, LO2=12, HI2=13"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.33,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:10,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:10",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 52.58,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:11,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:11",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 61.58,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:12,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:12",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 81.29,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:13,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:13",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 237.03,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:14,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:14",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-05-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 5.58,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:15,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:15",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=5, HI2=6, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-05-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 6.37,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:15,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:15",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=5, HI2=6, LO3=1, HI3=2"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-05-o02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 6.63,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:15,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:15",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=5, HI2=6, LO3=2, HI3=3"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-05-o03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 7.09,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:15,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:15",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=5, HI2=6, LO3=3, HI3=4"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-05-o04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 7.02,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:15,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:15",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=5, HI2=6, LO3=4, HI3=5"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 82.78,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:16,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:16",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 100.89,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:17,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:17",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 78.73,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:18,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:18",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 77.13,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:19,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:19",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 79.86,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:20,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:20",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 84.17,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:21,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:21",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part08-12",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 61.51,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:22,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:22",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=8, HI=9, LO2=12, HI2=13"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part09-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 34.13,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:11,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:11",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=9, HI=10, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part09-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 36.28,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:12,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:12",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=9, HI=10, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part09-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 46.26,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:13,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:13",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=9, HI=10, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part09-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 48.53,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:14,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:14",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=9, HI=10, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part09-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 50.43,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:15,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:15",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=9, HI=10, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part09-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 55.29,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:16,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:16",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=9, HI=10, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part09-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 66.4,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:17,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:17",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=9, HI=10, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part09-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 93.38,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:18,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:18",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=9, HI=10, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part09-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 63.66,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:19,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:19",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=9, HI=10, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part09-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 72.39,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:20,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:20",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=9, HI=10, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part09-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 99.36,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:21,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:21",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=9, HI=10, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part09-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 71.06,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:22,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:22",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=9, HI=10, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part09-12",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 61.15,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:23,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:23",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=9, HI=10, LO2=12, HI2=13"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part10-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.97,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:12,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:12",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=10, HI=11, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part10-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 44.68,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:13,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:13",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=10, HI=11, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part10-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 47.11,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:14,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:14",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=10, HI=11, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part10-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 51.24,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:15,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:15",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=10, HI=11, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part10-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 60.05,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:16,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:16",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=10, HI=11, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part10-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 74.88,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:17,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:17",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=10, HI=11, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part10-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 94.05,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:18,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:18",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=10, HI=11, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part10-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 106.34,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:19,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:19",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=10, HI=11, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part10-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 81.24,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:20,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:20",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=10, HI=11, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part10-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 64.06,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:21,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:21",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=10, HI=11, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part10-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 80.89,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:22,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:22",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=10, HI=11, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part10-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 74.39,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:23,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:23",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=10, HI=11, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part10-12",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 66.81,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:24,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:24",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=10, HI=11, LO2=12, HI2=13"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part11-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 32.11,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:13,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:13",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=11, HI=12, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part11-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 42.12,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:14,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:14",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=11, HI=12, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part11-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 44.41,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:15,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:15",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=11, HI=12, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part11-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 55.72,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:16,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:16",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=11, HI=12, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part11-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 67.2,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:17,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:17",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=11, HI=12, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part11-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 81.37,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:18,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:18",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=11, HI=12, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part11-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 60.53,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:19,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:19",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=11, HI=12, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part11-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 78.16,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:20,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:20",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=11, HI=12, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part11-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 64.95,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:21,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:21",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=11, HI=12, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part11-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 66.24,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:22,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:22",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=11, HI=12, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part11-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 84.25,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:23,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:23",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=11, HI=12, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part11-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 76.67,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:24,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:24",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=11, HI=12, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part11-12",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 66.57,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:25,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:25",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=11, HI=12, LO2=12, HI2=13"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part12-00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 31.06,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:14,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:14",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=12, HI=13, LO2=0, HI2=1"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part12-01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 25.8,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:15,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:15",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=12, HI=13, LO2=1, HI2=2"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part12-02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 44.44,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:16,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:16",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=12, HI=13, LO2=2, HI2=3"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part12-03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 37.89,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:17,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:17",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=12, HI=13, LO2=3, HI2=4"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part12-04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 56.67,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:18,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:18",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=12, HI=13, LO2=4, HI2=5"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part12-05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 52.01,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:19,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:19",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=12, HI=13, LO2=5, HI2=6"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part12-06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 58.03,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:20,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:20",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=12, HI=13, LO2=6, HI2=7"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part12-07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 49.47,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:21,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:21",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=12, HI=13, LO2=7, HI2=8"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part12-08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 48.62,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:22,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:22",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=12, HI=13, LO2=8, HI2=9"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part12-09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 48.05,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:23,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:23",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=12, HI=13, LO2=9, HI2=10"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part12-10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 79.25,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:24,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:24",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=12, HI=13, LO2=10, HI2=11"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part12-11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 51.54,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:25,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:25",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=12, HI=13, LO2=11, HI2=12"
+    }
+   },
+   {
+    "id": "keyslice-rebuild-shared-path-part12-12",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 95.97,
+    "bounds": {
+     "unwind": 28,
+     "unwindset": "java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:26,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:26",
+     "split": "TrieKeySliceHarness.rebuildSharedPathSemantics with Nondet.LO=12, HI=13, LO2=12, HI2=13"
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-LSH-01",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "lshared-prefix-roundtrip",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 5.96,
+    "bounds": {
+     "unwind": 12,
+     "lshared": "1..2^31-1"
+    }
+   },
+   {
+    "id": "lshared-prefix-roundtrip-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 1.95,
+    "bounds": {
+     "unwind": 12
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-LSH-02",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "lshared-prefix-roundtrip",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 5.96,
+    "bounds": {
+     "unwind": 12,
+     "lshared": "1..2^31-1"
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-LSH-03",
+  "reading": "conforms",
+  "status": "refuted-as-expected",
+  "entries": [
+   {
+    "id": "lshared-prefix-roundtrip",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 5.96,
+    "bounds": {
+     "unwind": 12,
+     "lshared": "1..2^31-1"
+    }
+   },
+   {
+    "id": "lshared-escape-bytes",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 1.91,
+    "bounds": {
+     "unwind": 12
+    }
+   },
+   {
+    "id": "lshared-escape-bytes-rskip",
+    "role": "rskip-reading",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 1.96,
+    "bounds": {
+     "unwind": 12
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-LSH-04",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-LSH-05",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "lshared-prefix-roundtrip",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 5.96,
+    "bounds": {
+     "unwind": 12,
+     "lshared": "1..2^31-1"
+    }
+   },
+   {
+    "id": "shared-path-roundtrip",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 15.07,
+    "bounds": {
+     "unwind": 42,
+     "bits": "1..40"
+    }
+   },
+   {
+    "id": "shared-path-roundtrip-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 7.95,
+    "bounds": {
+     "unwind": 42
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-LSH-06",
+  "reading": "diverges",
+  "status": "refuted-as-expected",
+  "entries": [
+   {
+    "id": "parser-lshared-non-canonical",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 3.51,
+    "bounds": {
+     "unwind": 20
+    }
+   },
+   {
+    "id": "parser-lshared-non-canonical-rskip",
+    "role": "rskip-reading",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 9.1,
+    "bounds": {
+     "unwind": 20
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-VARINT-01",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "varint-roundtrip",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 4.41,
+    "bounds": {
+     "unwind": 10,
+     "value": "all 2^64"
+    }
+   },
+   {
+    "id": "varint-roundtrip-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 2.74,
+    "bounds": {
+     "unwind": 10
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-VARINT-02",
+  "reading": "conforms",
+  "status": "check",
+  "entries": [
+   {
+    "id": "lshared-prefix-roundtrip",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 5.96,
+    "bounds": {
+     "unwind": 12,
+     "lshared": "1..2^31-1"
+    }
+   },
+   {
+    "id": "parser-tree-size-varint",
+    "role": "property",
+    "verdict": "TIMEOUT",
+    "pass": false,
+    "time_s": 599.92,
+    "bounds": {
+     "unwind": 20,
+     "value": "all 2^64"
+    }
+   },
+   {
+    "id": "parser-tree-size-varint-neg",
+    "role": "negative-control",
+    "verdict": "TIMEOUT",
+    "pass": false,
+    "time_s": 599.92,
+    "bounds": {
+     "unwind": 20
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-VARINT-03",
+  "reading": "diverges",
+  "status": "refuted-as-expected",
+  "entries": [
+   {
+    "id": "parser-varint-non-minimal",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 5.19,
+    "bounds": {
+     "unwind": 20
+    }
+   },
+   {
+    "id": "parser-varint-non-minimal-rskip",
+    "role": "rskip-reading",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 4.19,
+    "bounds": {
+     "unwind": 20
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-NODE-01",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-NODE-02",
+  "reading": "diverges",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-NODE-03",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-NODE-04",
+  "reading": "diverges",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-NODE-05",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-NODE-06",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-NODE-07",
+  "reading": "diverges",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-NODE-08",
+  "reading": "diverges",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-NODE-09",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-NODE-10",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-EMB-01",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-EMB-02",
+  "reading": "diverges",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-EMB-03",
+  "reading": "diverges",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-EMB-04",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-EMB-05",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-VAL-01",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-VAL-02",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-VAL-03",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-VAL-04",
+  "reading": "unclear",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-VAL-05",
+  "reading": "diverges",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-VAL-06",
+  "reading": "diverges",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-VAL-07",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-OPS-01",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-OPS-02",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "trie-single-key-put-get",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 11.32,
+    "bounds": {
+     "unwind": 40,
+     "key_bytes": "0..2 symbolic",
+     "values": "1,32,33 bytes"
+    }
+   },
+   {
+    "id": "trie-single-key-put-get-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 3.04,
+    "bounds": {
+     "unwind": 40
+    }
+   },
+   {
+    "id": "trie-put-get-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 5.17,
+    "bounds": {
+     "unwind": 40
+    }
+   },
+   {
+    "id": "trie-put-get-part00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 71.8,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=0, HI=1"
+    }
+   },
+   {
+    "id": "trie-put-get-part01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 93.36,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=1, HI=2"
+    }
+   },
+   {
+    "id": "trie-put-get-part02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 95.48,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=2, HI=3"
+    }
+   },
+   {
+    "id": "trie-put-get-part03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 97.03,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=3, HI=4"
+    }
+   },
+   {
+    "id": "trie-put-get-part04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 93.79,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=4, HI=5"
+    }
+   },
+   {
+    "id": "trie-put-get-part05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 90.82,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=5, HI=6"
+    }
+   },
+   {
+    "id": "trie-put-get-part06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 90.13,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=6, HI=7"
+    }
+   },
+   {
+    "id": "trie-put-get-part07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 95.79,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=7, HI=8"
+    }
+   },
+   {
+    "id": "trie-put-get-part08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 90.87,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=8, HI=9"
+    }
+   },
+   {
+    "id": "trie-put-get-part09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 89.62,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=9, HI=10"
+    }
+   },
+   {
+    "id": "trie-put-get-part10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 92.44,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=10, HI=11"
+    }
+   },
+   {
+    "id": "trie-put-get-part11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 91.54,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=11, HI=12"
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-OPS-03",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "trie-single-key-put-get",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 11.32,
+    "bounds": {
+     "unwind": 40,
+     "key_bytes": "0..2 symbolic",
+     "values": "1,32,33 bytes"
+    }
+   },
+   {
+    "id": "trie-put-get-part00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 71.8,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=0, HI=1"
+    }
+   },
+   {
+    "id": "trie-put-get-part01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 93.36,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=1, HI=2"
+    }
+   },
+   {
+    "id": "trie-put-get-part02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 95.48,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=2, HI=3"
+    }
+   },
+   {
+    "id": "trie-put-get-part03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 97.03,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=3, HI=4"
+    }
+   },
+   {
+    "id": "trie-put-get-part04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 93.79,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=4, HI=5"
+    }
+   },
+   {
+    "id": "trie-put-get-part05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 90.82,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=5, HI=6"
+    }
+   },
+   {
+    "id": "trie-put-get-part06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 90.13,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=6, HI=7"
+    }
+   },
+   {
+    "id": "trie-put-get-part07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 95.79,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=7, HI=8"
+    }
+   },
+   {
+    "id": "trie-put-get-part08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 90.87,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=8, HI=9"
+    }
+   },
+   {
+    "id": "trie-put-get-part09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 89.62,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=9, HI=10"
+    }
+   },
+   {
+    "id": "trie-put-get-part10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 92.44,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=10, HI=11"
+    }
+   },
+   {
+    "id": "trie-put-get-part11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 91.54,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=11, HI=12"
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-OPS-04",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "trie-single-key-delete",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 9.48,
+    "bounds": {
+     "unwind": 40,
+     "keys": "KEYS (12)",
+     "values": "1,32,33 bytes"
+    }
+   },
+   {
+    "id": "trie-single-key-delete-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 2.69,
+    "bounds": {
+     "unwind": 40
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part05-07-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 137.41,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=5, HI=6, LO2=7, HI2=8, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part05-07-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 141.0,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=5, HI=6, LO2=7, HI2=8, LO3=1, HI3=2"
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-OPS-05",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "trie-put-delete-get-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 3.2,
+    "bounds": {
+     "unwind": 40
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part05-07-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 137.41,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=5, HI=6, LO2=7, HI2=8, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part05-07-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 141.0,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=5, HI=6, LO2=7, HI2=8, LO3=1, HI3=2"
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-OPS-06",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "trie-single-key-delete",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 9.48,
+    "bounds": {
+     "unwind": 40,
+     "keys": "KEYS (12)",
+     "values": "1,32,33 bytes"
+    }
+   },
+   {
+    "id": "trie-empty-value-is-delete-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 2.95,
+    "bounds": {
+     "unwind": 40
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-OPS-07",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "trie-put-get-part00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 71.8,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=0, HI=1"
+    }
+   },
+   {
+    "id": "trie-put-get-part01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 93.36,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=1, HI=2"
+    }
+   },
+   {
+    "id": "trie-put-get-part02",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 95.48,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=2, HI=3"
+    }
+   },
+   {
+    "id": "trie-put-get-part03",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 97.03,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=3, HI=4"
+    }
+   },
+   {
+    "id": "trie-put-get-part04",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 93.79,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=4, HI=5"
+    }
+   },
+   {
+    "id": "trie-put-get-part05",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 90.82,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=5, HI=6"
+    }
+   },
+   {
+    "id": "trie-put-get-part06",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 90.13,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=6, HI=7"
+    }
+   },
+   {
+    "id": "trie-put-get-part07",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 95.79,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=7, HI=8"
+    }
+   },
+   {
+    "id": "trie-put-get-part08",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 90.87,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=8, HI=9"
+    }
+   },
+   {
+    "id": "trie-put-get-part09",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 89.62,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=9, HI=10"
+    }
+   },
+   {
+    "id": "trie-put-get-part10",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 92.44,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=10, HI=11"
+    }
+   },
+   {
+    "id": "trie-put-get-part11",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 91.54,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putGet with Nondet.LO=11, HI=12"
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-OPS-08",
+  "reading": "conforms",
+  "status": "holds",
+  "entries": [
+   {
+    "id": "trie-put-delete-get-part05-07-o00",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 137.41,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=5, HI=6, LO2=7, HI2=8, LO3=0, HI3=1"
+    }
+   },
+   {
+    "id": "trie-put-delete-get-part05-07-o01",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 141.0,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieOpsHarness.putDeleteGet with Nondet.LO=5, HI=6, LO2=7, HI2=8, LO3=1, HI3=2"
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-OPS-09",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-CMP-01",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-CMP-02",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-CMP-03",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-HASH-01",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-HASH-02",
+  "reading": "unclear",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-HASH-03",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-HASH-04",
+  "reading": "diverges",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-HASH-05",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-SER-01",
+  "reading": "conforms",
+  "status": "check",
+  "entries": [
+   {
+    "id": "trie-message-roundtrip-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 3.66,
+    "bounds": {
+     "unwind": 40
+    }
+   },
+   {
+    "id": "trie-message-hash-child-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 11.84,
+    "bounds": {
+     "unwind": 40
+    }
+   },
+   {
+    "id": "trie-message-single-key-roundtrip",
+    "role": "property",
+    "verdict": "SUCCESS",
+    "pass": true,
+    "time_s": 127.72,
+    "bounds": {
+     "unwind": 40,
+     "keys": "KEYS",
+     "values": "1,32,33 bytes"
+    }
+   },
+   {
+    "id": "trie-message-single-key-roundtrip-neg",
+    "role": "negative-control",
+    "verdict": "FAILURE",
+    "pass": true,
+    "time_s": 3.36,
+    "bounds": {
+     "unwind": 40
+    }
+   },
+   {
+    "id": "trie-message-roundtrip-part05",
+    "role": "property",
+    "verdict": "TIMEOUT",
+    "pass": false,
+    "time_s": 600.01,
+    "bounds": {
+     "unwind": 40,
+     "split": "TrieSerializationHarness.roundTrip with Nondet.LO=5, HI=6"
+    }
+   }
+  ]
+ },
+ {
+  "obligation": "TRIE-SER-02",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-SER-03",
+  "reading": "diverges",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-SER-04",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-SER-05",
+  "reading": "unclear",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-SER-06",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-SER-07",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-SER-08",
+  "reading": "unclear",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-SIZE-01",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-SIZE-02",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-SIZE-03",
+  "reading": "diverges",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-STORE-01",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-STORE-02",
+  "reading": "diverges",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-STORE-03",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-STORE-04",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-STORE-05",
+  "reading": "conforms",
+  "status": "missing",
+  "entries": []
+ },
+ {
+  "obligation": "TRIE-STORE-06",
+  "reading": "diverges",
+  "status": "missing",
+  "entries": []
+ }
+]
