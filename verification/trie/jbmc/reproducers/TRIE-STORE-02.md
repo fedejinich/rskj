@@ -23,7 +23,7 @@ RSKIP107 (`IPs/RSKIP107.md:66; RSKIP24.md:78`, Specification (node format))
 - Java output: entry keccak(80) -> 40 (property harness `store-content-addressed`)
 - RSKIP-expected output: keccak(40) -> 40
 - JBMC verdict of the reading: FAILURE (expected FAILURE), host voids-macbook-pro-2.local
-- Stub audit: REVIEW: java::java.lang.ThreadLocal.remove:()V, java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V. Expected verdicts with unresolved stubs are not accepted proof.
+- Stub audit: none on property path. Expected verdicts with unresolved stubs are not accepted proof.
 - Failed properties: `java::StoreHarness.contentAddressedStoreRskip:()V.assertion.1`
 
 Violated property:

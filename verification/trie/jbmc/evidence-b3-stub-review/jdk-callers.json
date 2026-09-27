@@ -1,0 +1,583 @@
+{
+  "scope": "Static direct-call inventory across 6531 first-on-classpath classes in the retained b3 classpath. Presence in this inventory is not proof of reachability. Bytecode includes methods with no bearing on the selected entries.",
+  "harness_directory_sha256": "47b41b394f062ddd21a7af3765e771f7a839325e03e3cfd890847a002b697d2e",
+  "direct_candidates": [
+    {
+      "class": "org/cprover/CProver.class",
+      "classpath_entry": "/Users/void/trie-batches/trie-b3-20260927-0110/work/verification/trie/.tools/cbmc/jbmc/lib/java-models-library/target/cprover-api.jar",
+      "class_sha256": "342846e46b6de52b702fd3fb6fb785815df7516cf1629b362eb67fa190afd900"
+    },
+    {
+      "class": "java/util/Arrays.class",
+      "classpath_entry": "$HERE/build/jdk17/java.base",
+      "class_sha256": "9990b6e06859452e1d7e4c15c0dba9d48f5d5449d4fbda12598771511406b485"
+    },
+    {
+      "class": "java/util/ImmutableCollections$List12.class",
+      "classpath_entry": "$HERE/build/jdk17/java.base",
+      "class_sha256": "24eb6b97dda632efb65ab2a12dac054229ceeb709340d1953a2b06d27df6eff3"
+    },
+    {
+      "class": "java/util/IdentityHashMap$EntrySet.class",
+      "classpath_entry": "$HERE/build/jdk17/java.base",
+      "class_sha256": "dea84429b41e50451956624820c2e9ffbdc7948df4a3bf85e97e2eea2a4e7c68"
+    },
+    {
+      "class": "java/util/IdentityHashMap$KeySet.class",
+      "classpath_entry": "$HERE/build/jdk17/java.base",
+      "class_sha256": "fd4a4b0a2b06b4d8647bd205ee428125b7b40f26577efb31562aba880b297fff"
+    },
+    {
+      "class": "java/util/Objects.class",
+      "classpath_entry": "$HERE/build/jdk17/java.base",
+      "class_sha256": "4052d03fc9d2a91b15b3ce32362fa1c9cd065cef9038f0a79e5065b3c65449f3"
+    },
+    {
+      "class": "java/util/Collections.class",
+      "classpath_entry": "$HERE/build/jdk17/java.base",
+      "class_sha256": "c0e3433b7c9c75c72b0ad5b710c226cd011167579ef8e305b3070afb3d7dd860"
+    },
+    {
+      "class": "java/util/ImmutableCollections$SetN.class",
+      "classpath_entry": "$HERE/build/jdk17/java.base",
+      "class_sha256": "7a7972b0ba309b18b9a8b10009b25b3aeac0ed4229bcfc1e62576f6e74e7238a"
+    },
+    {
+      "class": "java/util/ImmutableCollections$Set12.class",
+      "classpath_entry": "$HERE/build/jdk17/java.base",
+      "class_sha256": "e75d258775ec84bf759a5ea26c520933c7f0eeef85046ff78cb2b15d3ed0675a"
+    },
+    {
+      "class": "java/util/TimSort.class",
+      "classpath_entry": "$HERE/build/jdk17/java.base",
+      "class_sha256": "0980722ec9fc120d686db65e51de52e2f531d798aac2970223d0408dabaca6eb"
+    },
+    {
+      "class": "java/util/HashMap.class",
+      "classpath_entry": "$HERE/build/jdk17/java.base",
+      "class_sha256": "292071f237b47e6eeb459e92442b1c31f7aba388cc6924932db2f5da30891f9a"
+    },
+    {
+      "class": "java/util/Collections$CopiesList.class",
+      "classpath_entry": "$HERE/build/jdk17/java.base",
+      "class_sha256": "c6e55a76d44771d9d09cd956d847d804ca64a8a0f495b6f8f57dd578b794aba5"
+    },
+    {
+      "class": "java/util/AbstractCollection.class",
+      "classpath_entry": "$HERE/build/jdk17/java.base",
+      "class_sha256": "bfeb4cb58edf541bcf44e5b466d2f674b9b9ec9b6409b899d7990f744c46710d"
+    },
+    {
+      "class": "java/util/IdentityHashMap$Values.class",
+      "classpath_entry": "$HERE/build/jdk17/java.base",
+      "class_sha256": "00c76ce7f5788e4e67627a854ff2563227512a4426f2da55623c671371f9402c"
+    },
+    {
+      "class": "java/util/EnumMap$EntrySet.class",
+      "classpath_entry": "$HERE/build/jdk17/java.base",
+      "class_sha256": "6deb3ac104f6b11806979a664ef43a024e7da07f543fa52f7ff30f42771581c0"
+    },
+    {
+      "class": "java/util/ImmutableCollections$SubList.class",
+      "classpath_entry": "$HERE/build/jdk17/java.base",
+      "class_sha256": "f8a83d57f84c6f80df3de4d7f20e12693efb051710d3f71dc6adec5fdb01e21e"
+    },
+    {
+      "class": "java/util/LinkedList.class",
+      "classpath_entry": "$HERE/build/jdk17/java.base",
+      "class_sha256": "80ab2ec22a6f1de5468b05640f97484f37439be8c5d171576d2b7f3a1d02f68c"
+    },
+    {
+      "class": "org/ethereum/util/Utils.class",
+      "classpath_entry": "/Users/void/trie-batches/trie-b3-20260927-0110/work/verification/trie/.tools/deps/rskj1",
+      "class_sha256": "67893f1823057d8c05c179d069026d57956b2408dcac8ce24a80469bb228b827"
+    },
+    {
+      "class": "com/google/common/collect/ArrayTable.class",
+      "classpath_entry": "/Users/void/trie-batches/trie-b3-20260927-0110/work/verification/trie/.tools/deps/jars/guava-18.0.jar",
+      "class_sha256": "66ab20ccabefbecf11550749d181f8a7dec68bd54f48d88ccee3ea9e73075660"
+    },
+    {
+      "class": "com/google/common/collect/ObjectArrays.class",
+      "classpath_entry": "/Users/void/trie-batches/trie-b3-20260927-0110/work/verification/trie/.tools/deps/jars/guava-18.0.jar",
+      "class_sha256": "280899dc66b3ac2913feea75ba6e076c8966d8ae8eabc53a3b7660955f22ae15"
+    },
+    {
+      "class": "com/google/common/collect/Platform.class",
+      "classpath_entry": "/Users/void/trie-batches/trie-b3-20260927-0110/work/verification/trie/.tools/deps/jars/guava-18.0.jar",
+      "class_sha256": "d7752c7a1c9f7c257d0d28bc506ae92e1fbdb6323ca46427d389be714a0ab3c0"
+    },
+    {
+      "class": "com/google/common/reflect/Types.class",
+      "classpath_entry": "/Users/void/trie-batches/trie-b3-20260927-0110/work/verification/trie/.tools/deps/jars/guava-18.0.jar",
+      "class_sha256": "98b9bab4e5e784c864cb7ace031d131ae604caf31a930ea12a1b29ec0f262ea9"
+    },
+    {
+      "class": "org/apache/commons/lang3/ArrayUtils.class",
+      "classpath_entry": "/Users/void/trie-batches/trie-b3-20260927-0110/work/verification/trie/.tools/deps/jars/commons-lang3-3.12.0.jar",
+      "class_sha256": "67b93e0120cb7a2165849043cd0e06ee622d40b36ada9e3fc00295331af5f374"
+    },
+    {
+      "class": "org/apache/commons/lang3/ObjectUtils.class",
+      "classpath_entry": "/Users/void/trie-batches/trie-b3-20260927-0110/work/verification/trie/.tools/deps/jars/commons-lang3-3.12.0.jar",
+      "class_sha256": "61aa17b70d50335e21434facf7d14367280562b5714776c0dada2698becd9fca"
+    },
+    {
+      "class": "org/apache/commons/lang3/Streams$ArrayCollector.class",
+      "classpath_entry": "/Users/void/trie-batches/trie-b3-20260927-0110/work/verification/trie/.tools/deps/jars/commons-lang3-3.12.0.jar",
+      "class_sha256": "8a75529a3a3564072e221b75f454660bab766e469928f087489c46d43a6fae08"
+    },
+    {
+      "class": "org/apache/commons/lang3/event/EventListenerSupport.class",
+      "classpath_entry": "/Users/void/trie-batches/trie-b3-20260927-0110/work/verification/trie/.tools/deps/jars/commons-lang3-3.12.0.jar",
+      "class_sha256": "fb4537993b65ec90953873a13db76383884c7b04b99bb0f5a0c21cd3d24d9061"
+    },
+    {
+      "class": "org/apache/commons/lang3/reflect/MethodUtils.class",
+      "classpath_entry": "/Users/void/trie-batches/trie-b3-20260927-0110/work/verification/trie/.tools/deps/jars/commons-lang3-3.12.0.jar",
+      "class_sha256": "d721db5647f98170114a14c0bf3bc23e104b7d88ffbc288ca6b53e725e4af233"
+    },
+    {
+      "class": "org/apache/commons/lang3/reflect/TypeUtils.class",
+      "classpath_entry": "/Users/void/trie-batches/trie-b3-20260927-0110/work/verification/trie/.tools/deps/jars/commons-lang3-3.12.0.jar",
+      "class_sha256": "ac4720911e9a6ab211b258558dd1b7341da2a947f15e50cf59ae9f331159fb7e"
+    },
+    {
+      "class": "org/apache/commons/lang3/stream/Streams$ArrayCollector.class",
+      "classpath_entry": "/Users/void/trie-batches/trie-b3-20260927-0110/work/verification/trie/.tools/deps/jars/commons-lang3-3.12.0.jar",
+      "class_sha256": "e0cdcdb253aba9d6b0be239cb3aeaab49cb625218bc1fe5cf07ae9ea7f56f204"
+    }
+  ],
+  "direct_calls": [
+    {
+      "class": "org/cprover/CProver.class",
+      "method": "public static <T> T[] createArrayWithType(int, T[]);",
+      "descriptor": "(I[Ljava/lang/Object;)[Ljava/lang/Object;",
+      "instruction": "10: invokestatic  #31                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/Arrays.class",
+      "method": "public static <T extends java.lang.Comparable<? super T>> void parallelSort(T[]);",
+      "descriptor": "([Ljava/lang/Comparable;)V",
+      "instruction": "48: invokestatic  #95                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/Arrays.class",
+      "method": "public static <T extends java.lang.Comparable<? super T>> void parallelSort(T[], int, int);",
+      "descriptor": "([Ljava/lang/Comparable;II)V",
+      "instruction": "57: invokestatic  #95                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/Arrays.class",
+      "method": "public static <T> void parallelSort(T[], java.util.Comparator<? super T>);",
+      "descriptor": "([Ljava/lang/Object;Ljava/util/Comparator;)V",
+      "instruction": "54: invokestatic  #95                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/Arrays.class",
+      "method": "public static <T> void parallelSort(T[], int, int, java.util.Comparator<? super T>);",
+      "descriptor": "([Ljava/lang/Object;IILjava/util/Comparator;)V",
+      "instruction": "66: invokestatic  #95                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/Arrays.class",
+      "method": "public static <T, U> T[] copyOf(U[], int, java.lang.Class<? extends T[]>);",
+      "descriptor": "([Ljava/lang/Object;ILjava/lang/Class;)[Ljava/lang/Object;",
+      "instruction": "18: invokestatic  #95                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/Arrays.class",
+      "method": "public static <T, U> T[] copyOfRange(U[], int, int, java.lang.Class<? extends T[]>);",
+      "descriptor": "([Ljava/lang/Object;IILjava/lang/Class;)[Ljava/lang/Object;",
+      "instruction": "62: invokestatic  #95                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/ImmutableCollections$List12.class",
+      "method": "public <T> T[] toArray(T[]);",
+      "descriptor": "([Ljava/lang/Object;)[Ljava/lang/Object;",
+      "instruction": "23: invokestatic  #62                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/IdentityHashMap$EntrySet.class",
+      "method": "public <T> T[] toArray(T[]);",
+      "descriptor": "([Ljava/lang/Object;)[Ljava/lang/Object;",
+      "instruction": "27: invokestatic  #92                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/IdentityHashMap$KeySet.class",
+      "method": "public <T> T[] toArray(T[]);",
+      "descriptor": "([Ljava/lang/Object;)[Ljava/lang/Object;",
+      "instruction": "27: invokestatic  #88                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/Objects.class",
+      "method": "public static int checkIndex(int, int);",
+      "descriptor": "(II)I",
+      "instruction": "3: invokestatic  #71                 // Method jdk/internal/util/Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I"
+    },
+    {
+      "class": "java/util/Objects.class",
+      "method": "public static int checkFromToIndex(int, int, int);",
+      "descriptor": "(III)I",
+      "instruction": "4: invokestatic  #77                 // Method jdk/internal/util/Preconditions.checkFromToIndex:(IIILjava/util/function/BiFunction;)I"
+    },
+    {
+      "class": "java/util/Objects.class",
+      "method": "public static int checkFromIndexSize(int, int, int);",
+      "descriptor": "(III)I",
+      "instruction": "4: invokestatic  #81                 // Method jdk/internal/util/Preconditions.checkFromIndexSize:(IIILjava/util/function/BiFunction;)I"
+    },
+    {
+      "class": "java/util/Objects.class",
+      "method": "public static long checkIndex(long, long);",
+      "descriptor": "(JJ)J",
+      "instruction": "3: invokestatic  #84                 // Method jdk/internal/util/Preconditions.checkIndex:(JJLjava/util/function/BiFunction;)J"
+    },
+    {
+      "class": "java/util/Objects.class",
+      "method": "public static long checkFromToIndex(long, long, long);",
+      "descriptor": "(JJJ)J",
+      "instruction": "5: invokestatic  #87                 // Method jdk/internal/util/Preconditions.checkFromToIndex:(JJJLjava/util/function/BiFunction;)J"
+    },
+    {
+      "class": "java/util/Objects.class",
+      "method": "public static long checkFromIndexSize(long, long, long);",
+      "descriptor": "(JJJ)J",
+      "instruction": "5: invokestatic  #90                 // Method jdk/internal/util/Preconditions.checkFromIndexSize:(JJJLjava/util/function/BiFunction;)J"
+    },
+    {
+      "class": "java/util/Collections.class",
+      "method": "static <T> T[] zeroLengthArray(java.lang.Class<T>);",
+      "descriptor": "(Ljava/lang/Class;)[Ljava/lang/Object;",
+      "instruction": "2: invokestatic  #245                // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/ImmutableCollections$SetN.class",
+      "method": "public <T> T[] toArray(T[]);",
+      "descriptor": "([Ljava/lang/Object;)[Ljava/lang/Object;",
+      "instruction": "24: invokestatic  #100                // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/ImmutableCollections$Set12.class",
+      "method": "public <T> T[] toArray(T[]);",
+      "descriptor": "([Ljava/lang/Object;)[Ljava/lang/Object;",
+      "instruction": "23: invokestatic  #89                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/TimSort.class",
+      "method": "private java.util.TimSort(T[], java.util.Comparator<? super T>, T[], int, int);",
+      "descriptor": "([Ljava/lang/Object;Ljava/util/Comparator;[Ljava/lang/Object;II)V",
+      "instruction": "79: invokestatic  #33                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/TimSort.class",
+      "method": "private T[] ensureCapacity(int);",
+      "descriptor": "(I)[Ljava/lang/Object;",
+      "instruction": "50: invokestatic  #33                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/HashMap.class",
+      "method": "final <T> T[] prepareArray(T[]);",
+      "descriptor": "([Ljava/lang/Object;)[Ljava/lang/Object;",
+      "instruction": "19: invokestatic  #243                // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/Collections$CopiesList.class",
+      "method": "public <T> T[] toArray(T[]);",
+      "descriptor": "([Ljava/lang/Object;)[Ljava/lang/Object;",
+      "instruction": "19: invokestatic  #74                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/AbstractCollection.class",
+      "method": "public <T> T[] toArray(T[]);",
+      "descriptor": "([Ljava/lang/Object;)[Ljava/lang/Object;",
+      "instruction": "23: invokestatic  #50                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/IdentityHashMap$Values.class",
+      "method": "public <T> T[] toArray(T[]);",
+      "descriptor": "([Ljava/lang/Object;)[Ljava/lang/Object;",
+      "instruction": "27: invokestatic  #69                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/EnumMap$EntrySet.class",
+      "method": "public <T> T[] toArray(T[]);",
+      "descriptor": "([Ljava/lang/Object;)[Ljava/lang/Object;",
+      "instruction": "19: invokestatic  #61                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/ImmutableCollections$SubList.class",
+      "method": "public <T> T[] toArray(T[]);",
+      "descriptor": "([Ljava/lang/Object;)[Ljava/lang/Object;",
+      "instruction": "24: invokestatic  #96                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "java/util/LinkedList.class",
+      "method": "public <T> T[] toArray(T[]);",
+      "descriptor": "([Ljava/lang/Object;)[Ljava/lang/Object;",
+      "instruction": "20: invokestatic  #183                // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/ethereum/util/Utils.class",
+      "method": "public static <T> T[] mergeArrays(T[]...);",
+      "descriptor": "([[Ljava/lang/Object;)[Ljava/lang/Object;",
+      "instruction": "44: invokestatic  #174                // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "com/google/common/collect/ArrayTable.class",
+      "method": "public V[][] toArray(java.lang.Class<V>);",
+      "descriptor": "(Ljava/lang/Class;)[[Ljava/lang/Object;",
+      "instruction": "24: invokestatic  #29                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;[I)Ljava/lang/Object;"
+    },
+    {
+      "class": "com/google/common/collect/ObjectArrays.class",
+      "method": "public static <T> T[] newArray(java.lang.Class<T>, int);",
+      "descriptor": "(Ljava/lang/Class;I)[Ljava/lang/Object;",
+      "instruction": "2: invokestatic  #2                  // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "com/google/common/collect/Platform.class",
+      "method": "static <T> T[] newArray(T[], int);",
+      "descriptor": "([Ljava/lang/Object;I)[Ljava/lang/Object;",
+      "instruction": "10: invokestatic  #3                  // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "com/google/common/reflect/Types.class",
+      "method": "static java.lang.Class<?> getArrayClass(java.lang.Class<?>);",
+      "descriptor": "(Ljava/lang/Class;)Ljava/lang/Class;",
+      "instruction": "2: invokestatic  #51                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/ArrayUtils.class",
+      "method": "private static java.lang.Object add(java.lang.Object, int, java.lang.Object, java.lang.Class<?>);",
+      "descriptor": "(Ljava/lang/Object;ILjava/lang/Object;Ljava/lang/Class;)Ljava/lang/Object;",
+      "instruction": "42: invokestatic  #33                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/ArrayUtils.class",
+      "method": "private static java.lang.Object add(java.lang.Object, int, java.lang.Object, java.lang.Class<?>);",
+      "descriptor": "(Ljava/lang/Object;ILjava/lang/Object;Ljava/lang/Class;)Ljava/lang/Object;",
+      "instruction": "115: invokestatic  #33                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/ArrayUtils.class",
+      "method": "public static <T> T[] addAll(T[], T...);",
+      "descriptor": "([Ljava/lang/Object;[Ljava/lang/Object;)[Ljava/lang/Object;",
+      "instruction": "32: invokestatic  #33                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/ArrayUtils.class",
+      "method": "private static java.lang.Object copyArrayGrow1(java.lang.Object, java.lang.Class<?>);",
+      "descriptor": "(Ljava/lang/Object;Ljava/lang/Class;)Ljava/lang/Object;",
+      "instruction": "19: invokestatic  #33                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/ArrayUtils.class",
+      "method": "private static java.lang.Object copyArrayGrow1(java.lang.Object, java.lang.Class<?>);",
+      "descriptor": "(Ljava/lang/Object;Ljava/lang/Class;)Ljava/lang/Object;",
+      "instruction": "35: invokestatic  #33                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/ArrayUtils.class",
+      "method": "public static <T> T[] insert(int, T[], T...);",
+      "descriptor": "(I[Ljava/lang/Object;[Ljava/lang/Object;)[Ljava/lang/Object;",
+      "instruction": "79: invokestatic  #33                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/ArrayUtils.class",
+      "method": "public static <T> T[] nullToEmpty(T[], java.lang.Class<T[]>);",
+      "descriptor": "([Ljava/lang/Object;Ljava/lang/Class;)[Ljava/lang/Object;",
+      "instruction": "24: invokestatic  #33                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/ArrayUtils.class",
+      "method": "private static java.lang.Object remove(java.lang.Object, int);",
+      "descriptor": "(Ljava/lang/Object;I)Ljava/lang/Object;",
+      "instruction": "60: invokestatic  #33                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/ArrayUtils.class",
+      "method": "static java.lang.Object removeAll(java.lang.Object, java.util.BitSet);",
+      "descriptor": "(Ljava/lang/Object;Ljava/util/BitSet;)Ljava/lang/Object;",
+      "instruction": "26: invokestatic  #33                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/ArrayUtils.class",
+      "method": "static java.lang.Object removeAll(java.lang.Object, int...);",
+      "descriptor": "(Ljava/lang/Object;[I)Ljava/lang/Object;",
+      "instruction": "125: invokestatic  #33                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/ArrayUtils.class",
+      "method": "public static <T> T[] subarray(T[], int, int);",
+      "descriptor": "([Ljava/lang/Object;II)[Ljava/lang/Object;",
+      "instruction": "41: invokestatic  #33                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/ArrayUtils.class",
+      "method": "public static <T> T[] subarray(T[], int, int);",
+      "descriptor": "([Ljava/lang/Object;II)[Ljava/lang/Object;",
+      "instruction": "58: invokestatic  #33                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/ObjectUtils.class",
+      "method": "public static <T> T clone(T);",
+      "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+      "instruction": "39: invokestatic  #10                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/Streams$ArrayCollector.class",
+      "method": "private java.lang.Object[] lambda$finisher$1(java.util.List);",
+      "descriptor": "(Ljava/util/List;)[Ljava/lang/Object;",
+      "instruction": "10: invokestatic  #9                  // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/event/EventListenerSupport.class",
+      "method": "private void initializeTransientFields(java.lang.Class<L>, java.lang.ClassLoader);",
+      "descriptor": "(Ljava/lang/Class;Ljava/lang/ClassLoader;)V",
+      "instruction": "2: invokestatic  #47                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/reflect/MethodUtils.class",
+      "method": "static java.lang.Object[] getVarArgs(java.lang.Object[], java.lang.Class<?>[]);",
+      "descriptor": "([Ljava/lang/Object;[Ljava/lang/Class;)[Ljava/lang/Object;",
+      "instruction": "81: invokestatic  #37                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/reflect/TypeUtils.class",
+      "method": "public static java.lang.Class<?> getRawType(java.lang.reflect.Type, java.lang.reflect.Type);",
+      "descriptor": "(Ljava/lang/reflect/Type;Ljava/lang/reflect/Type;)Ljava/lang/Class;",
+      "instruction": "123: invokestatic  #85                 // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    },
+    {
+      "class": "org/apache/commons/lang3/stream/Streams$ArrayCollector.class",
+      "method": "private java.lang.Object[] lambda$finisher$1(java.util.List);",
+      "descriptor": "(Ljava/util/List;)[Ljava/lang/Object;",
+      "instruction": "10: invokestatic  #9                  // Method java/lang/reflect/Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;"
+    }
+  ],
+  "objects_callers": {
+    "classes": [
+      {
+        "class": "java/util/ArrayList$SubList.class",
+        "classpath_entry": "$HERE/build/jdk17/java.base",
+        "sha256": "66b9866683bd7f7209286307b0417b7d8783d84f1bb5e145ff876a31cf21383b"
+      },
+      {
+        "class": "java/util/Objects.class",
+        "classpath_entry": "$HERE/build/jdk17/java.base",
+        "sha256": "4052d03fc9d2a91b15b3ce32362fa1c9cd065cef9038f0a79e5065b3c65449f3"
+      },
+      {
+        "class": "java/util/Base64$DecInputStream.class",
+        "classpath_entry": "$HERE/build/jdk17/java.base",
+        "sha256": "876861abb885b6eb718ebec867e64bd5fbacb3637f22708fe156cc2c06ef49e5"
+      },
+      {
+        "class": "java/util/ArrayList.class",
+        "classpath_entry": "$HERE/build/jdk17/java.base",
+        "sha256": "a0938f458a2714bf98c4af854429594281d2a1f9ccbbd863a975bcd3a12ab493"
+      },
+      {
+        "class": "java/util/ImmutableCollections$SubList.class",
+        "classpath_entry": "$HERE/build/jdk17/java.base",
+        "sha256": "f8a83d57f84c6f80df3de4d7f20e12693efb051710d3f71dc6adec5fdb01e21e"
+      },
+      {
+        "class": "java/util/AbstractList$SubList.class",
+        "classpath_entry": "$HERE/build/jdk17/java.base",
+        "sha256": "7aaf2481d08ccbaf56bc0882116249b6162d8cd438cc36acd926f5269f99bb84"
+      },
+      {
+        "class": "java/io/ByteArrayOutputStream.class",
+        "classpath_entry": "$HERE/build/jdk17/java.base",
+        "sha256": "99f52a615eb9321f57a6843570901897b31b7fb42c6f0f98721e6ce891d88100"
+      },
+      {
+        "class": "java/io/OutputStream.class",
+        "classpath_entry": "$HERE/build/jdk17/java.base",
+        "sha256": "780d8f954f7bcf0589e231a4c0781d357a16fbcd000086427012b2be07aa2ac4"
+      }
+    ],
+    "calls": [
+      {
+        "class": "java/util/ArrayList$SubList.class",
+        "method": "public E set(int, E);",
+        "descriptor": "(ILjava/lang/Object;)Ljava/lang/Object;",
+        "instruction": "5: invokestatic  #30                 // Method java/util/Objects.checkIndex:(II)I"
+      },
+      {
+        "class": "java/util/ArrayList$SubList.class",
+        "method": "public E get(int);",
+        "descriptor": "(I)Ljava/lang/Object;",
+        "instruction": "5: invokestatic  #30                 // Method java/util/Objects.checkIndex:(II)I"
+      },
+      {
+        "class": "java/util/ArrayList$SubList.class",
+        "method": "public E remove(int);",
+        "descriptor": "(I)Ljava/lang/Object;",
+        "instruction": "5: invokestatic  #30                 // Method java/util/Objects.checkIndex:(II)I"
+      },
+      {
+        "class": "java/util/Base64$DecInputStream.class",
+        "method": "public int read(byte[], int, int) throws java.io.IOException;",
+        "descriptor": "([BII)I",
+        "instruction": "21: invokestatic  #77                 // Method java/util/Objects.checkFromIndexSize:(III)I"
+      },
+      {
+        "class": "java/util/ArrayList.class",
+        "method": "public E get(int);",
+        "descriptor": "(I)Ljava/lang/Object;",
+        "instruction": "5: invokestatic  #117                // Method java/util/Objects.checkIndex:(II)I"
+      },
+      {
+        "class": "java/util/ArrayList.class",
+        "method": "public E set(int, E);",
+        "descriptor": "(ILjava/lang/Object;)Ljava/lang/Object;",
+        "instruction": "5: invokestatic  #117                // Method java/util/Objects.checkIndex:(II)I"
+      },
+      {
+        "class": "java/util/ArrayList.class",
+        "method": "public E remove(int);",
+        "descriptor": "(I)Ljava/lang/Object;",
+        "instruction": "5: invokestatic  #117                // Method java/util/Objects.checkIndex:(II)I"
+      },
+      {
+        "class": "java/util/ImmutableCollections$SubList.class",
+        "method": "public E get(int);",
+        "descriptor": "(I)Ljava/lang/Object;",
+        "instruction": "5: invokestatic  #34                 // Method java/util/Objects.checkIndex:(II)I"
+      },
+      {
+        "class": "java/util/AbstractList$SubList.class",
+        "method": "public E set(int, E);",
+        "descriptor": "(ILjava/lang/Object;)Ljava/lang/Object;",
+        "instruction": "5: invokestatic  #28                 // Method java/util/Objects.checkIndex:(II)I"
+      },
+      {
+        "class": "java/util/AbstractList$SubList.class",
+        "method": "public E get(int);",
+        "descriptor": "(I)Ljava/lang/Object;",
+        "instruction": "5: invokestatic  #28                 // Method java/util/Objects.checkIndex:(II)I"
+      },
+      {
+        "class": "java/util/AbstractList$SubList.class",
+        "method": "public E remove(int);",
+        "descriptor": "(I)Ljava/lang/Object;",
+        "instruction": "5: invokestatic  #28                 // Method java/util/Objects.checkIndex:(II)I"
+      },
+      {
+        "class": "java/io/ByteArrayOutputStream.class",
+        "method": "public synchronized void write(byte[], int, int);",
+        "descriptor": "([BII)V",
+        "instruction": "4: invokestatic  #56                 // Method java/util/Objects.checkFromIndexSize:(III)I"
+      },
+      {
+        "class": "java/io/OutputStream.class",
+        "method": "public void write(byte[], int, int) throws java.io.IOException;",
+        "descriptor": "([BII)V",
+        "instruction": "4: invokestatic  #16                 // Method java/util/Objects.checkFromIndexSize:(III)I"
+      }
+    ]
+  }
+}

@@ -27659,8 +27659,7 @@
   "scope_gaps": [],
   "review": [
    "dto-roundtrip-inline-neg",
-   "dto-embedded-long-value",
-   "dto-embedded-long-value-rskip"
+   "dto-embedded-long-value"
   ],
   "entries": [
    {
@@ -28212,7 +28211,7 @@
  {
   "obligation": "TRIE-STORE-01",
   "reading": "conforms",
-  "status": "check",
+  "status": "pending",
   "pending": [
    "store-save-retrieve-part00-none",
    "store-save-retrieve-part00-03",
@@ -28264,9 +28263,7 @@
    "store-save-retrieve-part11-11"
   ],
   "scope_gaps": [],
-  "review": [
-   "store-save-retrieve-neg"
-  ],
+  "review": [],
   "entries": [
    {
     "id": "store-save-retrieve-neg",
@@ -28285,7 +28282,7 @@
  {
   "obligation": "TRIE-STORE-02",
   "reading": "diverges",
-  "status": "check",
+  "status": "pending",
   "pending": [
    "store-content-addressed-part00-none",
    "store-content-addressed-part00-03",
@@ -28337,9 +28334,7 @@
    "store-content-addressed-part11-11"
   ],
   "scope_gaps": [],
-  "review": [
-   "store-content-addressed-rskip"
-  ],
+  "review": [],
   "entries": [
    {
     "id": "store-content-addressed-rskip",
@@ -28358,7 +28353,7 @@
  {
   "obligation": "TRIE-STORE-03",
   "reading": "conforms",
-  "status": "check",
+  "status": "pending",
   "pending": [
    "store-saved-entries-part00-01",
    "store-saved-entries-part00-03",
@@ -28401,9 +28396,7 @@
   "scope_gaps": [
    "store-saved-entries"
   ],
-  "review": [
-   "store-saved-entries-neg"
-  ],
+  "review": [],
   "entries": [
    {
     "id": "store-saved-entries-neg",
@@ -28512,8 +28505,7 @@
   "pending": [],
   "scope_gaps": [],
   "review": [
-   "store-collect",
-   "store-collect-rskip"
+   "store-collect"
   ],
   "entries": [
    {

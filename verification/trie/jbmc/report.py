@@ -105,8 +105,11 @@ def main():
       "properties about concrete digest values are left to the differential tests.")
     w("- Every property harness has a negative control that must fail on its own assertion; every "
       "RSKIP reading is a separate harness expected to fail, with a reproducer.")
-    w("- Stubs JBMC substitutes for bodiless methods are listed per result and audited against "
-      "`models/benign-stubs.json` (`reaudit.py`; conditional entries are checked in each result's log).")
+    w("- Stubs JBMC substitutes for bodiless methods are listed per result and audited by `reaudit.py`. "
+      "Global reasons are in `models/benign-stubs.json`; conditional entries require log evidence. "
+      "Five historical b3 failures have exact-evidence exceptions documented in "
+      "`evidence-b3-stub-review/README.md`, bound to their original result, manifests and log/stub bytes. "
+      "Those exceptions do not approve other executions or positive companion checks.")
     w("- Heavy checks are split into parts whose union is the original check (`gen-splits.py`, %s)." %
       ", ".join("%s %d" % kv for kv in splits.most_common()))
     w("- Runs go through `heavy_run.py` (shared lock, memory watchdog, admission and timeout); each run "

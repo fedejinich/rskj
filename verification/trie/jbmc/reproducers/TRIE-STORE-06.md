@@ -30,7 +30,7 @@ RSKIP64 (`IPs/RSKIP64.md:47-53`, Epoch migration process)
 - Java output: retrieve(root) present, present, absent (property harness `store-collect`)
 - RSKIP-expected output: present after every collect
 - JBMC verdict of the reading: FAILURE (expected FAILURE), host voids-macbook-pro-2.local
-- Stub audit: REVIEW: java::java.lang.ThreadLocal.remove:()V, java::java.lang.reflect.Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;, java::java.util.AbstractList$RandomAccessSubList.subListRangeCheck:(III)V, java::java.util.AbstractList$SubList.subListRangeCheck:(III)V, java::java.util.ArrayList$SubList.subListRangeCheck:(III)V, java::java.util.ArrayList.subListRangeCheck:(III)V, java::jdk.internal.util.Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I, java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V. Expected verdicts with unresolved stubs are not accepted proof.
+- Stub audit: none on property path. Expected verdicts with unresolved stubs are not accepted proof.
 - Failed properties: `java::StoreHarness.collectLosesRootRskip:()V.assertion.1`
 
 Violated property:

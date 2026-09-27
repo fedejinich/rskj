@@ -1,0 +1,64 @@
+{
+  "note": "Manual historical evidence decisions, not a global stub whitelist. See README.md and negative-trace-review.json. These five original failures are the only accepted records.",
+  "manifests": {
+    "reference-manifest.json": "8c495a31c9b36501a53aeb20fc9e5756e6d2077b399f318ecef5b7f1aec44a72",
+    "executor-manifest.json": "544e10b1e1cfd9bc8dc934c51a0df435ad31a640fb0aa25351ddea8b5577db0f"
+  },
+  "results": {
+    "store-save-retrieve-neg": {
+      "result_sha256": "8524595e6c7dfa7481459e40e3c72c6b4140e97200cec3ded06b1644476b2868",
+      "log_sha256": "6ace977579337bfc6ce0bb6ae094a9dcdc870a703f24183be8f08703c948b926",
+      "stubs_sha256": "bd8ca8c5120c6d95ea2409b882f200941b96cc69ba3f898f1e12c9949a879a1c",
+      "approved_stubs": [
+        "java::java.lang.ThreadLocal.remove:()V",
+        "java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+      ],
+      "basis": "Pinned NOP logger makes both logging calls unreachable."
+    },
+    "store-content-addressed-rskip": {
+      "result_sha256": "e126ac37c1a5184c6e06fb49199f51c427e737850f9b31e68696ee97a9a921c3",
+      "log_sha256": "9b1281c7f00cee3cf12a9bf72322ab9bf8259a2d473de22c42518bb12900d162",
+      "stubs_sha256": "bd8ca8c5120c6d95ea2409b882f200941b96cc69ba3f898f1e12c9949a879a1c",
+      "approved_stubs": [
+        "java::java.lang.ThreadLocal.remove:()V",
+        "java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+      ],
+      "basis": "Pinned NOP logger makes both logging calls unreachable."
+    },
+    "store-saved-entries-neg": {
+      "result_sha256": "460a6e051684bd2672211707801714e95bc8258d872ff64bd66da3c87f1a5dad",
+      "log_sha256": "fc7230d7e0283483116c05861c85a603ba84caa59069a91cc4240543f8f321e9",
+      "stubs_sha256": "bd8ca8c5120c6d95ea2409b882f200941b96cc69ba3f898f1e12c9949a879a1c",
+      "approved_stubs": [
+        "java::java.lang.ThreadLocal.remove:()V",
+        "java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+      ],
+      "basis": "Pinned NOP logger makes both logging calls unreachable."
+    },
+    "store-collect-rskip": {
+      "result_sha256": "bba3bdf90e59e219041ab83171dbe3c545ea6ae1045015007cf8a13ae0f0c7aa",
+      "log_sha256": "b03b43f6fd918381fd75c5cb78bc96c48dffc9e3f938ac48bc187b8ae5585004",
+      "stubs_sha256": "686e4e91337a992346f5c8cc1ec98d1f982ddd74aa26a03ba07b805e5805dd83",
+      "approved_stubs": [
+        "java::java.lang.ThreadLocal.remove:()V",
+        "java::java.lang.reflect.Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;",
+        "java::java.util.AbstractList$RandomAccessSubList.subListRangeCheck:(III)V",
+        "java::java.util.AbstractList$SubList.subListRangeCheck:(III)V",
+        "java::java.util.ArrayList$SubList.subListRangeCheck:(III)V",
+        "java::java.util.ArrayList.subListRangeCheck:(III)V",
+        "java::jdk.internal.util.Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I",
+        "java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+      ],
+      "basis": "Original failing trace has valid range checks whose results the JDK callers discard; other unresolved helpers are not called. See negative-trace-review.json."
+    },
+    "dto-embedded-long-value-rskip": {
+      "result_sha256": "fe0d850eccb4b1a86dc4ba1229d8ad69287053649d95d9e4aea8fc3df36ac638",
+      "log_sha256": "6ead9b6f8aabd2355d254b96526c590ff82415933821889a7ab15cdecf89be55",
+      "stubs_sha256": "c0208c38fc3375b4968342de49b83909d1cb49cc1b525ff227929897e5e57aec",
+      "approved_stubs": [
+        "java::jdk.internal.util.Preconditions.checkFromIndexSize:(IIILjava/util/function/BiFunction;)I"
+      ],
+      "basis": "Original failing trace has valid range checks whose results the JDK callers discard; other unresolved helpers are not called. See negative-trace-review.json."
+    }
+  }
+}

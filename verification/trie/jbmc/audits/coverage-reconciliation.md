@@ -35,10 +35,11 @@ Preserve the live b5–b8 source snapshots and executions. After those batches s
 
 No in-flight harness or generated source was changed for this reconciliation.
 
-## Unresolved stub checks after b5 integration
+## Historical stub checks after b5 integration
 
-Ten recorded results still have `REVIEW` stub audits. Expected verdicts alone do not
-close them. The following source review does not change the whitelist or those verdicts.
+At b5 integration, ten recorded results had `REVIEW` stub audits. The initial review
+below did not close them. Five now have exact-evidence exceptions, described in the
+update below; five remain unresolved. Expected verdicts alone do not close a review.
 
 `TrieStoreImpl.save`, at pinned Java lines 58–85, initializes `traceInfo` to null and
 only assigns it inside `logger.isTraceEnabled()`. Both `ThreadLocal.remove` and
@@ -70,7 +71,23 @@ The remaining seven results need separate JDK-path review:
   executable implementation. A desired failing DTO assertion does not establish
   that the missing range check is harmless.
 
-After snapshots settle, apply only justified stub-audit changes and re-audit the
-retained logs. Any change to executable models requires fresh affected properties
-and negative controls with new invocation manifests. No blanket approval of
-`Preconditions`, reflective allocation or sublist helpers is justified by this review.
+Any change to executable models remains gated on snapshots settling and requires
+fresh affected properties and negative controls with new invocation manifests.
+No blanket approval of `Preconditions`, reflective allocation or sublist helpers is justified.
+
+### Exact-evidence review update
+
+The [b3 review](../evidence-b3-stub-review/README.md) reconciles the historical
+manifests and compiled inputs, including the original harness directory. It closes
+the three logging-only reviews using the pinned NOP logger argument. Two retained
+counterexample traces also justify their missing-body calls: `store-collect-rskip`
+has 22 valid index checks and no calls to the unresolved allocation/sublist helpers;
+`dto-embedded-long-value-rskip` has nine valid range checks whose return values are
+discarded. This is trace-specific evidence, not acceptance of their positive companions.
+
+`reaudit.py` binds these five exceptions to the complete original result record,
+both manifests and exact log/stub bytes. Its regression check rejects changed
+inputs and confirms the other five entries remain `REVIEW`: `store-epochs`,
+`store-epochs-neg`, `store-collect`, `dto-roundtrip-inline-neg` and
+`dto-embedded-long-value`. No compiled input, Java verdict, remote snapshot or
+global benign-stub list changed. Domain omissions above remain unresolved.

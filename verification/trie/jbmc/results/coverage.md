@@ -80,9 +80,9 @@ Six split sentinels have no legal pair and are not extra tested cases. The forma
 | TRIE-SIZE-01 | conforms | pending | node-format-1 (property, SUCCESS); node-format-neg (negative-control, FAILURE); node-format-2 (property, 0/132 parts as expected, 132 without result); node-format-3 (property, 0/67 parts as expected, 67 without result) | "KEYS, 1 key" |
 | TRIE-SIZE-02 | conforms | pending | node-format-1 (property, SUCCESS); node-format-neg (negative-control, FAILURE); node-format-2 (property, 0/132 parts as expected, 132 without result); node-format-3 (property, 0/67 parts as expected, 67 without result) | "KEYS, 1 key" |
 | TRIE-SIZE-03 | diverges | check | parser-tree-size-not-validated (property, SUCCESS); parser-tree-size-not-validated-rskip (rskip-reading, FAILURE) | {} |
-| TRIE-STORE-01 | conforms | check | store-save-retrieve-neg (negative-control, FAILURE); store-save-retrieve (property, 0/48 parts as expected, 48 without result) |  |
-| TRIE-STORE-02 | diverges | check | store-content-addressed-rskip (rskip-reading, FAILURE); store-content-addressed (property, 0/48 parts as expected, 48 without result) |  |
-| TRIE-STORE-03 | conforms | check | store-saved-entries-neg (negative-control, FAILURE); store-saved-entries (property, 0/37 parts as expected, 37 without result) |  |
+| TRIE-STORE-01 | conforms | pending | store-save-retrieve-neg (negative-control, FAILURE); store-save-retrieve (property, 0/48 parts as expected, 48 without result) |  |
+| TRIE-STORE-02 | diverges | pending | store-content-addressed-rskip (rskip-reading, FAILURE); store-content-addressed (property, 0/48 parts as expected, 48 without result) |  |
+| TRIE-STORE-03 | conforms | pending | store-saved-entries-neg (negative-control, FAILURE); store-saved-entries (property, 0/37 parts as expected, 37 without result) |  |
 | TRIE-STORE-04 | conforms | pending | store-saved-entries (property, 0/37 parts as expected, 37 without result) |  |
 | TRIE-STORE-05 | conforms | check | store-epochs (property, SUCCESS); store-epochs-neg (negative-control, FAILURE) | {} |
 | TRIE-STORE-06 | diverges | check | store-collect (property, SUCCESS); store-collect-rskip (rskip-reading, FAILURE) | {} |

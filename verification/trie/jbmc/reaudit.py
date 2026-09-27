@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Recomputes stub_audit for every entry of results/summary.json against the current
-models/benign-stubs.json, so a stub reviewed after a run was recorded is audited the same way.
+models/benign-stubs.json and the exact historical decisions in evidence-b3-stub-review/.
+Those decisions never apply to another result record, invocation manifest or log/stub bytes.
 
 A benign stub listed in CONDITIONAL is accepted for an entry only if that entry's JBMC log reports
 the named property SUCCESS (the evidence the justification in benign-stubs.json relies on);
@@ -9,7 +10,7 @@ for merged results from another executor.
 
     verification/trie/jbmc/reaudit.py
 Run while no run-jbmc.sh is active (it rewrites summary.json)."""
-import json, os, re
+import hashlib, json, os, re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 BENIGN = json.load(open(os.path.join(HERE, "models", "benign-stubs.json")))
@@ -30,8 +31,34 @@ def log_of(r):
     return ""
 
 
+def reviewed_stubs(r):
+    """Exact historical exceptions; changed evidence fails closed to ordinary review."""
+    evidence = os.path.join(HERE, "evidence-b3-stub-review")
+    try:
+        decisions = json.load(open(os.path.join(evidence, "reviewed-results.json")))
+        decision = decisions["results"].get(r["id"])
+        if not decision:
+            return []
+        identity = json.dumps({k: v for k, v in r.items() if k != "stub_audit"},
+                              sort_keys=True, separators=(",", ":")).encode()
+        if hashlib.sha256(identity).hexdigest() != decision["result_sha256"]:
+            return []
+        files = {os.path.join(evidence, name): digest
+                 for name, digest in decisions["manifests"].items()}
+        for suffix, key in ((".log", "log_sha256"), (".stubs.txt", "stubs_sha256")):
+            files[os.path.join(HERE, "results", "hosts", r["host"], r["id"] + suffix)] = decision[key]
+        for path, digest in files.items():
+            with open(path, "rb") as f:
+                if hashlib.sha256(f.read()).hexdigest() != digest:
+                    return []
+        return decision["approved_stubs"]
+    except (OSError, ValueError, KeyError):
+        return []
+
+
 def audit(r):
-    unknown = [f for f in r.get("stubs", []) if f not in BENIGN]
+    reviewed = reviewed_stubs(r)
+    unknown = [f for f in r.get("stubs", []) if f not in BENIGN and f not in reviewed]
     log = None
     for f in r.get("stubs", []):
         if f in CONDITIONAL and f not in unknown:

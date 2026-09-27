@@ -22,7 +22,7 @@ RSKIP107 (`IPs/RSKIP107.md:50-85`, Specification (node format))
 - Java output: TrieDTO toMessage = 5f 06 00 22 60 33xab 02 40 02 47 (property harness `dto-embedded-long-value`)
 - RSKIP-expected output: m08
 - JBMC verdict of the reading: FAILURE (expected FAILURE), host voids-macbook-pro-2.local
-- Stub audit: REVIEW: java::jdk.internal.util.Preconditions.checkFromIndexSize:(IIILjava/util/function/BiFunction;)I. Expected verdicts with unresolved stubs are not accepted proof.
+- Stub audit: none on property path. Expected verdicts with unresolved stubs are not accepted proof.
 - Failed properties: `java::DtoHarness.dtoEmbeddedLongValueRskip:()V.assertion.1`
 
 Violated property:

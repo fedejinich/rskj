@@ -2,7 +2,7 @@
 
 This directory retains the original reference and executor manifests and source files for the ten unresolved b3 results. `reconciliation.json` records matching invocation commands, expected failed assertions, original log/stub digests and the non-harness classpath match against the original b6 reference. The aggregate b3 harness bytecode differs from b6; this is not a current-source replay. The existing invocation comparator passes for all ten IDs. Reference and executor JSON are not byte-identical: their host paths and source-commit descriptions differ. Their ordered classpath digests, source hashes, tool versions and selected normalized arguments match. All twenty retained log/stub hashes were rechecked against the aggregate's original host files.
 
-No verdict, executable model, harness or audit whitelist changed. All ten results remain `REVIEW` pending a narrowly scoped acceptance rule and its checks. These notes support the existing complete-trie task, not an approved MVP or a partial component acceptance.
+Five original failing results now have justified per-result stub exceptions in `reviewed-results.json`, enforced by `reaudit.py`. They are the three logging-only entries below, `store-collect-rskip` and `dto-embedded-long-value-rskip`. The other five remain `REVIEW`. No Java verdict, executable model, harness or global benign-stub list changed. `reconciliation.json` retains the original pre-review audit labels. These notes support the complete-trie task, not an approved MVP or a component acceptance.
 
 ## Logging-only entries
 
@@ -16,11 +16,13 @@ At the pinned `TrieStoreImpl.save`, `traceInfo` starts null. It can become non-n
 
 The historical input reconciliation now establishes the missing connection to b3. Its model, production and SLF4J classpath digests equal those used for that logger inspection. Thus the source argument applies to these particular retained executions. It does not establish behavior with another logger, with trace logging enabled, or for another caller of either missing method.
 
-Any future acceptance must bind the original per-result log/stub hashes, invocation and compiled-input identity. Do not add these methods to a global benign-stub list on the strength of these three results.
+The exceptions bind the complete original result record except its audit label, both historical manifests, and the original log/stub bytes by SHA256. Changed IDs, commands, bounds, outcomes, tool versions, manifests or evidence bytes cannot inherit the exception. These methods were not added to the global benign-stub list.
 
 ## JDK bytecode provenance
 
 `jdk-bytecode.txt` records explicit-class-file `javap -c -p` excerpts from the original b6 reference. The whole models directory, JDK directory, production directory and core-models jar were rehashed and matched against b3's executor manifest before extracting them. This does not use whichever JDK happens to run `javap` as the inspected implementation.
+
+The original b3 harness directory was also retrieved read-only and rehashed to the b3 manifest digest. `jdk-callers.json` inventories direct calls across 6,531 classes resolved in original classpath order. It finds 51 call sites for Preconditions/reflective allocation and 13 for Objects range checks. This static inventory includes unreachable methods; it is not a reachability proof.
 
 The core-models jar has no ArrayList, Collections, Objects or ByteBuffer class. The classpath also supplies the explicit heap ByteBuffer model; the extracted JDK directory does not contain ByteBuffer or HeapByteBuffer. That model performs its own bounds checks and does not call the missing Preconditions methods.
 
@@ -44,8 +46,22 @@ Pinned TrieDTO and SharedPathSerializer pass entire arrays to `encoder.write(byt
 
 This gives a concrete bounds justification for the inspected write sites in `dto-roundtrip-inline-neg`, `dto-embedded-long-value` and `dto-embedded-long-value-rskip`. Final acceptance still requires confirming there is no other relevant call site in each retained execution. A substring search for successful bounds properties is not enough to establish that. The inline negative control also needs the logging justification above.
 
-## Next acceptance steps
+## Retained failing traces
 
-1. Complete the call-site inventory for reflective allocation and both index-check signatures in the selected original inputs. Record any reachable caller not covered above.
-2. After the old snapshots settle, encode only justified per-result audit exceptions, bound to historical evidence identities. Tests must reject changed log/stub bytes, mismatched manifests and unreviewed result IDs.
-3. Reaudit without a competing summary writer and regenerate the matrix. Preserve every remaining REVIEW entry. No executable model change can inherit old verdicts; such a change needs fresh affected properties and negative controls.
+Only three of the seven failing logs retain a trace. Do not infer a missing trace from an expected FAILURE. `negative-trace-review.json` records the three available traces and names the four missing ones.
+
+- `store-content-addressed-rskip`: 6,647 state blocks, no call to either unresolved logging method.
+- `store-collect-rskip`: 24,887 state blocks, 22 calls to `checkIndex`, all with `0 <= index < length` and a null exception callback. No call to reflective allocation, logging or sublist range-check stubs.
+- `dto-embedded-long-value-rskip`: 8,616 state blocks, nine calls to `checkFromIndexSize`, all satisfying the real range check, with null callbacks.
+
+`preconditions-reference.txt` supplies the missing methods' reference semantics from local OpenJDK Homebrew 17.0.17+0. ArrayList, Objects, Collections, OutputStream and ByteArrayOutputStream from that same JDK archive are byte-identical to the historical inputs. The two int checks return the original index without calls or side effects when their bounds hold. This is reference evidence, not a claim that JBMC executed the missing class.
+
+The JDK caller bytecode above discards the range-check return values. Replacing those particular stub calls by the real checks preserves the inspected failing paths: the checks do not throw, their return values are unused, and the other unresolved methods are not called. This justifies the two trace-specific exceptions. It does not approve their positive companion results or prove whole-program unreachability.
+
+`python3 verification/trie/jbmc/test_reaudit.py` recomputes the trace argument checks from the original logs and tests the exact-evidence exceptions. It rejects invalid/missing traces, invalid range arguments, reachable unresolved allocation, changed result metadata, extra stubs, missing files, changed log/stub bytes and mismatched manifests. It also confirms that all five unaccepted entries still require review.
+
+## Remaining work
+
+Finish the whole-path analysis for `store-epochs`, `store-epochs-neg`, `store-collect`, `dto-roundtrip-inline-neg` and `dto-embedded-long-value`. The static inventory narrows the relevant code but does not settle its reachable paths. In particular, only Arrays' generic `copyOf` reflective-allocation caller appears in the store logs; lack of other property listings is not an unreachability proof.
+
+Reaudit only without a competing summary writer. Audit-policy changes do not alter the immutable remote compiled inputs. Executable model/harness repairs remain gated on the old snapshots settling, and require fresh affected properties and negative controls.
