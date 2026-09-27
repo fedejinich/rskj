@@ -1,0 +1,144 @@
+{
+  "co.rsk.bitcoinj.core.Utils": {},
+  "co.rsk.core.RskAddress": {},
+  "org.ethereum.db.TrieKeyMapper": {
+    "REMASC_ACCOUNT_KEY_SIZE": 11,
+    "DOMAIN_PREFIX": {
+      "@type": "[B",
+      "@items": [
+        0
+      ]
+    },
+    "STORAGE_PREFIX": {
+      "@type": "[B",
+      "@items": [
+        0
+      ]
+    },
+    "CODE_PREFIX": {
+      "@type": "[B",
+      "@items": [
+        -128
+      ]
+    }
+  },
+  "org.ethereum.vm.DataWord": {
+    "ZERO_DATA": {
+      "@type": "[B",
+      "@items": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "ZERO": {
+      "@type": "org.ethereum.vm.DataWord",
+      "data": {
+        "@type": "[B",
+        "@items": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "ONE": {
+      "@type": "org.ethereum.vm.DataWord",
+      "data": {
+        "@type": "[B",
+        "@items": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      }
+    }
+  }
+}

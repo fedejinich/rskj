@@ -1,0 +1,87 @@
+{
+  "batch": "trie-b3-20260927-0110",
+  "non_harness_classpath_matches_b6_reference": true,
+  "note": "Only b3 aggregate harness bytecode differs from b6. No verdict or stub approval changed. Original bounded harness source retained for review; not relabelled current-source evidence.",
+  "results": [
+    {
+      "id": "store-save-retrieve-neg",
+      "command_matches_executor_manifest": true,
+      "expected_assertions_match": true,
+      "log_sha256": "6ace977579337bfc6ce0bb6ae094a9dcdc870a703f24183be8f08703c948b926",
+      "stubs_sha256": "bd8ca8c5120c6d95ea2409b882f200941b96cc69ba3f898f1e12c9949a879a1c",
+      "stub_audit": "REVIEW: java::java.lang.ThreadLocal.remove:()V, java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+    },
+    {
+      "id": "store-content-addressed-rskip",
+      "command_matches_executor_manifest": true,
+      "expected_assertions_match": true,
+      "log_sha256": "9b1281c7f00cee3cf12a9bf72322ab9bf8259a2d473de22c42518bb12900d162",
+      "stubs_sha256": "bd8ca8c5120c6d95ea2409b882f200941b96cc69ba3f898f1e12c9949a879a1c",
+      "stub_audit": "REVIEW: java::java.lang.ThreadLocal.remove:()V, java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+    },
+    {
+      "id": "store-saved-entries-neg",
+      "command_matches_executor_manifest": true,
+      "expected_assertions_match": true,
+      "log_sha256": "fc7230d7e0283483116c05861c85a603ba84caa59069a91cc4240543f8f321e9",
+      "stubs_sha256": "bd8ca8c5120c6d95ea2409b882f200941b96cc69ba3f898f1e12c9949a879a1c",
+      "stub_audit": "REVIEW: java::java.lang.ThreadLocal.remove:()V, java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+    },
+    {
+      "id": "store-epochs",
+      "command_matches_executor_manifest": true,
+      "expected_assertions_match": true,
+      "log_sha256": "9733bc44b2ed5f9270f85ad1c0c6cafe5a1d2820e16bda039c873137e41d780e",
+      "stubs_sha256": "92d7c6cd816910988c80ec7ee308680d7875e3d7a7eba78afc50a71ed069b9dc",
+      "stub_audit": "REVIEW: java::java.lang.ThreadLocal.remove:()V, java::java.lang.reflect.Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;, java::jdk.internal.util.Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I, java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+    },
+    {
+      "id": "store-epochs-neg",
+      "command_matches_executor_manifest": true,
+      "expected_assertions_match": true,
+      "log_sha256": "7bd8f2f8fb0d62e58cb49af2463a49a81c736950b14c712203ff59ddec33b4f0",
+      "stubs_sha256": "648b06fb036db7a85652134ca4b1da9855d9c56d2a2d0c4a4f2da8e90e5bd66e",
+      "stub_audit": "REVIEW: java::java.lang.reflect.Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;, java::jdk.internal.util.Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I"
+    },
+    {
+      "id": "store-collect",
+      "command_matches_executor_manifest": true,
+      "expected_assertions_match": true,
+      "log_sha256": "83f7747e0ac881c43df174eec0510d645b9951dd6fa43e937d1c672d24e93e92",
+      "stubs_sha256": "686e4e91337a992346f5c8cc1ec98d1f982ddd74aa26a03ba07b805e5805dd83",
+      "stub_audit": "REVIEW: java::java.lang.ThreadLocal.remove:()V, java::java.lang.reflect.Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;, java::java.util.AbstractList$RandomAccessSubList.subListRangeCheck:(III)V, java::java.util.AbstractList$SubList.subListRangeCheck:(III)V, java::java.util.ArrayList$SubList.subListRangeCheck:(III)V, java::java.util.ArrayList.subListRangeCheck:(III)V, java::jdk.internal.util.Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I, java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+    },
+    {
+      "id": "store-collect-rskip",
+      "command_matches_executor_manifest": true,
+      "expected_assertions_match": true,
+      "log_sha256": "b03b43f6fd918381fd75c5cb78bc96c48dffc9e3f938ac48bc187b8ae5585004",
+      "stubs_sha256": "686e4e91337a992346f5c8cc1ec98d1f982ddd74aa26a03ba07b805e5805dd83",
+      "stub_audit": "REVIEW: java::java.lang.ThreadLocal.remove:()V, java::java.lang.reflect.Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;, java::java.util.AbstractList$RandomAccessSubList.subListRangeCheck:(III)V, java::java.util.AbstractList$SubList.subListRangeCheck:(III)V, java::java.util.ArrayList$SubList.subListRangeCheck:(III)V, java::java.util.ArrayList.subListRangeCheck:(III)V, java::jdk.internal.util.Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I, java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+    },
+    {
+      "id": "dto-roundtrip-inline-neg",
+      "command_matches_executor_manifest": true,
+      "expected_assertions_match": true,
+      "log_sha256": "a3626ac1b52fc1e1456e1f1ebf9f6c2c665e751e19f085c4f63334b13ea18df0",
+      "stubs_sha256": "2532cdcf1c47175a3a30d85e6db1c3c1e60b71ae1448d8ff88253ad7a5509d0d",
+      "stub_audit": "REVIEW: java::java.lang.ThreadLocal.remove:()V, java::jdk.internal.util.Preconditions.checkFromIndexSize:(IIILjava/util/function/BiFunction;)I, java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+    },
+    {
+      "id": "dto-embedded-long-value",
+      "command_matches_executor_manifest": true,
+      "expected_assertions_match": true,
+      "log_sha256": "75685b017ba5b0a51a87b5e1287faeff7c93ab9b31b1d421aef16ed1d65590bb",
+      "stubs_sha256": "c0208c38fc3375b4968342de49b83909d1cb49cc1b525ff227929897e5e57aec",
+      "stub_audit": "REVIEW: java::jdk.internal.util.Preconditions.checkFromIndexSize:(IIILjava/util/function/BiFunction;)I"
+    },
+    {
+      "id": "dto-embedded-long-value-rskip",
+      "command_matches_executor_manifest": true,
+      "expected_assertions_match": true,
+      "log_sha256": "6ead9b6f8aabd2355d254b96526c590ff82415933821889a7ab15cdecf89be55",
+      "stubs_sha256": "c0208c38fc3375b4968342de49b83909d1cb49cc1b525ff227929897e5e57aec",
+      "stub_audit": "REVIEW: java::jdk.internal.util.Preconditions.checkFromIndexSize:(IIILjava/util/function/BiFunction;)I"
+    }
+  ]
+}
