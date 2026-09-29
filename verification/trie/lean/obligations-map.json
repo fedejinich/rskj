@@ -1,0 +1,2137 @@
+[
+ {
+  "id": "TRIE-KEY-01",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_key_01",
+    "file": "lean/RskjTrie/Obligations/Key.lean",
+    "line": 9,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "List.length a = 20",
+     "List.length (H a) = 32"
+    ],
+    "axioms": [
+     "propext"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-KEY-02",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_key_02",
+    "file": "lean/RskjTrie/Obligations/Key.lean",
+    "line": 14,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [
+     "10 ≤ List.length (H x)"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_key_02_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Key.lean",
+    "line": 19,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [
+     "10 ≤ List.length (H x)"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": ""
+ },
+ {
+  "id": "TRIE-KEY-03",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_key_03",
+    "file": "lean/RskjTrie/Obligations/Key.lean",
+    "line": 23,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "List.length a = 20",
+     "List.length (H a) = 32"
+    ],
+    "axioms": [
+     "propext"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-KEY-04",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_key_04",
+    "file": "lean/RskjTrie/Obligations/Key.lean",
+    "line": 29,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "List.length a = 20",
+     "List.length (H a) = 32"
+    ],
+    "axioms": [
+     "propext"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-KEY-05",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_key_05",
+    "file": "lean/RskjTrie/Obligations/Key.lean",
+    "line": 38,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Obligations.Reachable env t"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_key_05_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Key.lean",
+    "line": 46,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Obligations.Reachable env t"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": "Java stores ONE_BYTE_ARRAY = [0x01] (MutableRepository.java:56,105-109), not 0x00."
+ },
+ {
+  "id": "TRIE-KEY-06",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_key_06",
+    "file": "lean/RskjTrie/Obligations/Key.lean",
+    "line": 53,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-KEY-07",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_key_07",
+    "file": "lean/RskjTrie/Obligations/Key.lean",
+    "line": 58,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "List.length (H a) = 32",
+     "List.length a = 20",
+     "List.length (H s) = 32"
+    ],
+    "axioms": [
+     "propext"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_key_07_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Key.lean",
+    "line": 66,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": "The statement is Java's behaviour and is proved; the counterexample refutes the alternative RSKIP reading."
+ },
+ {
+  "id": "TRIE-KEY-08",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_key_08",
+    "file": "lean/RskjTrie/Obligations/Key.lean",
+    "line": 73,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-KEY-09",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_key_09",
+    "file": "lean/RskjTrie/Obligations/Key.lean",
+    "line": 120,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "∀ (x : RskjTrie.Bytes), List.length (H x) = 32"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-KEY-10",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_key_10",
+    "file": "lean/RskjTrie/Obligations/Key.lean",
+    "line": 146,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Obligations.Reachable env t"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_key_10_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Key.lean",
+    "line": 153,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Obligations.Reachable env t"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": "Values are stored as given; no type byte is prepended (RSKIP112 text)."
+ },
+ {
+  "id": "TRIE-PATH-01",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_path_01",
+    "file": "lean/RskjTrie/Obligations/Path.lean",
+    "line": 10,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_path_01_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Path.lean",
+    "line": 22,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": "The statement is Java's behaviour and is proved; the counterexample refutes the alternative RSKIP reading."
+ },
+ {
+  "id": "TRIE-PATH-02",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_path_02",
+    "file": "lean/RskjTrie/Obligations/Path.lean",
+    "line": 38,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "v1 ≠ []",
+     "v2 ≠ []",
+     "List.length v1 ≤ RskjTrie.Uint24.MAX",
+     "List.length v2 ≤ RskjTrie.Uint24.MAX"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_path_02_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Path.lean",
+    "line": 72,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [
+     "v1 ≠ []",
+     "v2 ≠ []",
+     "List.length v1 ≤ RskjTrie.Uint24.MAX",
+     "List.length v2 ≤ RskjTrie.Uint24.MAX"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": "The statement is Java's behaviour and is proved; the counterexample refutes the alternative RSKIP reading."
+ },
+ {
+  "id": "TRIE-PATH-03",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_path_03",
+    "file": "lean/RskjTrie/Obligations/Path.lean",
+    "line": 91,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-PATH-04",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_path_04",
+    "file": "lean/RskjTrie/Obligations/Path.lean",
+    "line": 101,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [
+     "n ≤ 8 * List.length enc",
+     "n ≤ 8 * List.length enc'",
+     "∀ (k : Nat), k < n → RskjTrie.PathEncoder.bitAt enc k = RskjTrie.PathEncoder.bitAt enc' k"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_path_04_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Path.lean",
+    "line": 110,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": ""
+ },
+ {
+  "id": "TRIE-PATH-05",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_path_05",
+    "file": "lean/RskjTrie/Obligations/Path.lean",
+    "line": 127,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-LSH-01",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_lsh_01",
+    "file": "lean/RskjTrie/Obligations/Lsh.lean",
+    "line": 22,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-LSH-02",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_lsh_02",
+    "file": "lean/RskjTrie/Obligations/Lsh.lean",
+    "line": 30,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-LSH-03",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_lsh_03",
+    "file": "lean/RskjTrie/Obligations/Lsh.lean",
+    "line": 41,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [
+     "¬(1 ≤ l ∧ l ≤ 32)",
+     "¬(160 ≤ l ∧ l ≤ 382)"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_lsh_03_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Lsh.lean",
+    "line": 48,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": []
+   }
+  ],
+  "lean_status": "refuted",
+  "note": ""
+ },
+ {
+  "id": "TRIE-LSH-04",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_lsh_04",
+    "file": "lean/RskjTrie/Obligations/Lsh.lean",
+    "line": 55,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "t.Resident",
+     "RskjTrie.Trie.CacheOK env.H t"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-LSH-05",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_lsh_05",
+    "file": "lean/RskjTrie/Obligations/Lsh.lean",
+    "line": 67,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "1 ≤ p.length",
+     "p.length < 2 ^ 31"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-LSH-06",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_lsh_06",
+    "file": "lean/RskjTrie/Obligations/Lsh.lean",
+    "line": 75,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_lsh_06_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Lsh.lean",
+    "line": 95,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": ""
+ },
+ {
+  "id": "TRIE-VARINT-01",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_varint_01",
+    "file": "lean/RskjTrie/Obligations/Lsh.lean",
+    "line": 105,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "v < 2 ^ 64"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-VARINT-02",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_varint_02",
+    "file": "lean/RskjTrie/Obligations/Lsh.lean",
+    "line": 113,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "v < 2 ^ 64"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-VARINT-03",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_varint_03",
+    "file": "lean/RskjTrie/Obligations/Lsh.lean",
+    "line": 120,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_varint_03_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Lsh.lean",
+    "line": 126,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": ""
+ },
+ {
+  "id": "TRIE-NODE-01",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_node_01",
+    "file": "lean/RskjTrie/Obligations/Node.lean",
+    "line": 9,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Trie.toMessage env t = Except.ok m"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-NODE-02",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_node_02",
+    "file": "lean/RskjTrie/Obligations/Node.lean",
+    "line": 16,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_node_02_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Node.lean",
+    "line": 26,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": ""
+ },
+ {
+  "id": "TRIE-NODE-03",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_node_03",
+    "file": "lean/RskjTrie/Obligations/Node.lean",
+    "line": 34,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "∀ (x : RskjTrie.Bytes), List.length (env.H x) = 32",
+     "t.Resident",
+     "RskjTrie.Trie.CacheOK env.H t",
+     "t.PathsOK"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-NODE-04",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_node_04",
+    "file": "lean/RskjTrie/Obligations/Node.lean",
+    "line": 49,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [
+     "t.Resident",
+     "RskjTrie.Trie.CacheOK env.H t"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_node_04_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Node.lean",
+    "line": 59,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": ""
+ },
+ {
+  "id": "TRIE-NODE-05",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_node_05",
+    "file": "lean/RskjTrie/Obligations/Node.lean",
+    "line": 69,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "t.Resident",
+     "RskjTrie.Trie.CacheOK env.H t"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-NODE-06",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_node_06",
+    "file": "lean/RskjTrie/Obligations/Node.lean",
+    "line": 82,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "∀ (x : RskjTrie.Bytes), List.length (env.H x) = 32",
+     "c.Resident",
+     "c.isEmptyTrie = false",
+     "RskjTrie.Trie.CacheOK env.H c"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-NODE-07",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_node_07",
+    "file": "lean/RskjTrie/Obligations/Node.lean",
+    "line": 93,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_node_07_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Node.lean",
+    "line": 100,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": ""
+ },
+ {
+  "id": "TRIE-NODE-08",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_node_08",
+    "file": "lean/RskjTrie/Obligations/Node.lean",
+    "line": 109,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [
+     "vl > 32",
+     "(!(l.isEmpty && r.isEmpty)) = true"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_node_08_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Node.lean",
+    "line": 116,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": ""
+ },
+ {
+  "id": "TRIE-NODE-09",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_node_09",
+    "file": "lean/RskjTrie/Obligations/Node.lean",
+    "line": 125,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-NODE-10",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_node_10",
+    "file": "lean/RskjTrie/Obligations/Node.lean",
+    "line": 149,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "List.length h = 32"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-EMB-01",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_emb_01",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 10,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "t.Resident",
+     "RskjTrie.Trie.CacheOK env.H t"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-EMB-02",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_emb_02",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 28,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [
+     "List.length c < 256",
+     "RskjTrie.Trie.fromMessageRskip107 env F c = Except.ok node"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_emb_02_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 57,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": ""
+ },
+ {
+  "id": "TRIE-EMB-03",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_emb_03",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 64,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [
+     "c.Resident",
+     "RskjTrie.Trie.CacheOK env.H c"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_emb_03_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 72,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": ""
+ },
+ {
+  "id": "TRIE-EMB-04",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_emb_04",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 81,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-EMB-05",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_emb_05",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 91,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "∀ (x : RskjTrie.Bytes), List.length (env.H x) = 32",
+     "c.Resident",
+     "c.isEmptyTrie = false",
+     "c.PathsOK",
+     "(RskjTrie.NodeRef.encS env.H (RskjTrie.NodeRef.node c)).snd.snd = true",
+     "List.length (RskjTrie.NodeRef.encS env.H (RskjTrie.NodeRef.node c)).fst < F"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-VAL-01",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_val_01",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 102,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": []
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-VAL-02",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_val_02",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 106,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "vl > 32"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-VAL-03",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_val_03",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 112,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Trie.CacheOK env.H t",
+     "t.Resident",
+     "t.value = some x"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": "Proved for nodes with the value in memory and consistent caches (every node of a reachable trie). For a node parsed from a crafted store the property fails: see TRIE-VAL-06."
+ },
+ {
+  "id": "TRIE-VAL-04",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_val_04",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 127,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": []
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_val_04_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 130,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": []
+   }
+  ],
+  "lean_status": "proved",
+  "note": "The statement is Java's behaviour and is proved; the counterexample refutes the alternative RSKIP reading."
+ },
+ {
+  "id": "TRIE-VAL-05",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_val_05",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 135,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_val_05_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 157,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": ""
+ },
+ {
+  "id": "TRIE-VAL-06",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_val_06",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 167,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [
+     "t.value = none",
+     "t.valueLength > 0",
+     "t.valueHash = some h",
+     "env.db h = some v",
+     "List.length v = t.valueLength"
+    ],
+    "axioms": [
+     "propext"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_val_06_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 175,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [
+     "List.length v = 33",
+     "List.length v' = 33",
+     "v ≠ v'",
+     "List.length (env.H v) = 32",
+     "env.H v' = env.H v → v' = v",
+     "env.db (env.H v) = some v'"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": ""
+ },
+ {
+  "id": "TRIE-VAL-07",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_val_07",
+    "file": "lean/RskjTrie/Obligations/Emb.lean",
+    "line": 204,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-OPS-01",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ops_01",
+    "file": "lean/RskjTrie/Obligations/Ops.lean",
+    "line": 82,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-OPS-02",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ops_02",
+    "file": "lean/RskjTrie/Obligations/Ops.lean",
+    "line": 86,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Obligations.Reachable env t",
+     "v ≠ []",
+     "List.length v ≤ RskjTrie.Uint24.MAX"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-OPS-03",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ops_03",
+    "file": "lean/RskjTrie/Obligations/Ops.lean",
+    "line": 94,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Obligations.Reachable env t",
+     "RskjTrie.Trie.put env t k v = Except.ok t'",
+     "k' ≠ k"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-OPS-04",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ops_04",
+    "file": "lean/RskjTrie/Obligations/Ops.lean",
+    "line": 102,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Obligations.Reachable env t"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-OPS-05",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ops_05",
+    "file": "lean/RskjTrie/Obligations/Ops.lean",
+    "line": 109,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Obligations.Reachable env t"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-OPS-06",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ops_06",
+    "file": "lean/RskjTrie/Obligations/Ops.lean",
+    "line": 116,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-OPS-07",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ops_07",
+    "file": "lean/RskjTrie/Obligations/Ops.lean",
+    "line": 122,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Obligations.Reachable env t",
+     "s ≠ []",
+     "v1 ≠ []",
+     "v2 ≠ []",
+     "List.length v1 ≤ RskjTrie.Uint24.MAX",
+     "List.length v2 ≤ RskjTrie.Uint24.MAX"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-OPS-08",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ops_08",
+    "file": "lean/RskjTrie/Obligations/Ops.lean",
+    "line": 140,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Obligations.Reachable env t",
+     "RskjTrie.Trie.put env t k v = Except.ok t2"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_ops_08_operational",
+    "file": "lean/RskjTrie/Obligations/Ops.lean",
+    "line": 148,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "∀ (x : RskjTrie.Bytes), List.length (env.H x) = 32",
+     "t.Resident",
+     "RskjTrie.Trie.CacheOK env.H t",
+     "RskjTrie.Op.OTrie.Rep env o t",
+     "RskjTrie.Op.OTrie.putSlice env RskjTrie.Op.OFUEL o (RskjTrie.TrieKeySlice.fromKey k) v d = Except.ok (r, o')"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "partial",
+  "note": "Pure layer: tries are immutable Lean values, so t is unchanged by t.put(...) and its get/getHash are functions of its contents. Operational layer (trie_ops_08_operational): the receiver whose caches put mutates still represents t, so its getHash/get are unchanged. Not modelled: Java array aliasing (mutating the array passed to put or returned by get); objects shared between the old and new trie are modelled as copies (MODEL.md, aliasing)."
+ },
+ {
+  "id": "TRIE-OPS-09",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ops_09",
+    "file": "lean/RskjTrie/Obligations/Ops.lean",
+    "line": 164,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Obligations.Reachable env t"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_ops_09_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Ops.lean",
+    "line": 199,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_ops_09_sanity",
+    "file": "lean/RskjTrie/Obligations/Ops.lean",
+    "line": 218,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": "Refuted: deleteRecursive(k) removes the subtree iff k itself has a value; a value-less branching node exactly at k (the {0100: aa, 0180: bb} root at key 01, confirmed by a Java probe) leaves the trie unchanged. trie_ops_09_sanity proves the reproducer_hint run."
+ },
+ {
+  "id": "TRIE-CMP-01",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_cmp_01",
+    "file": "lean/RskjTrie/Obligations/Ops.lean",
+    "line": 229,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Obligations.Reachable env t"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-CMP-02",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_cmp_02",
+    "file": "lean/RskjTrie/Obligations/Ops.lean",
+    "line": 247,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Obligations.Reachable env t1",
+     "RskjTrie.Obligations.Reachable env t2",
+     "∀ (k : RskjTrie.Bytes), RskjTrie.Trie.get env t1 k = RskjTrie.Trie.get env t2 k"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-CMP-03",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_cmp_03",
+    "file": "lean/RskjTrie/Obligations/Ops.lean",
+    "line": 253,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Obligations.Reachable env t1",
+     "RskjTrie.Obligations.Reachable env t2",
+     "∀ (k : RskjTrie.Bytes), RskjTrie.Trie.get env t1 k = RskjTrie.Trie.get env t2 k"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-HASH-01",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_hash_01",
+    "file": "lean/RskjTrie/Obligations/Hash.lean",
+    "line": 12,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "t.isEmptyTrie = false"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-HASH-02",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_hash_02",
+    "file": "lean/RskjTrie/Obligations/Hash.lean",
+    "line": 26,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_hash_02_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Hash.lean",
+    "line": 34,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [
+     "env.H = RskjTrie.Keccak.keccak256"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": "The statement is Java's behaviour and is proved; the counterexample refutes the alternative RSKIP reading."
+ },
+ {
+  "id": "TRIE-HASH-03",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_hash_03",
+    "file": "lean/RskjTrie/Obligations/Hash.lean",
+    "line": 51,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "∀ (x : RskjTrie.Bytes), List.length (env.H x) = 32",
+     "RskjTrie.Obligations.Reachable env t1",
+     "RskjTrie.Obligations.Reachable env t2",
+     "∀ (k : RskjTrie.Bytes), RskjTrie.Trie.get env t1 k ≠ Except.ok none → List.length k < 2 ^ 28",
+     "∀ (k : RskjTrie.Bytes), RskjTrie.Trie.get env t2 k ≠ Except.ok none → List.length k < 2 ^ 28",
+     "RskjTrie.InjOn env.H (RskjTrie.Trie.vals env.H t1 ++ RskjTrie.Trie.vals env.H t2 ++ [[128]])",
+     "RskjTrie.Trie.getHash env t1 = RskjTrie.Trie.getHash env t2"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": "Ideal-hash hypotheses: 32-byte outputs, collision freedom only on the finite list of messages and values from the two tries, plus the empty-root input 80; keys shorter than 2^28 bytes (shared paths fit Java's int). Global injectivity is not assumed."
+ },
+ {
+  "id": "TRIE-HASH-04",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_hash_04",
+    "file": "lean/RskjTrie/Obligations/Hash.lean",
+    "line": 68,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [
+     "∀ (x : RskjTrie.Bytes), List.length (H x) = 32"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_hash_04_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Hash.lean",
+    "line": 123,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": "Refuted on the crafted store of cases/reproducers.cases (repro-hash-04-*), operational layer, decide +kernel with real Keccak-256; outputs equal Java's. The java-behaviour theorem proves, via the operational/pure bridge, that for a store written by save the hash does not depend on loads (hypotheses: 32-byte H, injective on the trie's messages and values, shared paths < 2^31 bits, non-empty trie)."
+ },
+ {
+  "id": "TRIE-HASH-05",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_hash_05",
+    "file": "lean/RskjTrie/Obligations/Hash.lean",
+    "line": 132,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "partial",
+  "note": "The theorem proves the cache-free encoder equation, not Java's stateful Orchid hash. Java caches getHashOrchid(isSecure) without keying on isSecure (Trie.java:382-392); calling false then true reuses the false hash. Neither Lean layer models hashOrchid. JBMC hash-orchid-cache-flag records the counterexample; the same-flag bridge remains open."
+ },
+ {
+  "id": "TRIE-SER-01",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ser_01",
+    "file": "lean/RskjTrie/Obligations/Ser.lean",
+    "line": 14,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "∀ (x : RskjTrie.Bytes), List.length (env.H x) = 32",
+     "t.Resident",
+     "RskjTrie.Trie.CacheOK env.H t",
+     "t.PathsOK"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": "Every node with consistent caches whose shared paths are < 2^31 bits; H yields 32 bytes."
+ },
+ {
+  "id": "TRIE-SER-02",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ser_02",
+    "file": "lean/RskjTrie/Obligations/Ser.lean",
+    "line": 32,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "∀ (x : RskjTrie.Bytes), List.length (env.H x) = 32",
+     "t1.Resident",
+     "RskjTrie.Trie.CacheOK env.H t1",
+     "t1.PathsOK",
+     "t2.Resident",
+     "RskjTrie.Trie.CacheOK env.H t2",
+     "t2.PathsOK",
+     "RskjTrie.Trie.toMessage env t1 = RskjTrie.Trie.toMessage env t2"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-SER-03",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ser_03",
+    "file": "lean/RskjTrie/Obligations/Ser.lean",
+    "line": 46,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_ser_03_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Ser.lean",
+    "line": 53,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": ""
+ },
+ {
+  "id": "TRIE-SER-04",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ser_04",
+    "file": "lean/RskjTrie/Obligations/Ser.lean",
+    "line": 59,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-SER-05",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ser_05",
+    "file": "lean/RskjTrie/Obligations/Ser.lean",
+    "line": 72,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "partial",
+  "note": "Termination and 'returns a node or an error' hold (fromMessage is a total Lean function). Memory is not modelled: proved instead that on 50 ff fe ffffff7f the parser computes lencoded = 268435456 (the byte[] Java allocates before reading) from a 7-byte input, then fails. Error classes (RuntimeException vs others) are not distinguished (errors are strings)."
+ },
+ {
+  "id": "TRIE-SER-06",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ser_06",
+    "file": "lean/RskjTrie/Obligations/Ser.lean",
+    "line": 83,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "t.Resident"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-SER-07",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ser_07",
+    "file": "lean/RskjTrie/Obligations/Ser.lean",
+    "line": 101,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "∀ (x : RskjTrie.Bytes), List.length (env.H x) = 32"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": "Shared paths < 2^16 bits (int16 length field); long values need the value in the store."
+ },
+ {
+  "id": "TRIE-SER-08",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_ser_08",
+    "file": "lean/RskjTrie/Obligations/Ser.lean",
+    "line": 134,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_ser_08_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Ser.lean",
+    "line": 153,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": "Refuted with Java's own bytes (probe run on the pinned classes): an embedded long-value child is re-emitted by TrieDTO.toMessage in its sync form (value inline). The java-behaviour theorem only restates the modelled TrieDTO.toMessage (TrieDTO.java:417-470); the agreement of TrieDTO fields with Trie.fromMessage is not proved."
+ },
+ {
+  "id": "TRIE-SIZE-01",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_size_01",
+    "file": "lean/RskjTrie/Obligations/Size.lean",
+    "line": 17,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "t.Resident",
+     "RskjTrie.Trie.CacheOK env.H t"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_size_01_sanity",
+    "file": "lean/RskjTrie/Obligations/Size.lean",
+    "line": 40,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-SIZE-02",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_size_02",
+    "file": "lean/RskjTrie/Obligations/Size.lean",
+    "line": 48,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "t.Resident",
+     "RskjTrie.Trie.CacheOK env.H t"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_size_02_reachable",
+    "file": "lean/RskjTrie/Obligations/Size.lean",
+    "line": 62,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Obligations.Reachable env t"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-SIZE-03",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_size_03",
+    "file": "lean/RskjTrie/Obligations/Size.lean",
+    "line": 69,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [
+     "t.childrenSize = some c"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_size_03_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Size.lean",
+    "line": 82,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": ""
+ },
+ {
+  "id": "TRIE-STORE-01",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_store_01",
+    "file": "lean/RskjTrie/Obligations/Store.lean",
+    "line": 13,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "∀ (x : RskjTrie.Bytes), List.length (H x) = 32",
+     "RskjTrie.Obligations.Reachable { H := H, db := db } t",
+     "∀ (k : RskjTrie.Bytes), RskjTrie.Trie.get { H := H, db := db } t k ≠ Except.ok none → List.length k < 2 ^ 28",
+     "t.isEmptyTrie = false",
+     "RskjTrie.InjOn H (RskjTrie.Trie.vals H t)"
+    ],
+    "axioms": [
+     "propext",
+     "Classical.choice",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_store_01_empty",
+    "file": "lean/RskjTrie/Obligations/Store.lean",
+    "line": 25,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": "Non-empty tries: H injective on the trie's messages and values, 32-byte outputs, keys < 2^28 bytes. The empty trie is covered by trie_store_01_empty."
+ },
+ {
+  "id": "TRIE-STORE-02",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_store_02",
+    "file": "lean/RskjTrie/Obligations/Store.lean",
+    "line": 47,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_store_02_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Store.lean",
+    "line": 61,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": "Refuted for the empty root only: H(80) -> 40 is not content-addressed."
+ },
+ {
+  "id": "TRIE-STORE-03",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_store_03",
+    "file": "lean/RskjTrie/Obligations/Store.lean",
+    "line": 70,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "t.Resident",
+     "RskjTrie.Trie.CacheOK H t"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-STORE-04",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_store_04",
+    "file": "lean/RskjTrie/Obligations/Store.lean",
+    "line": 84,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [
+     "t.Resident",
+     "RskjTrie.Trie.CacheOK H t",
+     "t.isEmptyTrie = false",
+     "RskjTrie.InjOn H (RskjTrie.Trie.vals H t)"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-STORE-05",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_store_05",
+    "file": "lean/RskjTrie/Obligations/Store.lean",
+    "line": 111,
+    "role": "obligation",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "proved",
+  "note": ""
+ },
+ {
+  "id": "TRIE-STORE-06",
+  "theorems": [
+   {
+    "name": "RskjTrie.Obligations.trie_store_06",
+    "file": "lean/RskjTrie/Obligations/Store.lean",
+    "line": 169,
+    "role": "java-behaviour",
+    "status": "proved",
+    "hypotheses": [
+     "RskjTrie.Op.MultiTrieStore.collect H ms h = Except.ok ms'"
+    ],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   },
+   {
+    "name": "RskjTrie.Obligations.trie_store_06_rskip_counterexample",
+    "file": "lean/RskjTrie/Obligations/Store.lean",
+    "line": 209,
+    "role": "rskip-counterexample",
+    "status": "proved",
+    "hypotheses": [],
+    "axioms": [
+     "propext",
+     "Quot.sound"
+    ]
+   }
+  ],
+  "lean_status": "refuted",
+  "note": "Refuted: collect copies nothing (the retrieved root is marked saved); Java probe and Lean (decide +kernel) agree: present, present, absent after 3 collects."
+ }
+]

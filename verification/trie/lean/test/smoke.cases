@@ -1,0 +1,75 @@
+# Hand-written smoke cases for the Lean runner (see differential/FORMAT.md)
+case empty
+end
+
+case single
+put 01 aa
+end
+
+case overwrite-and-delete
+put 01 aa
+put 01 bb
+delete 01
+end
+
+case split-and-coalesce
+put 0100 aa
+put 0180 bb
+put 01 cc
+delete 0180
+delete 01
+end
+
+case empty-value-is-delete
+put 02 aa
+put 03 bb
+put 02 -
+end
+
+case long-value-save-reload
+put 0a abababababababababababababababababababababababababababababababababababababababab
+put 0b 01
+save
+reload
+put 0c 02
+save
+reload
+end
+
+case prefix-keys
+put 00 01
+put 0000 02
+put 000000 03
+delete 0000
+end
+
+case many
+put 00 00
+put 01 01
+put 02 02
+put 03 03
+put ff ff
+put 80 80
+put 7f 7f
+delete 02
+delete 03
+end
+
+case decodes
+decode 40
+decode 4000
+decode 5000
+decode 5001ff
+decode 58
+decode -
+decode 0200000000
+decode 0200000000000000aabb
+decode 02000001000000
+end
+
+case keymaps
+keymap-account 0000000000000000000000000000000001000006
+keymap-code 0000000000000000000000000000000001000006
+keymap-storage 0000000000000000000000000000000001000006 0000000000000000000000000000000000000000000000000000000000000000
+keymap-storage 0000000000000000000000000000000001000006 00000000000000000000000000000000000000000000000000000000000000ff
+end

@@ -1,0 +1,61 @@
+# Hand-written: the reproducer hints from spec/obligations.json, run on both sides.
+case repro-decode
+# TRIE-PATH-04 non-zero padding bits
+decode 5000ff01
+# TRIE-LSH-06 non-canonical lshared encodings
+decode 50ff050001
+decode 50fffd05000001
+decode 50ffff05000000010000000001
+decode 50ff0001
+# TRIE-VARINT-03 non-minimal treeSize VarInt
+decode 5a07000450060002fd040001
+# TRIE-NODE-02 version bits never checked
+decode c001
+decode 8001
+decode 00
+decode 0101
+# TRIE-EMB-02 embedded child with a child
+decode 4a224811111111111111111111111111111111111111111111111111111111111111110000
+# TRIE-VAL-05 inline value > 32 bytes, long value with length <= 32
+decode 40000000000000000000000000000000000000000000000000000000000000000000
+decode 60aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa000001
+decode 60aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa000000
+# TRIE-SER-03 orphan embedded flag, embedded empty node
+decode 4201
+decode 4a01400001
+# TRIE-SIZE-03 treeSize not validated
+decode 5a070004500600020501
+end
+# TRIE-HASH-02 empty trie
+case repro-empty
+end
+# TRIE-NODE-04 child flag bits: root with a value and an embedded left child
+case repro-node-04
+put 00 01
+put 0000 02
+end
+# TRIE-EMB-03 / TRIE-NODE-07: 43-byte leaves are embedded (limit 44, RSKIP107 says 40)
+case repro-emb-03
+put 0000000000000000 5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a
+put 8000000000000000 5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a
+end
+# TRIE-NODE-08: childrenSize precedes the long-value fields
+case repro-node-08
+put 01 ababababababababababababababababababababababababababababababababab
+put 0101 02
+end
+# TRIE-HASH-04: the hash of a stored parent depends on whether its small child was loaded first
+# (getHash caches, so each order needs its own fresh parse)
+case repro-hash-04-unloaded
+raw 196550c4c21ed1db8731b699b81b52a83ea6f08d4b99067f0459dc44796f9a8b 50060001
+raw 04f34ee97cf2a14000f85019454fadba552e3f43ccf5c65324fc256cff19b19b 48196550c4c21ed1db8731b699b81b52a83ea6f08d4b99067f0459dc44796f9a8b04
+load 04f34ee97cf2a14000f85019454fadba552e3f43ccf5c65324fc256cff19b19b
+hash
+end
+case repro-hash-04-loaded
+raw 196550c4c21ed1db8731b699b81b52a83ea6f08d4b99067f0459dc44796f9a8b 50060001
+raw 04f34ee97cf2a14000f85019454fadba552e3f43ccf5c65324fc256cff19b19b 48196550c4c21ed1db8731b699b81b52a83ea6f08d4b99067f0459dc44796f9a8b04
+load 04f34ee97cf2a14000f85019454fadba552e3f43ccf5c65324fc256cff19b19b
+getk 00
+hash
+end

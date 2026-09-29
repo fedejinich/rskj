@@ -1,0 +1,4 @@
+java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V
+java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z
+java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;
+java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;

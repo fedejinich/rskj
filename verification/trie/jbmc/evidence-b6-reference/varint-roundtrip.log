@@ -1,0 +1,315 @@
+jbmc VarIntHarness -cp /Users/void_rsk/.treehouse/rskj-fork-7783de/1/rskj-fork/verification/trie/.tools/batch-reference-b6/work/verification/trie/jbmc/build/harness:/Users/void_rsk/.treehouse/rskj-fork-7783de/1/rskj-fork/verification/trie/.tools/batch-reference-b6/work/verification/trie/jbmc/build/models:/Users/void_rsk/.treehouse/rskj-fork-7783de/1/rskj-fork/verification/trie/.tools/batch-reference-b6/work/verification/trie/.tools/cbmc/jbmc/lib/java-models-library/target/core-models.jar:/Users/void_rsk/.treehouse/rskj-fork-7783de/1/rskj-fork/verification/trie/.tools/batch-reference-b6/work/verification/trie/.tools/cbmc/jbmc/lib/java-models-library/target/cprover-api.jar:/Users/void_rsk/.treehouse/rskj-fork-7783de/1/rskj-fork/verification/trie/.tools/batch-reference-b6/work/verification/trie/jbmc/build/jdk17/java.base:/Users/void_rsk/.treehouse/rskj-fork-7783de/1/rskj-fork/verification/trie/.tools/batch-reference-b6/work/verification/trie/.tools/deps/rskj1:/Users/void_rsk/.treehouse/rskj-fork-7783de/1/rskj-fork/verification/trie/.tools/batch-reference-b6/work/verification/trie/.tools/deps/jars/slf4j-api-1.7.36.jar:/Users/void_rsk/.treehouse/rskj-fork-7783de/1/rskj-fork/verification/trie/.tools/batch-reference-b6/work/verification/trie/.tools/deps/jars/bitcoinj-thin-0.14.4-rsk-18.jar:/Users/void_rsk/.treehouse/rskj-fork-7783de/1/rskj-fork/verification/trie/.tools/batch-reference-b6/work/verification/trie/.tools/deps/jars/guava-18.0.jar:/Users/void_rsk/.treehouse/rskj-fork-7783de/1/rskj-fork/verification/trie/.tools/batch-reference-b6/work/verification/trie/.tools/deps/jars/commons-lang3-3.12.0.jar:/Users/void_rsk/.treehouse/rskj-fork-7783de/1/rskj-fork/verification/trie/.tools/batch-reference-b6/work/verification/trie/.tools/deps/jars/bclcrypto-jdk15on-1.59.jar --function VarIntHarness.roundTrip --unwinding-assertions --static-values /Users/void_rsk/.treehouse/rskj-fork-7783de/1/rskj-fork/verification/trie/.tools/batch-reference-b6/work/verification/trie/jbmc/models/static-values.json --unwind 10 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\.class)).*$
+
+JBMC version 6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b) 64-bit arm64 macos
+Parsing ...
+Trying to load Java main class: VarIntHarness
+Found Java main class: VarIntHarness
+Converting
+Java: added 18600 String or Class constant symbols
+Stub static field err found for non-stub type java::java.lang.System. In future this will be a fatal error.
+Generating GOTO Program
+Running GOTO functions transformation passes
+Running with 16 object bits, 48 offset bits (default)
+Starting Bounded Model Checking
+loop identifier java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0 for non-existent function provided with unwindset
+loop identifier java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1 for non-existent function provided with unwindset
+loop identifier java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0 for non-existent function provided with unwindset
+loop identifier java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0 for non-existent function provided with unwindset
+loop identifier java::Nondet.bytes:(I)[B.0 for non-existent function provided with unwindset
+loop identifier java::Nondet.cat:([[B)[B.0 for non-existent function provided with unwindset
+loop identifier java::Nondet.cat:([[B)[B.1 for non-existent function provided with unwindset
+loop identifier java::Nondet.same:([B[B)Z.0 for non-existent function provided with unwindset
+loop identifier java::Nondet.at:([BI[B)Z.0 for non-existent function provided with unwindset
+loop identifier java::Nondet.slice:([BII)[B.0 for non-existent function provided with unwindset
+loop identifier java::Nondet.rep:(II)[B.0 for non-existent function provided with unwindset
+loop identifier java::Nondet.b:([I)[B.0 for non-existent function provided with unwindset
+loop identifier java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0 for non-existent function provided with unwindset
+loop identifier java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1 for non-existent function provided with unwindset
+loop identifier java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0 for non-existent function provided with unwindset
+loop identifier java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0 for non-existent function provided with unwindset
+Unwinding recursion java::java.lang.Object.<clinit_wrapper> iteration 1
+Unwinding recursion java::java.lang.Object.<clinit_wrapper> iteration 1
+Unwinding recursion java::VarIntHarness.<clinit_wrapper> iteration 1
+aborting path on assume(false) at file VarIntHarness.java line 14 function java::VarIntHarness.roundTrip:(J)V bytecode-index 20 thread 0
+aborting path on assume(false) at file VarIntHarness.java line 15 function java::VarIntHarness.roundTrip:(J)V bytecode-index 30 thread 0
+aborting path on assume(false) at file VarIntHarness.java line 18 function java::VarIntHarness.roundTrip:(J)V bytecode-index 58 thread 0
+aborting path on assume(false) at file VarIntHarness.java line 20 function java::VarIntHarness.roundTrip:(J)V bytecode-index 78 thread 0
+aborting path on assume(false) at file VarIntHarness.java line 22 function java::VarIntHarness.roundTrip:(J)V bytecode-index 98 thread 0
+aborting path on assume(false) at file VarIntHarness.java line 24 function java::VarIntHarness.roundTrip:(J)V bytecode-index 110 thread 0
+aborting path on assume(false) at file VarIntHarness.java line 27 function java::VarIntHarness.roundTrip:(J)V bytecode-index 138 thread 0
+Unwinding loop java::VarIntHarness.roundTrip:(J)V.0 iteration 1 file VarIntHarness.java line 26 function java::VarIntHarness.roundTrip:(J)V bytecode-index 140 thread 0
+aborting path on assume(false) at file VarIntHarness.java line 27 function java::VarIntHarness.roundTrip:(J)V bytecode-index 138 thread 0
+Unwinding loop java::VarIntHarness.roundTrip:(J)V.0 iteration 2 file VarIntHarness.java line 26 function java::VarIntHarness.roundTrip:(J)V bytecode-index 140 thread 0
+aborting path on assume(false) at file VarIntHarness.java line 27 function java::VarIntHarness.roundTrip:(J)V bytecode-index 138 thread 0
+Unwinding loop java::VarIntHarness.roundTrip:(J)V.0 iteration 3 file VarIntHarness.java line 26 function java::VarIntHarness.roundTrip:(J)V bytecode-index 140 thread 0
+aborting path on assume(false) at file VarIntHarness.java line 27 function java::VarIntHarness.roundTrip:(J)V bytecode-index 138 thread 0
+Unwinding loop java::VarIntHarness.roundTrip:(J)V.0 iteration 4 file VarIntHarness.java line 26 function java::VarIntHarness.roundTrip:(J)V bytecode-index 140 thread 0
+aborting path on assume(false) at file VarIntHarness.java line 27 function java::VarIntHarness.roundTrip:(J)V bytecode-index 138 thread 0
+Unwinding loop java::VarIntHarness.roundTrip:(J)V.0 iteration 5 file VarIntHarness.java line 26 function java::VarIntHarness.roundTrip:(J)V bytecode-index 140 thread 0
+aborting path on assume(false) at file VarIntHarness.java line 27 function java::VarIntHarness.roundTrip:(J)V bytecode-index 138 thread 0
+Unwinding loop java::VarIntHarness.roundTrip:(J)V.0 iteration 6 file VarIntHarness.java line 26 function java::VarIntHarness.roundTrip:(J)V bytecode-index 140 thread 0
+aborting path on assume(false) at file VarIntHarness.java line 27 function java::VarIntHarness.roundTrip:(J)V bytecode-index 138 thread 0
+Unwinding loop java::VarIntHarness.roundTrip:(J)V.0 iteration 7 file VarIntHarness.java line 26 function java::VarIntHarness.roundTrip:(J)V bytecode-index 140 thread 0
+aborting path on assume(false) at file VarIntHarness.java line 27 function java::VarIntHarness.roundTrip:(J)V bytecode-index 138 thread 0
+Unwinding loop java::VarIntHarness.roundTrip:(J)V.0 iteration 8 file VarIntHarness.java line 26 function java::VarIntHarness.roundTrip:(J)V bytecode-index 140 thread 0
+aborting path on assume(false) at file VarIntHarness.java line 30 function java::VarIntHarness.roundTrip:(J)V bytecode-index 157 thread 0
+aborting path on assume(false) at file VarIntHarness.java line 31 function java::VarIntHarness.roundTrip:(J)V bytecode-index 167 thread 0
+Runtime Symex: 0.147977s
+size of program expression: 2711 steps
+simple slicing removed 6 assignments
+Generated 348 VCC(s), 26 remaining after simplification
+Runtime Postprocess Equation: 0.000442625s
+Passing problem to string refinement loop with MiniSAT 2.2.1 without simplifier
+converting SSA
+Runtime Convert SSA: 0.0181686s
+Running string refinement loop with MiniSAT 2.2.1 without simplifier
+19215 variables, 22224 clauses
+SAT checker: instance is UNSATISFIABLE
+BV-Refinement: got UNSAT, and the proof passes => UNSAT
+Total iterations: 1
+Runtime Solver: 0.0541971s
+Runtime decision procedure: 0.0755813s
+
+** Results:
+[array-create-negative-size.1] Array size should be >= 0: SUCCESS
+[array-create-negative-size.2] Array size should be >= 0: SUCCESS
+[array-create-negative-size.3] Array size should be >= 0: SUCCESS
+[array-create-negative-size.4] Array size should be >= 0: SUCCESS
+[array-create-negative-size.5] Array size should be >= 0: SUCCESS
+[array-create-negative-size.6] Array size should be >= 0: SUCCESS
+[array-create-negative-size.7] Array size should be >= 0: SUCCESS
+[array-create-negative-size.8] Array size should be >= 0: SUCCESS
+[array-create-negative-size.9] Array size should be >= 0: SUCCESS
+VarIntHarness.java function java::VarIntHarness.<clinit>:()V
+[java::VarIntHarness.<clinit>:()V.null-pointer-exception.1] line 4 Null pointer check: SUCCESS
+
+VarIntHarness.java function java::VarIntHarness.roundTrip:(J)V
+[java::VarIntHarness.roundTrip:(J)V.1] line 11 no uncaught exception: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.1] line 11 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.2] line 12 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.assertion.1] line 14 assertion at file VarIntHarness.java line 14 function java::VarIntHarness.roundTrip:(J)V bytecode-index 20: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.3] line 14 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.4] line 14 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.assertion.2] line 15 assertion at file VarIntHarness.java line 15 function java::VarIntHarness.roundTrip:(J)V bytecode-index 30: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.5] line 15 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.6] line 15 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.array-index-out-of-bounds-high.1] line 16 Array index should be < length: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.array-index-out-of-bounds-low.1] line 16 Array index should be >= 0: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.7] line 16 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.assertion.3] line 18 assertion at file VarIntHarness.java line 18 function java::VarIntHarness.roundTrip:(J)V bytecode-index 58: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.8] line 18 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.assertion.4] line 20 assertion at file VarIntHarness.java line 20 function java::VarIntHarness.roundTrip:(J)V bytecode-index 78: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.9] line 20 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.assertion.5] line 22 assertion at file VarIntHarness.java line 22 function java::VarIntHarness.roundTrip:(J)V bytecode-index 98: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.10] line 22 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.assertion.6] line 24 assertion at file VarIntHarness.java line 24 function java::VarIntHarness.roundTrip:(J)V bytecode-index 110: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.11] line 24 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.array-index-out-of-bounds-high.2] line 27 Array index should be < length: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.array-index-out-of-bounds-high.3] line 27 Array index should be < length: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.array-index-out-of-bounds-low.2] line 27 Array index should be >= 0: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.array-index-out-of-bounds-low.3] line 27 Array index should be >= 0: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.assertion.7] line 27 assertion at file VarIntHarness.java line 27 function java::VarIntHarness.roundTrip:(J)V bytecode-index 138: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.12] line 27 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.13] line 27 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.14] line 27 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.15] line 29 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.assertion.8] line 30 assertion at file VarIntHarness.java line 30 function java::VarIntHarness.roundTrip:(J)V bytecode-index 157: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.16] line 30 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.17] line 30 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.18] line 30 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.assertion.9] line 31 assertion at file VarIntHarness.java line 31 function java::VarIntHarness.roundTrip:(J)V bytecode-index 167: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.19] line 31 Null pointer check: SUCCESS
+[java::VarIntHarness.roundTrip:(J)V.null-pointer-exception.20] line 31 Null pointer check: SUCCESS
+
+co/rsk/bitcoinj/core/Utils.java function java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.array-index-out-of-bounds-high.1] line 255 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.array-index-out-of-bounds-high.2] line 255 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.array-index-out-of-bounds-high.3] line 255 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.array-index-out-of-bounds-high.4] line 255 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.array-index-out-of-bounds-high.5] line 255 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.array-index-out-of-bounds-high.6] line 255 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.array-index-out-of-bounds-high.7] line 255 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.array-index-out-of-bounds-high.8] line 255 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.array-index-out-of-bounds-low.1] line 255 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.array-index-out-of-bounds-low.2] line 255 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.array-index-out-of-bounds-low.3] line 255 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.array-index-out-of-bounds-low.4] line 255 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.array-index-out-of-bounds-low.5] line 255 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.array-index-out-of-bounds-low.6] line 255 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.array-index-out-of-bounds-low.7] line 255 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.array-index-out-of-bounds-low.8] line 255 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.null-pointer-exception.1] line 255 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.null-pointer-exception.2] line 255 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.null-pointer-exception.3] line 255 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.null-pointer-exception.4] line 255 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.null-pointer-exception.5] line 255 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.null-pointer-exception.6] line 255 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.null-pointer-exception.7] line 255 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readInt64:([BI)J.null-pointer-exception.8] line 255 Null pointer check: SUCCESS
+
+co/rsk/bitcoinj/core/Utils.java function java::co.rsk.bitcoinj.core.Utils.readUint32:([BI)J
+[java::co.rsk.bitcoinj.core.Utils.readUint32:([BI)J.array-index-out-of-bounds-high.1] line 247 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readUint32:([BI)J.array-index-out-of-bounds-high.2] line 247 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readUint32:([BI)J.array-index-out-of-bounds-high.3] line 247 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readUint32:([BI)J.array-index-out-of-bounds-high.4] line 247 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readUint32:([BI)J.array-index-out-of-bounds-low.1] line 247 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readUint32:([BI)J.array-index-out-of-bounds-low.2] line 247 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readUint32:([BI)J.array-index-out-of-bounds-low.3] line 247 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readUint32:([BI)J.array-index-out-of-bounds-low.4] line 247 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readUint32:([BI)J.null-pointer-exception.1] line 247 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readUint32:([BI)J.null-pointer-exception.2] line 247 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readUint32:([BI)J.null-pointer-exception.3] line 247 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.readUint32:([BI)J.null-pointer-exception.4] line 247 Null pointer check: SUCCESS
+
+co/rsk/bitcoinj/core/Utils.java function java::co.rsk.bitcoinj.core.Utils.uint32ToByteArrayLE:(J[BI)V
+[java::co.rsk.bitcoinj.core.Utils.uint32ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-high.1] line 143 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint32ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-low.1] line 143 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint32ToByteArrayLE:(J[BI)V.null-pointer-exception.1] line 143 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint32ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-high.2] line 144 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint32ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-low.2] line 144 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint32ToByteArrayLE:(J[BI)V.null-pointer-exception.2] line 144 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint32ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-high.3] line 145 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint32ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-low.3] line 145 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint32ToByteArrayLE:(J[BI)V.null-pointer-exception.3] line 145 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint32ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-high.4] line 146 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint32ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-low.4] line 146 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint32ToByteArrayLE:(J[BI)V.null-pointer-exception.4] line 146 Null pointer check: SUCCESS
+
+co/rsk/bitcoinj/core/Utils.java function java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-high.1] line 150 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-low.1] line 150 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.null-pointer-exception.1] line 150 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-high.2] line 151 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-low.2] line 151 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.null-pointer-exception.2] line 151 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-high.3] line 152 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-low.3] line 152 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.null-pointer-exception.3] line 152 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-high.4] line 153 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-low.4] line 153 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.null-pointer-exception.4] line 153 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-high.5] line 154 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-low.5] line 154 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.null-pointer-exception.5] line 154 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-high.6] line 155 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-low.6] line 155 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.null-pointer-exception.6] line 155 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-high.7] line 156 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-low.7] line 156 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.null-pointer-exception.7] line 156 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-high.8] line 157 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.array-index-out-of-bounds-low.8] line 157 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.Utils.uint64ToByteArrayLE:(J[BI)V.null-pointer-exception.8] line 157 Null pointer check: SUCCESS
+
+co/rsk/bitcoinj/core/VarInt.java function java::co.rsk.bitcoinj.core.VarInt.<init>:(J)V
+[java::co.rsk.bitcoinj.core.VarInt.<init>:(J)V.null-pointer-exception.1] line 31 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:(J)V.null-pointer-exception.2] line 32 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:(J)V.null-pointer-exception.3] line 33 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:(J)V.null-pointer-exception.4] line 33 Null pointer check: SUCCESS
+
+co/rsk/bitcoinj/core/VarInt.java function java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.null-pointer-exception.1] line 42 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.array-index-out-of-bounds-high.1] line 43 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.array-index-out-of-bounds-low.1] line 43 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.null-pointer-exception.2] line 43 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.null-pointer-exception.3] line 45 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.null-pointer-exception.4] line 46 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.array-index-out-of-bounds-high.2] line 48 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.array-index-out-of-bounds-high.3] line 48 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.array-index-out-of-bounds-low.2] line 48 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.array-index-out-of-bounds-low.3] line 48 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.null-pointer-exception.5] line 48 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.null-pointer-exception.6] line 48 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.null-pointer-exception.7] line 48 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.null-pointer-exception.8] line 49 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.null-pointer-exception.9] line 51 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.null-pointer-exception.10] line 52 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.null-pointer-exception.11] line 54 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.<init>:([BI)V.null-pointer-exception.12] line 55 Null pointer check: SUCCESS
+
+co/rsk/bitcoinj/core/VarInt.java function java::co.rsk.bitcoinj.core.VarInt.encode:()[B
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.null-pointer-exception.1] line 95 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.array-create-negative-size.1] line 97 Array size should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.array-index-out-of-bounds-high.1] line 97 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.array-index-out-of-bounds-low.1] line 97 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.null-pointer-exception.2] line 97 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.null-pointer-exception.3] line 97 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.array-create-negative-size.2] line 99 Array size should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.array-index-out-of-bounds-high.2] line 99 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.array-index-out-of-bounds-high.3] line 99 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.array-index-out-of-bounds-high.4] line 99 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.array-index-out-of-bounds-low.2] line 99 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.array-index-out-of-bounds-low.3] line 99 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.array-index-out-of-bounds-low.4] line 99 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.null-pointer-exception.4] line 99 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.null-pointer-exception.5] line 99 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.null-pointer-exception.6] line 99 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.null-pointer-exception.7] line 99 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.null-pointer-exception.8] line 99 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.array-create-negative-size.3] line 101 Array size should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.array-index-out-of-bounds-high.5] line 102 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.array-index-out-of-bounds-low.5] line 102 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.null-pointer-exception.9] line 102 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.null-pointer-exception.10] line 103 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.array-create-negative-size.4] line 106 Array size should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.array-index-out-of-bounds-high.6] line 107 Array index should be < length: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.array-index-out-of-bounds-low.6] line 107 Array index should be >= 0: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.null-pointer-exception.11] line 107 Null pointer check: SUCCESS
+[java::co.rsk.bitcoinj.core.VarInt.encode:()[B.null-pointer-exception.12] line 108 Null pointer check: SUCCESS
+
+co/rsk/bitcoinj/core/VarInt.java function java::co.rsk.bitcoinj.core.VarInt.getOriginalSizeInBytes:()I
+[java::co.rsk.bitcoinj.core.VarInt.getOriginalSizeInBytes:()I.null-pointer-exception.1] line 64 Null pointer check: SUCCESS
+
+co/rsk/bitcoinj/core/VarInt.java function java::co.rsk.bitcoinj.core.VarInt.getSizeInBytes:()I
+[java::co.rsk.bitcoinj.core.VarInt.getSizeInBytes:()I.null-pointer-exception.1] line 71 Null pointer check: SUCCESS
+
+java/lang/AssertionError.java function java::java.lang.AssertionError.<init>:()V
+[java::java.lang.AssertionError.<init>:()V.null-pointer-exception.1] line 49 Null pointer check: SUCCESS
+
+java/lang/Class.java function java::java.lang.Class.cproverInitializeClassLiteral:(Ljava/lang/String;ZZZZZZZ)V
+[java::java.lang.Class.cproverInitializeClassLiteral:(Ljava/lang/String;ZZZZZZZ)V.null-pointer-exception.1] line 473 Null pointer check: SUCCESS
+[java::java.lang.Class.cproverInitializeClassLiteral:(Ljava/lang/String;ZZZZZZZ)V.null-pointer-exception.2] line 474 Null pointer check: SUCCESS
+[java::java.lang.Class.cproverInitializeClassLiteral:(Ljava/lang/String;ZZZZZZZ)V.null-pointer-exception.3] line 475 Null pointer check: SUCCESS
+[java::java.lang.Class.cproverInitializeClassLiteral:(Ljava/lang/String;ZZZZZZZ)V.null-pointer-exception.4] line 476 Null pointer check: SUCCESS
+[java::java.lang.Class.cproverInitializeClassLiteral:(Ljava/lang/String;ZZZZZZZ)V.null-pointer-exception.5] line 477 Null pointer check: SUCCESS
+[java::java.lang.Class.cproverInitializeClassLiteral:(Ljava/lang/String;ZZZZZZZ)V.null-pointer-exception.6] line 478 Null pointer check: SUCCESS
+[java::java.lang.Class.cproverInitializeClassLiteral:(Ljava/lang/String;ZZZZZZZ)V.null-pointer-exception.7] line 479 Null pointer check: SUCCESS
+[java::java.lang.Class.cproverInitializeClassLiteral:(Ljava/lang/String;ZZZZZZZ)V.null-pointer-exception.8] line 480 Null pointer check: SUCCESS
+
+java/lang/Class.java function java::java.lang.Class.cproverNondetInitialize:()V
+[java::java.lang.Class.cproverNondetInitialize:()V.null-pointer-exception.1] line 454 Null pointer check: SUCCESS
+[java::java.lang.Class.cproverNondetInitialize:()V.null-pointer-exception.2] line 455 Null pointer check: SUCCESS
+
+java/lang/Class.java function java::java.lang.Class.desiredAssertionStatus:()Z
+[java::java.lang.Class.desiredAssertionStatus:()Z.null-pointer-exception.1] line 421 Null pointer check: SUCCESS
+[java::java.lang.Class.desiredAssertionStatus:()Z.null-pointer-exception.2] line 428 Null pointer check: SUCCESS
+[java::java.lang.Class.desiredAssertionStatus:()Z.null-pointer-exception.3] line 429 Null pointer check: SUCCESS
+[java::java.lang.Class.desiredAssertionStatus:()Z.null-pointer-exception.4] line 430 Null pointer check: SUCCESS
+[java::java.lang.Class.desiredAssertionStatus:()Z.null-pointer-exception.5] line 430 Null pointer check: SUCCESS
+[java::java.lang.Class.desiredAssertionStatus:()Z.null-pointer-exception.6] line 432 Null pointer check: SUCCESS
+
+java/lang/Class.java function java::java.lang.Class.getClassLoader:()Ljava/lang/ClassLoader;
+[java::java.lang.Class.getClassLoader:()Ljava/lang/ClassLoader;.null-pointer-exception.1] line 191 Null pointer check: SUCCESS
+
+java/lang/Class.java function java::java.lang.Class.getName:()Ljava/lang/String;
+[java::java.lang.Class.getName:()Ljava/lang/String;.null-pointer-exception.1] line 158 Null pointer check: SUCCESS
+
+java/lang/Error.java function java::java.lang.Error.<init>:()V
+[java::java.lang.Error.<init>:()V.null-pointer-exception.1] line 58 Null pointer check: SUCCESS
+
+java/lang/Object.java function java::java.lang.Object.<clinit>:()V
+[java::java.lang.Object.<clinit>:()V.null-pointer-exception.1] line 50 Null pointer check: SUCCESS
+
+java/lang/Object.java function java::java.lang.Object.<init>:()V
+[java::java.lang.Object.<init>:()V.null-pointer-exception.1] line 58 Null pointer check: SUCCESS
+
+java/lang/System.java function java::java.lang.System.<clinit>:()V
+[java::java.lang.System.<clinit>:()V.null-pointer-exception.1] line 23 Null pointer check: SUCCESS
+
+java/lang/Throwable.java function java::java.lang.Throwable.<init>:()V
+[java::java.lang.Throwable.<init>:()V.null-pointer-exception.2] line 201 Null pointer check: SUCCESS
+[java::java.lang.Throwable.<init>:()V.null-pointer-exception.1] line 264 Null pointer check: SUCCESS
+[java::java.lang.Throwable.<init>:()V.null-pointer-exception.3] line 266 Null pointer check: SUCCESS
+
+** 0 of 196 failed (1 iterations)
+VERIFICATION SUCCESSFUL
