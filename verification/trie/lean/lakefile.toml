@@ -1,0 +1,13 @@
+name = "rskjTrie"
+version = "0.1.0"
+defaultTargets = ["RskjTrie", "trie-diff"]
+
+[leanOptions]
+autoImplicit = false
+
+[[lean_lib]]
+name = "RskjTrie"
+
+[[lean_exe]]
+name = "trie-diff"
+root = "TrieDiff"

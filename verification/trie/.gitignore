@@ -1,0 +1,5 @@
+.tools/
+.lake/
+build/
+*.olean
+differential/results/*.err
