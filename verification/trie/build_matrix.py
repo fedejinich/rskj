@@ -162,6 +162,9 @@ def main():
         "jbmc_version": jbmc.get("jbmc_version"), "lean_toolchain": (ROOT / "lean/lean-toolchain").read_text().strip()
         if (ROOT / "lean/lean-toolchain").exists() else None,
         "differential": diff, "counts": counts, "coverage": coverage, "rows": rows,
+        "acceptance": {"status": "OPEN", "classifications": "provisional evidence inventory, not accepted Java proofs",
+                       "runtime_and_discovery_review": "OPEN", "private_slice_integrated": False,
+                       "details": "jbmc/audits/consumer-review-20260927.md"},
         "jbmc_entries": len(entries), "jbmc_pending": sum(r["verdict"] == "PENDING" for r in all_runs),
         "jbmc_complete_obligations": sum(r["stage"] == 1 and r["jbmc_complete"] for r in rows),
     }
@@ -170,6 +173,9 @@ def main():
     md = ["# Trie verification matrix", "",
           f"rskj `{RSKJ_COMMIT}` · RSKIPs `{spec['rskips_commit']}` · JBMC {matrix['jbmc_version']} · "
           f"{matrix['lean_toolchain']}", "",
+          "**Acceptance hold:** the classifications below are provisional evidence inventory, not accepted Java proofs. "
+          "Resource guards, discovery completion, imported Lean/control evidence and OPS-05 control correspondence remain open. "
+          "See [consumer review gates](jbmc/audits/consumer-review-20260927.md). Reproduction and b6 import are on hold.", "",
           "Status: " + ", ".join(f"**{k}** {v}" for k, v in counts.items()), "",
           "Coverage (Stage 1): " + ", ".join(f"{k} {v}" for k, v in coverage.items()), "",
           "Lean proves statements under the listed model hypotheses; JBMC checks the real classes within each harness bound.", "",

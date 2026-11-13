@@ -27623,7 +27623,7 @@
  {
   "obligation": "TRIE-SER-08",
   "reading": "unclear",
-  "status": "check",
+  "status": "pending",
   "pending": [
    "dto-roundtrip-inline-part00-00",
    "dto-roundtrip-inline-part00-03",
@@ -27657,10 +27657,7 @@
    "dto-roundtrip-inline-part11-11"
   ],
   "scope_gaps": [],
-  "review": [
-   "dto-roundtrip-inline-neg",
-   "dto-embedded-long-value"
-  ],
+  "review": [],
   "entries": [
    {
     "id": "dto-roundtrip-inline-neg",
@@ -28464,13 +28461,10 @@
  {
   "obligation": "TRIE-STORE-05",
   "reading": "conforms",
-  "status": "check",
+  "status": "holds",
   "pending": [],
   "scope_gaps": [],
-  "review": [
-   "store-epochs",
-   "store-epochs-neg"
-  ],
+  "review": [],
   "entries": [
    {
     "id": "store-epochs",
@@ -28504,9 +28498,7 @@
   "status": "check",
   "pending": [],
   "scope_gaps": [],
-  "review": [
-   "store-collect"
-  ],
+  "review": [],
   "entries": [
    {
     "id": "store-collect",

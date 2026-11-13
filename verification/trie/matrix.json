@@ -40,11 +40,11 @@
   ]
  },
  "counts": {
-  "proved": 18,
+  "proved": 19,
   "bounded": 0,
   "fails": 8,
   "finding": 24,
-  "open": 30,
+  "open": 29,
   "stage-2": 3
  },
  "coverage": {
@@ -227890,7 +227890,7 @@
      "note": "",
      "status": "supported",
      "reproducer": null,
-     "stub_audit": "REVIEW: java::java.lang.ThreadLocal.remove:()V, java::jdk.internal.util.Preconditions.checkFromIndexSize:(IIILjava/util/function/BiFunction;)I, java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V",
+     "stub_audit": "none on property path",
      "host": "voids-macbook-pro-2.local",
      "peak_rss_mb": 597,
      "limits": {
@@ -227940,7 +227940,7 @@
      },
      "status": "supported",
      "reproducer": null,
-     "stub_audit": "REVIEW: java::jdk.internal.util.Preconditions.checkFromIndexSize:(IIILjava/util/function/BiFunction;)I",
+     "stub_audit": "none on property path",
      "host": "voids-macbook-pro-2.local",
      "peak_rss_mb": 588,
      "limits": {
@@ -248352,7 +248352,7 @@
      },
      "status": "supported",
      "reproducer": null,
-     "stub_audit": "REVIEW: java::java.lang.ThreadLocal.remove:()V, java::java.lang.reflect.Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;, java::jdk.internal.util.Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I, java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V",
+     "stub_audit": "none on property path",
      "host": "voids-macbook-pro-2.local",
      "peak_rss_mb": 601,
      "limits": {
@@ -248402,7 +248402,7 @@
      "note": "",
      "status": "supported",
      "reproducer": null,
-     "stub_audit": "REVIEW: java::java.lang.reflect.Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;, java::jdk.internal.util.Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I",
+     "stub_audit": "none on property path",
      "host": "voids-macbook-pro-2.local",
      "peak_rss_mb": 552,
      "limits": {
@@ -248429,10 +248429,10 @@
      "url": "https://github.com/fedejinich/rskj/blob/fm/trie-verify/verification/trie/jbmc/harness/StoreHarness.java#L197"
     }
    ],
-   "status": "open",
+   "status": "proved",
    "summary": "Code reading only, not a verification verdict.",
    "coverage_notes": [],
-   "jbmc_complete": false,
+   "jbmc_complete": true,
    "coverage": "lean+jbmc"
   },
   {
@@ -248531,7 +248531,7 @@
      },
      "status": "supported",
      "reproducer": null,
-     "stub_audit": "REVIEW: java::java.lang.ThreadLocal.remove:()V, java::java.lang.reflect.Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;, java::java.util.AbstractList$RandomAccessSubList.subListRangeCheck:(III)V, java::java.util.AbstractList$SubList.subListRangeCheck:(III)V, java::java.util.ArrayList$SubList.subListRangeCheck:(III)V, java::java.util.ArrayList.subListRangeCheck:(III)V, java::jdk.internal.util.Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I, java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V",
+     "stub_audit": "none on property path",
      "host": "voids-macbook-pro-2.local",
      "peak_rss_mb": 620,
      "limits": {
@@ -248636,7 +248636,7 @@
    "status": "fails",
    "summary": "Refuted: collect copies nothing (the retrieved root is marked saved); Java probe and Lean (decide +kernel) agree: present, present, absent after 3 collects.",
    "coverage_notes": [],
-   "jbmc_complete": false,
+   "jbmc_complete": true,
    "coverage": "lean+jbmc"
   },
   {
@@ -248754,7 +248754,14 @@
    "coverage": "stage-2"
   }
  ],
+ "acceptance": {
+  "status": "OPEN",
+  "classifications": "provisional evidence inventory, not accepted Java proofs",
+  "runtime_and_discovery_review": "OPEN",
+  "private_slice_integrated": false,
+  "details": "jbmc/audits/consumer-review-20260927.md"
+ },
  "jbmc_entries": 2291,
  "jbmc_pending": 1429,
- "jbmc_complete_obligations": 41
+ "jbmc_complete_obligations": 43
 }

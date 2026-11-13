@@ -2,7 +2,7 @@
 
 This directory retains the original reference and executor manifests and source files for the ten unresolved b3 results. `reconciliation.json` records matching invocation commands, expected failed assertions, original log/stub digests and the non-harness classpath match against the original b6 reference. The aggregate b3 harness bytecode differs from b6; this is not a current-source replay. The existing invocation comparator passes for all ten IDs. Reference and executor JSON are not byte-identical: their host paths and source-commit descriptions differ. Their ordered classpath digests, source hashes, tool versions and selected normalized arguments match. All twenty retained log/stub hashes were rechecked against the aggregate's original host files.
 
-Five original failing results now have justified per-result stub exceptions in `reviewed-results.json`, enforced by `reaudit.py`. They are the three logging-only entries below, `store-collect-rskip` and `dto-embedded-long-value-rskip`. The other five remain `REVIEW`. No Java verdict, executable model, harness or global benign-stub list changed. `reconciliation.json` retains the original pre-review audit labels. These notes support the complete-trie task, not an approved MVP or a component acceptance.
+Seven original failing results now have justified per-result stub exceptions in `reviewed-results.json`, enforced by `reaudit.py`. They are the three logging-only entries below, `store-collect-rskip`, `dto-embedded-long-value-rskip`, `store-epochs-neg` and `dto-roundtrip-inline-neg`. A separate loaded-program review also accepts the original positive `dto-embedded-long-value` result. Separate whole-path reviews in `store-review/README.md` accept the two positive store records. All ten original reviews are resolved for their exact records. No Java verdict, executable model, harness or global benign-stub list changed. `reconciliation.json` retains the original pre-review audit labels. These notes support the complete-trie task, not an approved MVP or a component acceptance.
 
 ## Logging-only entries
 
@@ -30,7 +30,7 @@ The core-models jar has no ArrayList, Collections, Objects or ByteBuffer class. 
 
 The original `StoreHarness.multi` always constructs `MultiTrieStore(0, 3, ...)`. The pinned constructor creates an `ArrayList` with capacity three and adds exactly three entries. Later operations read or replace entries without changing its size.
 
-The inspected ArrayList bytecode allocates `Object[capacity]` directly. Its append helper calls `grow` only when the old size equals the array length. The constructor's three additions have old sizes 0, 1 and 2, so this list never grows. A reflective allocator is not needed for that construction. This narrows the allocation review; it is not yet a complete exclusion of every other possible caller of `Array.newInstance` in the loaded program.
+The inspected ArrayList bytecode allocates `Object[capacity]` directly. Its append helper calls `grow` only when the old size equals the array length. The constructor's three additions have old sizes 0, 1 and 2, so this list never grows. A reflective allocator is not needed for that construction. The subsequent `store-review/` inspection checks every incoming call to the reflective allocator and its object-copy chain. Its documented fixed-list invariant closes the earlier whole-path gap for the two original positive store records.
 
 For `store-epochs` and `store-epochs-neg`, `getCurrentStore` accesses index zero of the three-entry list. For collection, the pinned code reads indexes one and two and replaces index zero. `ArrayList.get` and `set` call `Objects.checkIndex`, but discard its returned integer and use the original index. These arguments satisfy the real JDK check. A synthesized result is therefore not being used as an array index at these sites. This argument is specific to the three-epoch harness; it says nothing about zero- or one-epoch stores.
 
@@ -58,10 +58,39 @@ Only three of the seven failing logs retain a trace. Do not infer a missing trac
 
 The JDK caller bytecode above discards the range-check return values. Replacing those particular stub calls by the real checks preserves the inspected failing paths: the checks do not throw, their return values are unused, and the other unresolved methods are not called. This justifies the two trace-specific exceptions. It does not approve their positive companion results or prove whole-program unreachability.
 
-`python3 verification/trie/jbmc/test_reaudit.py` recomputes the trace argument checks from the original logs and tests the exact-evidence exceptions. It rejects invalid/missing traces, invalid range arguments, reachable unresolved allocation, changed result metadata, extra stubs, missing files, changed log/stub bytes and mismatched manifests. It also confirms that all five unaccepted entries still require review.
+`python3 verification/trie/jbmc/test_reaudit.py` recomputes the trace argument checks from the original logs and tests the exact-evidence exceptions. It rejects invalid/missing traces, invalid range arguments, reachable unresolved allocation, changed result metadata, extra stubs, missing files, changed log/stub bytes and mismatched manifests. It also checks the independent positive-record reviews; no negative-control decision automatically accepts its companion.
 
-## Remaining work
+## Two diagnostic trace replays
 
-Finish the whole-path analysis for `store-epochs`, `store-epochs-neg`, `store-collect`, `dto-roundtrip-inline-neg` and `dto-embedded-long-value`. The static inventory narrows the relevant code but does not settle its reachable paths. In particular, only Arrays' generic `copyOf` reflective-allocation caller appears in the store logs; lack of other property listings is not an unreachability proof.
+`trace-replay/` retains fresh traces for `store-epochs-neg` and `dto-roundtrip-inline-neg`. The original logs remain unchanged and still have no traces. The replay used the original b3 harness bytecode and all eleven ordered classpath entries, each rehashed against `executor-manifest.json`. The tool version and static-values digest also match. The sole normalized argument change was adding `--trace`. Both runs used the shared heavy-tool guard, sequentially, without writing the aggregate.
+
+Separate `--show-goto-functions` inspections with and without `--trace` produced byte-identical loaded programs for each ID. `goto-comparison.json` records their digests and confirms that the synthesized stub lists match the original results. One gzip-compressed copy of each identical program is retained. The diagnostic manifest records the actual and normalized commands. Its raw `stub_audit` field deliberately remains REVIEW; the later decisions live in `reviewed-results.json`.
+
+- `store-epochs-neg` failed only its intended assertion. Its 4,537 trace state blocks contain one `checkIndex(0, 3, null)` call and no reflective-allocation call.
+- `dto-roundtrip-inline-neg` failed only its intended assertion. Its 8,917 trace state blocks contain two `checkFromIndexSize(0, 1, 1, null)` calls. The pinned NOP logger excludes unresolved logging calls by the control-flow argument above.
+
+The JDK caller bytecode discards these checks' return values. Their real implementations neither throw nor have side effects for the captured valid arguments. Substituting those implementations preserves these two failing paths. This accepts two negative controls, not their positive companions or every path through their loaded programs. Absence of a function name in a trace is not a general unreachability proof, particularly for empty void stubs.
+
+The exact-evidence policy also hashes all seven replay files. Missing or altered replay evidence returns the historical exceptions to REVIEW. Tests recompute the range checks, original input identities, sole argument change, intended failed assertions and retained program hashes. No executable model or original result was replaced by the replay.
+
+## Positive DTO call-site review
+
+`callsite-review/` retains the original `dto-embedded-long-value` loaded GOTO program and inspection metadata. The inspection used the exact original b3 classpath, tool version, static values and normalized arguments, with `--show-goto-functions` added. It ran no solver and changed no compiled input. The original successful log remains the proof execution record.
+
+Every loaded call to the missing `Preconditions.checkFromIndexSize` comes from `Objects.checkFromIndexSize`, with a null callback. The only loaded callers of that Objects method are `ByteArrayOutputStream.write(byte[], int, int)` and `OutputStream.write(byte[], int, int)`. Both three-argument write methods are called only from `OutputStream.write(byte[])`, which passes zero and that same array's length. The retained program includes both virtual-dispatch alternatives, not just the concrete path from a negative trace.
+
+Thus every call to the missing check has valid whole-array bounds. The bytecode inspection above establishes that both write methods discard the check return value. Substituting the real side-effect-free check cannot add an exception or change a copied byte on these paths. This closes the range-check stub review for this exact bounded positive result. It does not establish arbitrary DTO correctness or a Java-to-Lean refinement theorem.
+
+The per-result exception hashes the inspection and compressed program. `test_reaudit.py` recomputes every call-site relation from that program and rejects missing calls, a nonzero offset, a non-null callback and an unexpected caller. It also verifies the original invocation and compiled-input digests. The two other positive store results do not inherit this exception.
+
+## Positive store reviews
+
+`store-review/README.md` gives the complete manual argument for the two original positive store records. The hash-bound loaded programs establish the incoming reflective-allocation chain, unique concrete list construction, range-check callers and rotation entry. The original harness fixes three epochs. The list never grows or changes size, all actual indices are valid, and `rotate2` cannot run. Concrete ArrayList iterators distinguish actual dispatch from the loaded abstract/sublist alternatives. NOP excludes logging.
+
+`store-review/check.py`, also run by `test_reaudit.py`, checks those structural premises and rejects an extra allocator caller, changed constructor arguments or a non-null callback. These tests support the manual invariant argument; they are not a general reachability prover. No new solver result or global benign-stub entry is introduced. `store-collect` confirms the documented root-loss behavior, not the desired RSKIP persistence rule.
+
+## Remaining full-scope work
+
+These ten exact reviews resolve the originally listed stub cases, not discovery completeness. The consumer identified that the captured runner can classify failed discovery as clean. The separate [discovery/protocol acceptance hold](../audits/consumer-review-20260927.md) remains open; reviewed exceptions alone are not accepted Java proofs. Later batch records, domain gaps, model limits and Java-to-Lean refinement also remain open.
 
 Reaudit only without a competing summary writer. Audit-policy changes do not alter the immutable remote compiled inputs. Executable model/harness repairs remain gated on the old snapshots settling, and require fresh affected properties and negative controls.

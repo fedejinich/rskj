@@ -49,6 +49,10 @@ with tempfile.TemporaryDirectory() as tmp, patch.object(m, "ROOT", Path(tmp)):
         path.write_text(json.dumps(data))
     m.main()
     matrix = json.loads((Path(tmp) / "matrix.json").read_text())
+    assert matrix["acceptance"]["status"] == "OPEN"
+    assert matrix["acceptance"]["runtime_and_discovery_review"] == "OPEN"
+    assert matrix["acceptance"]["private_slice_integrated"] is False
+    assert "Acceptance hold" in (Path(tmp) / "matrix.md").read_text()
     assert matrix["counts"]["proved"] == 0
     assert matrix["counts"]["open"] == 1
     assert matrix["jbmc_pending"] == 1

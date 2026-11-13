@@ -4603,7 +4603,7 @@
       "note": "MultiTrieStore(0, 3) over memory stores",
       "status": "supported",
       "reproducer": null,
-      "stub_audit": "REVIEW: java::java.lang.ThreadLocal.remove:()V, java::java.lang.reflect.Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;, java::jdk.internal.util.Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I, java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V",
+      "stub_audit": "none on property path",
       "host": "voids-macbook-pro-2.local",
       "peak_rss_mb": 601,
       "limits": {
@@ -4649,7 +4649,7 @@
       "note": "",
       "status": "supported",
       "reproducer": null,
-      "stub_audit": "REVIEW: java::java.lang.reflect.Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;, java::jdk.internal.util.Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I",
+      "stub_audit": "none on property path",
       "host": "voids-macbook-pro-2.local",
       "peak_rss_mb": 552,
       "limits": {
@@ -4694,7 +4694,7 @@
       "note": "reproducer store06: present, present, absent",
       "status": "supported",
       "reproducer": null,
-      "stub_audit": "REVIEW: java::java.lang.ThreadLocal.remove:()V, java::java.lang.reflect.Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;, java::java.util.AbstractList$RandomAccessSubList.subListRangeCheck:(III)V, java::java.util.AbstractList$SubList.subListRangeCheck:(III)V, java::java.util.ArrayList$SubList.subListRangeCheck:(III)V, java::java.util.ArrayList.subListRangeCheck:(III)V, java::jdk.internal.util.Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I, java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V",
+      "stub_audit": "none on property path",
       "host": "voids-macbook-pro-2.local",
       "peak_rss_mb": 620,
       "limits": {
@@ -5058,7 +5058,7 @@
       "note": "",
       "status": "supported",
       "reproducer": null,
-      "stub_audit": "REVIEW: java::java.lang.ThreadLocal.remove:()V, java::jdk.internal.util.Preconditions.checkFromIndexSize:(IIILjava/util/function/BiFunction;)I, java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V",
+      "stub_audit": "none on property path",
       "host": "voids-macbook-pro-2.local",
       "peak_rss_mb": 597,
       "limits": {
@@ -5105,7 +5105,7 @@
       "note": "reproducer m08 (Lean Ser.lean)",
       "status": "supported",
       "reproducer": null,
-      "stub_audit": "REVIEW: java::jdk.internal.util.Preconditions.checkFromIndexSize:(IIILjava/util/function/BiFunction;)I",
+      "stub_audit": "none on property path",
       "host": "voids-macbook-pro-2.local",
       "peak_rss_mb": 588,
       "limits": {
