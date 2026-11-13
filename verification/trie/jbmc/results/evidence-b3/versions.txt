@@ -1,0 +1,4 @@
+jbmc: 6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)
+jdk (reference JDK17=/opt/homebrew/opt/openjdk@17): openjdk version "17.0.17" 2025-10-21
+java-models-library: core-models.jar sha256 1592a008c6e780ecafef61249c00eb006bcc49bb5e5afd74b5c39c3ff8f12276, cprover-api.jar sha256 3c8c92f6a91f9ccf5b4d09df1615a3a8d3547d31a39bc3f9f249aa2bec6b199d (built with JBMC 6.11.0; .tools/cbmc is not a git checkout)
+source commit: 3aa6bd20cbb42fd5f6d4324553de11e7ab4c2561 (uncommitted changes under verification/trie/jbmc)

@@ -1,0 +1,362 @@
+{
+  "scope": "Three retained failing traces only. Does not prove whole-program unreachability or accept any result automatically. Range checks are valid on these traces; returned check integers are discarded by the inspected JDK callers.",
+  "failing_results_without_trace": [
+    "store-save-retrieve-neg",
+    "store-saved-entries-neg",
+    "store-epochs-neg",
+    "dto-roundtrip-inline-neg"
+  ],
+  "results": [
+    {
+      "id": "store-content-addressed-rskip",
+      "log_sha256": "9b1281c7f00cee3cf12a9bf72322ab9bf8259a2d473de22c42518bb12900d162",
+      "failed_properties": [
+        "java::StoreHarness.contentAddressedStoreRskip:()V.assertion.1"
+      ],
+      "trace_state_blocks": 6647,
+      "range_check_calls": [],
+      "unreachable_stub_calls_in_trace": []
+    },
+    {
+      "id": "store-collect-rskip",
+      "log_sha256": "b03b43f6fd918381fd75c5cb78bc96c48dffc9e3f938ac48bc187b8ae5585004",
+      "failed_properties": [
+        "java::StoreHarness.collectLosesRootRskip:()V.assertion.1"
+      ],
+      "trace_state_blocks": 24887,
+      "range_check_calls": [
+        {
+          "state": 16933,
+          "method": "checkIndex",
+          "arguments": [
+            0,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 30517,
+          "method": "checkIndex",
+          "arguments": [
+            1,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 30617,
+          "method": "checkIndex",
+          "arguments": [
+            2,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 30954,
+          "method": "checkIndex",
+          "arguments": [
+            0,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 31005,
+          "method": "checkIndex",
+          "arguments": [
+            1,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 31060,
+          "method": "checkIndex",
+          "arguments": [
+            2,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 31116,
+          "method": "checkIndex",
+          "arguments": [
+            0,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 31403,
+          "method": "checkIndex",
+          "arguments": [
+            0,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 40610,
+          "method": "checkIndex",
+          "arguments": [
+            1,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 40710,
+          "method": "checkIndex",
+          "arguments": [
+            2,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 40834,
+          "method": "checkIndex",
+          "arguments": [
+            0,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 40885,
+          "method": "checkIndex",
+          "arguments": [
+            1,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 40940,
+          "method": "checkIndex",
+          "arguments": [
+            2,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 40996,
+          "method": "checkIndex",
+          "arguments": [
+            0,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 41283,
+          "method": "checkIndex",
+          "arguments": [
+            0,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 50724,
+          "method": "checkIndex",
+          "arguments": [
+            1,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 50824,
+          "method": "checkIndex",
+          "arguments": [
+            2,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 50953,
+          "method": "checkIndex",
+          "arguments": [
+            0,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 51004,
+          "method": "checkIndex",
+          "arguments": [
+            1,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 51059,
+          "method": "checkIndex",
+          "arguments": [
+            2,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 51115,
+          "method": "checkIndex",
+          "arguments": [
+            0,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 51402,
+          "method": "checkIndex",
+          "arguments": [
+            0,
+            3,
+            null
+          ],
+          "valid": true
+        }
+      ],
+      "unreachable_stub_calls_in_trace": []
+    },
+    {
+      "id": "dto-embedded-long-value-rskip",
+      "log_sha256": "6ead9b6f8aabd2355d254b96526c590ff82415933821889a7ab15cdecf89be55",
+      "failed_properties": [
+        "java::DtoHarness.dtoEmbeddedLongValueRskip:()V.assertion.1"
+      ],
+      "trace_state_blocks": 8616,
+      "range_check_calls": [
+        {
+          "state": 7050,
+          "method": "checkFromIndexSize",
+          "arguments": [
+            0,
+            1,
+            1,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 8915,
+          "method": "checkFromIndexSize",
+          "arguments": [
+            0,
+            33,
+            33,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 10761,
+          "method": "checkFromIndexSize",
+          "arguments": [
+            0,
+            3,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 10859,
+          "method": "checkFromIndexSize",
+          "arguments": [
+            0,
+            34,
+            34,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 12113,
+          "method": "checkFromIndexSize",
+          "arguments": [
+            0,
+            1,
+            1,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 12461,
+          "method": "checkFromIndexSize",
+          "arguments": [
+            0,
+            3,
+            3,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 12559,
+          "method": "checkFromIndexSize",
+          "arguments": [
+            0,
+            2,
+            2,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 12804,
+          "method": "checkFromIndexSize",
+          "arguments": [
+            0,
+            1,
+            1,
+            null
+          ],
+          "valid": true
+        },
+        {
+          "state": 13002,
+          "method": "checkFromIndexSize",
+          "arguments": [
+            0,
+            0,
+            0,
+            null
+          ],
+          "valid": true
+        }
+      ],
+      "unreachable_stub_calls_in_trace": []
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "note": "Manual historical evidence decisions, not a global stub whitelist. See README.md and negative-trace-review.json. All ten original records are reviewed: seven failures and three positive results. Two failures use exact-input diagnostic trace replays. Positive results use loaded-program call-site reviews plus the documented fixed-three-epoch invariant for the two store checks.",
+  "manifests": {
+    "reference-manifest.json": "8c495a31c9b36501a53aeb20fc9e5756e6d2077b399f318ecef5b7f1aec44a72",
+    "executor-manifest.json": "544e10b1e1cfd9bc8dc934c51a0df435ad31a640fb0aa25351ddea8b5577db0f",
+    "trace-replay/dto-roundtrip-inline-neg.goto.txt.gz": "4d0e54cbb8accef7ca43420e52feba4d63d070db89ff52cce13823c0495697bb",
+    "trace-replay/dto-roundtrip-inline-neg.log": "4b01973baf79177f83e005134b72963e67910c9cd7252fe502d5bff897369b61",
+    "trace-replay/goto-comparison.json": "2b890a30194115df358a45ebf396fff6970d33f184e9b36fd38659fe955052ea",
+    "trace-replay/manifest.json": "fb4e04c9874fd9acda0112c73236f728c53c6f8690749b6143af8df6cfde8e9f",
+    "trace-replay/review.json": "44d2664b561d5e019b909dd8e065d2577bb6e389fd2b260af567b79c1b63a4fc",
+    "trace-replay/store-epochs-neg.goto.txt.gz": "be87dead7c985b25e754fa850fbaf224b8e1d6080c2d2b861cd01603747836da",
+    "trace-replay/store-epochs-neg.log": "7c305909831edd2f14d97da55dbe5d47260bf0cc4307b0a2fe82a30cc6386caf",
+    "callsite-review/dto-embedded-long-value.goto.txt.gz": "d8521077a5a550cbeef6ed03d08363173b297fb1ad09714d4b389f24c1663c3b",
+    "callsite-review/inspection.json": "c70a39a517f29c2054a3f72abe1b2c6b36edec5a106ec283a16824727be9d05f",
+    "store-review/MultiTrieStore.java": "791e16547aca99cc4c8216586077d9bf6a294eceb07c731996e3cd98738187ed",
+    "store-review/store-epochs.goto.txt.gz": "e6b73689f3c06d2bcbb0cc1c95a44a5b0657d6992f6f5231470b9787f2565a40",
+    "store-review/store-collect.goto.txt.gz": "6b470de4a6c44f884743338a6a2e4754f90f76778ecd8a3dee8569c7e4d9ad7d",
+    "store-review/README.md": "f47d5d60551e872c371fcef481158b1d5562196b32a45ede479be0508cae3502",
+    "store-review/inspection.json": "506fc0fe050b3fa1ed4a9615b02cb0626a36773dd5ad36ec5f26900fcdf875e5",
+    "source/harness/StoreHarness.java": "ee48730086a2b7b1392cff11a97ea54c10a4614cdc23fc50298e944253f85adf",
+    "jdk-bytecode.txt": "04fa35819c013c53139b72bf052bdcb3cf0e3c13bf3fc993b4a06eb443dcb2dc",
+    "preconditions-reference.txt": "55a2f14bf765e7424832a5170c7d8bb2487c73b95ae870f3dce110c8bd829758",
+    "store-review/check.py": "9bf30d93a30ea19a82da186b56ffa83fedc1305632829054ed1f655313dab666",
+    "store-review/logging-stub-bytecode.txt": "6b1ba1011547098fe242b38f14a7df88e82a89355c0e7e4ae37c0235844bcabe"
+  },
+  "results": {
+    "store-epochs": {
+      "result_sha256": "528913c4a083d3b3fdd666539c9ec522237a0d0c244e90977fb80ba0611d85a1",
+      "approved_stubs": [
+        "java::java.lang.ThreadLocal.remove:()V",
+        "java::java.lang.reflect.Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;",
+        "java::jdk.internal.util.Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I",
+        "java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+      ],
+      "basis": "Exact loaded-program incoming-call review and fixed-three-epoch invariant. Reflective allocation unreachable; actual index checks valid with discarded returns; NOP excludes logging. See store-review/README.md.",
+      "log_sha256": "9733bc44b2ed5f9270f85ad1c0c6cafe5a1d2820e16bda039c873137e41d780e",
+      "stubs_sha256": "92d7c6cd816910988c80ec7ee308680d7875e3d7a7eba78afc50a71ed069b9dc"
+    },
+    "store-collect": {
+      "result_sha256": "5541604ca46a61cee811425a5234deecaa36074c3b9845426a6c9753bd3fbc0b",
+      "approved_stubs": [
+        "java::java.lang.ThreadLocal.remove:()V",
+        "java::java.lang.reflect.Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;",
+        "java::java.util.AbstractList$RandomAccessSubList.subListRangeCheck:(III)V",
+        "java::java.util.AbstractList$SubList.subListRangeCheck:(III)V",
+        "java::java.util.ArrayList$SubList.subListRangeCheck:(III)V",
+        "java::java.util.ArrayList.subListRangeCheck:(III)V",
+        "java::jdk.internal.util.Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I",
+        "java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+      ],
+      "basis": "Exact loaded-program incoming-call review and fixed-three-epoch invariant. Reflective allocation and sublists unreachable; actual index checks valid with discarded returns; NOP excludes logging. See store-review/README.md.",
+      "log_sha256": "83f7747e0ac881c43df174eec0510d645b9951dd6fa43e937d1c672d24e93e92",
+      "stubs_sha256": "686e4e91337a992346f5c8cc1ec98d1f982ddd74aa26a03ba07b805e5805dd83"
+    },
+    "dto-embedded-long-value": {
+      "result_sha256": "741a8502ddfe101f9473449b9433149d82a32283a301be5fe504400dced10efc",
+      "log_sha256": "75685b017ba5b0a51a87b5e1287faeff7c93ab9b31b1d421aef16ed1d65590bb",
+      "stubs_sha256": "c0208c38fc3375b4968342de49b83909d1cb49cc1b525ff227929897e5e57aec",
+      "approved_stubs": [
+        "java::jdk.internal.util.Preconditions.checkFromIndexSize:(IIILjava/util/function/BiFunction;)I"
+      ],
+      "basis": "Every loaded call to the missing check goes through Objects and the two output-stream write overloads. Their sole callers pass offset zero and the same array's length; the callback is null and both callers discard the check return. See callsite-review/inspection.json, retained GOTO program, JDK bytecode and README.md."
+    },
+    "store-epochs-neg": {
+      "result_sha256": "b474a370f99f2083e3992d612f05a318c30decf79e49b217df84ca21e79558dc",
+      "log_sha256": "7bd8f2f8fb0d62e58cb49af2463a49a81c736950b14c712203ff59ddec33b4f0",
+      "stubs_sha256": "648b06fb036db7a85652134ca4b1da9855d9c56d2a2d0c4a4f2da8e90e5bd66e",
+      "approved_stubs": [
+        "java::java.lang.reflect.Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;",
+        "java::jdk.internal.util.Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I"
+      ],
+      "basis": "Exact-bytecode replay differs only by --trace; loaded GOTO program is identical. One valid checkIndex(0,3,null), with discarded return value, preserves the intended failing path. Reflective allocation is absent on that trace. See trace-replay/review.json and README.md."
+    },
+    "dto-roundtrip-inline-neg": {
+      "result_sha256": "f86466d46b32df1eaec5d658f392d1bf2d3c5e30db82d6d0bb97dd567eb9baaa",
+      "log_sha256": "a3626ac1b52fc1e1456e1f1ebf9f6c2c665e751e19f085c4f63334b13ea18df0",
+      "stubs_sha256": "2532cdcf1c47175a3a30d85e6db1c3c1e60b71ae1448d8ff88253ad7a5509d0d",
+      "approved_stubs": [
+        "java::java.lang.ThreadLocal.remove:()V",
+        "java::jdk.internal.util.Preconditions.checkFromIndexSize:(IIILjava/util/function/BiFunction;)I",
+        "java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+      ],
+      "basis": "Exact-bytecode replay differs only by --trace; loaded GOTO program is identical. Two valid checkFromIndexSize(0,1,1,null) calls have discarded returns. Pinned NOP makes the logging calls unreachable. See trace-replay/review.json and README.md."
+    },
+    "store-save-retrieve-neg": {
+      "result_sha256": "8524595e6c7dfa7481459e40e3c72c6b4140e97200cec3ded06b1644476b2868",
+      "log_sha256": "6ace977579337bfc6ce0bb6ae094a9dcdc870a703f24183be8f08703c948b926",
+      "stubs_sha256": "bd8ca8c5120c6d95ea2409b882f200941b96cc69ba3f898f1e12c9949a879a1c",
+      "approved_stubs": [
+        "java::java.lang.ThreadLocal.remove:()V",
+        "java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+      ],
+      "basis": "Pinned NOP logger makes both logging calls unreachable."
+    },
+    "store-content-addressed-rskip": {
+      "result_sha256": "e126ac37c1a5184c6e06fb49199f51c427e737850f9b31e68696ee97a9a921c3",
+      "log_sha256": "9b1281c7f00cee3cf12a9bf72322ab9bf8259a2d473de22c42518bb12900d162",
+      "stubs_sha256": "bd8ca8c5120c6d95ea2409b882f200941b96cc69ba3f898f1e12c9949a879a1c",
+      "approved_stubs": [
+        "java::java.lang.ThreadLocal.remove:()V",
+        "java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+      ],
+      "basis": "Pinned NOP logger makes both logging calls unreachable."
+    },
+    "store-saved-entries-neg": {
+      "result_sha256": "460a6e051684bd2672211707801714e95bc8258d872ff64bd66da3c87f1a5dad",
+      "log_sha256": "fc7230d7e0283483116c05861c85a603ba84caa59069a91cc4240543f8f321e9",
+      "stubs_sha256": "bd8ca8c5120c6d95ea2409b882f200941b96cc69ba3f898f1e12c9949a879a1c",
+      "approved_stubs": [
+        "java::java.lang.ThreadLocal.remove:()V",
+        "java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+      ],
+      "basis": "Pinned NOP logger makes both logging calls unreachable."
+    },
+    "store-collect-rskip": {
+      "result_sha256": "bba3bdf90e59e219041ab83171dbe3c545ea6ae1045015007cf8a13ae0f0c7aa",
+      "log_sha256": "b03b43f6fd918381fd75c5cb78bc96c48dffc9e3f938ac48bc187b8ae5585004",
+      "stubs_sha256": "686e4e91337a992346f5c8cc1ec98d1f982ddd74aa26a03ba07b805e5805dd83",
+      "approved_stubs": [
+        "java::java.lang.ThreadLocal.remove:()V",
+        "java::java.lang.reflect.Array.newInstance:(Ljava/lang/Class;I)Ljava/lang/Object;",
+        "java::java.util.AbstractList$RandomAccessSubList.subListRangeCheck:(III)V",
+        "java::java.util.AbstractList$SubList.subListRangeCheck:(III)V",
+        "java::java.util.ArrayList$SubList.subListRangeCheck:(III)V",
+        "java::java.util.ArrayList.subListRangeCheck:(III)V",
+        "java::jdk.internal.util.Preconditions.checkIndex:(IILjava/util/function/BiFunction;)I",
+        "java::org.ethereum.datasource.DataSourceWithCache.emitLogs:()V"
+      ],
+      "basis": "Original failing trace has valid range checks whose results the JDK callers discard; other unresolved helpers are not called. See negative-trace-review.json."
+    },
+    "dto-embedded-long-value-rskip": {
+      "result_sha256": "fe0d850eccb4b1a86dc4ba1229d8ad69287053649d95d9e4aea8fc3df36ac638",
+      "log_sha256": "6ead9b6f8aabd2355d254b96526c590ff82415933821889a7ab15cdecf89be55",
+      "stubs_sha256": "c0208c38fc3375b4968342de49b83909d1cb49cc1b525ff227929897e5e57aec",
+      "approved_stubs": [
+        "java::jdk.internal.util.Preconditions.checkFromIndexSize:(IIILjava/util/function/BiFunction;)I"
+      ],
+      "basis": "Original failing trace has valid range checks whose results the JDK callers discard; other unresolved helpers are not called. See negative-trace-review.json."
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+ "id": "parser-lshared-non-canonical-rskip",
+ "obligations": [
+  "TRIE-LSH-06"
+ ],
+ "role": "rskip-reading",
+ "class": "ParserHarness",
+ "method": "lsharedNonCanonicalRskip",
+ "expect": "FAILURE",
+ "verdict": "FAILURE",
+ "pass": true,
+ "exit_code": 10,
+ "time_s": 9.1,
+ "bounds": {
+  "unwind": 20
+ },
+ "note": "",
+ "status": "supported",
+ "reproducer": [
+  "jbmc/reproducers/TRIE-LSH-06.md"
+ ],
+ "stub_audit": "none on property path",
+ "host": "void-rsk.local",
+ "peak_rss_mb": 575,
+ "limits": {
+  "jbmc_slots": 5,
+  "rss_gb": 6.0,
+  "max_load": 16.0,
+  "timeout_s": 600
+ },
+ "failed_properties": [
+  "java::ParserHarness.lsharedNonCanonicalRskip:()V.assertion.1"
+ ],
+ "stubs": [
+  "java::java.lang.ClassLoader.checkClassLoaderPermission:(Ljava/lang/ClassLoader;Ljava/lang/Class;)V",
+  "java::java.lang.ClassLoader.desiredAssertionStatus:(Ljava/lang/String;)Z",
+  "java::java.lang.System.getSecurityManager:()Ljava/lang/SecurityManager;",
+  "java::java.security.AccessController.doPrivileged:(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+ ],
+ "jbmc_version": "6.11.0 (cbmc-6.11.0-820ff0f555b43fb78e0cd9332e498461bd14244b)",
+ "command": "jbmc ParserHarness -cp $JBMC_CP --function ParserHarness.lsharedNonCanonicalRskip --unwinding-assertions --static-values models/static-values.json --unwind 20 --unwindset java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.0:17,java::org.ethereum.crypto.Keccak256Helper.keccak256:([B)[B.1:17,java::org.ethereum.crypto.Keccak256Helper.sameBytes:([B[B)Z.0:65,java::org.ethereum.crypto.Keccak256Helper.fresh:()[B.0:33,java::array[byte].clone:()Ljava/lang/Object;.0:65,java::Nondet.bytes:(I)[B.0:75,java::Nondet.cat:([[B)[B.0:9,java::Nondet.cat:([[B)[B.1:130,java::Nondet.same:([B[B)Z.0:130,java::Nondet.at:([BI[B)Z.0:130,java::Nondet.slice:([BII)[B.0:130,java::Nondet.rep:(II)[B.0:130,java::Nondet.b:([I)[B.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.0:130,java::java.lang.System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V.1:130,java::java.nio.ByteBuffer.get:([B)Ljava/nio/ByteBuffer;.0:130,java::java.nio.ByteBuffer.put:([B)Ljava/nio/ByteBuffer;.0:130 --max-nondet-array-length 64 --java-cp-include-files ^(?!.*org/ethereum/datasource/(?!(KeyValueDataSource|DataSource|DataSourceKeyIterator)\\.class)).*$ --trace"
+}

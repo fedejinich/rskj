@@ -1,0 +1,17 @@
+{
+  "verified_harness_model_commit": "4a694a0db820f9b43b3c3c3e99a7c611f82e01ce",
+  "archive_proof_sources_identical": [
+    "trie-b6-20260927-0803",
+    "trie-b7-20260927-0803",
+    "trie-b8-20260927-0803"
+  ],
+  "runner_difference_from_commit": "Archived heavy_run.py predates the HEAVY_NO_TASKPOLICY option and hardcodes taskpolicy -b. Reference controls therefore ran under this original stricter QoS, despite the environment opt-out. Original runner retained here; not claimed identical to the commit.",
+  "archive_note": "AppleDouble ._ metadata is restored as filesystem metadata, not a source file.",
+  "validation_ids": [
+    "lshared-prefix-roundtrip",
+    "varint-roundtrip",
+    "trie-message-hash-child-neg",
+    "parser-lshared-non-canonical-rskip"
+  ],
+  "remote_work_executed_locally": false
+}

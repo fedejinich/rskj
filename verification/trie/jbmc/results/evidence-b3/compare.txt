@@ -1,0 +1,17 @@
+argv (normalized 'command') reference == b2-replay: True
+classpath digests reference == b2 (in order): False
+  [0] DIFF $HERE/build/harness | jbmc/build/harness
+  [1] same $HERE/build/models | jbmc/build/models
+  [2] same /Users/void_rsk/.treehouse/rskj-fork-7783de/1/rskj-fork/verification/trie/.tools/cbmc/jbmc/lib/java-models-library/target/core-models.jar | .tools/cbmc/jbmc/lib/java-models-library/target/core-models.jar
+  [3] same /Users/void_rsk/.treehouse/rskj-fork-7783de/1/rskj-fork/verification/trie/.tools/cbmc/jbmc/lib/java-models-library/target/cprover-api.jar | .tools/cbmc/jbmc/lib/java-models-library/target/cprover-api.jar
+  [4] same $HERE/build/jdk17/java.base | jbmc/build/jdk17/java.base
+  [5] same /Users/void_rsk/.treehouse/rskj-fork-7783de/1/rskj-fork/rskj-core/build/classes/java/main | .tools/deps/rskj1
+  [6] same /Users/void_rsk/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.36/6c62681a2f655b49963a5983b8b0950a6120ae14/slf4j-api-1.7.36.jar | .tools/deps/jars/slf4j-api-1.7.36.jar
+  [7] same /Users/void_rsk/.gradle/caches/modules-2/files-2.1/co.rsk.bitcoinj/bitcoinj-thin/0.14.4-rsk-18/b43f2d1ede527008787d99715a1fe876af5adc2/bitcoinj-thin-0.14.4-rsk-18.jar | .tools/deps/jars/bitcoinj-thin-0.14.4-rsk-18.jar
+  [8] same /Users/void_rsk/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/18.0/cce0823396aa693798f8882e64213b1772032b09/guava-18.0.jar | .tools/deps/jars/guava-18.0.jar
+  [9] same /Users/void_rsk/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.12.0/c6842c86792ff03b9f1d1fe2aab8dc23aa6c6f0e/commons-lang3-3.12.0.jar | .tools/deps/jars/commons-lang3-3.12.0.jar
+  [10] same /Users/void_rsk/.gradle/caches/modules-2/files-2.1/org.bouncycastle/bclcrypto-jdk15on/1.59/d11e386ca6e8d7398351a908bfb6a535d0b9405d/bclcrypto-jdk15on-1.59.jar | .tools/deps/jars/bclcrypto-jdk15on-1.59.jar
+source files differing b2 vs current: harness/KeyHarness.java, harness/Nondet.java, harness/SplitHarness.java, harness/TrieKeySliceHarness.java, harnesses.json, heavy_run.py, invocation.py, models/benign-stubs.json, run-jbmc.sh
+reference (current tree, this host): ** 1 of 2117 failed (2 iterations)
+b2 replayed on this host: ** 1 of 2117 failed (2 iterations)
+current tree without bclcrypto-jdk15on-1.59.jar on the JBMC classpath: ** 1 of 1879 failed (2 iterations)

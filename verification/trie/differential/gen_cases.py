@@ -1,0 +1,135 @@
+#!/usr/bin/env python3
+"""Deterministically generates the differential case files in cases/ (see FORMAT.md).
+
+Families: random put/delete/save/reload histories with shared prefixes (exercising splits, merges,
+every shared-path length range and the 32-byte long-value / 44-byte embedding boundaries), Unitrie
+shaped account/storage/code keys, node decoding of boundary and malformed byte strings, key mapping.
+"""
+import random
+from pathlib import Path
+
+OUT = Path(__file__).resolve().parent / "cases"
+VALUE_LENS = [1, 2, 3, 5, 12, 20, 31, 32, 33, 34, 40, 64, 100, 257]
+
+
+def h(b: bytes) -> str:
+    return b.hex() if b else "-"
+
+
+def rand_bytes(r, n):
+    return bytes(r.randrange(256) for _ in range(n))
+
+
+def value(r):
+    return rand_bytes(r, r.choice(VALUE_LENS))
+
+
+def flip_bit(r, key: bytes) -> bytes:
+    if not key:
+        return bytes([r.randrange(256)])
+    i = r.randrange(len(key) * 8)
+    b = bytearray(key)
+    b[i // 8] ^= 0x80 >> (i % 8)
+    return bytes(b)
+
+
+def history(r, name, keypool, n_ops):
+    lines = [f"case {name}"]
+    live, saved = set(), False  # saved: the current root is in the store, so reload is valid
+    for _ in range(n_ops):
+        op = r.random()
+        if op < 0.55 or not live:
+            k = r.choice(keypool)
+            lines.append(f"put {h(k)} {h(value(r))}")
+            live.add(k)
+            saved = False
+        elif op < 0.70:
+            k = r.choice(sorted(live))
+            lines.append(f"delete {h(k)}")
+            live.discard(k)
+            saved = False
+        elif op < 0.75:
+            k = r.choice(keypool)  # possibly absent
+            lines.append(f"delete {h(k)}")
+            live.discard(k)
+            saved = False
+        elif op < 0.80:
+            k = r.choice(sorted(live))
+            lines.append(f"put {h(k)} -")  # empty value deletes
+            live.discard(k)
+            saved = False
+        elif op < 0.90:
+            lines.append("save")
+            saved = True
+        elif saved and live:
+            lines.append("reload")
+    if live and r.random() < 0.5:
+        lines += ["save", "reload"]
+    lines.append("end")
+    return lines
+
+
+def keypool_random(r):
+    pool = []
+    for _ in range(r.randint(2, 12)):
+        prefix = rand_bytes(r, r.choice([0, 0, 1, 2, 4, 5, 19, 20, 21, 40, 47, 48, 60]))
+        pool.append(prefix + rand_bytes(r, r.randint(0, 3)))
+    for k in list(pool):
+        if r.random() < 0.5:
+            pool.append(flip_bit(r, k))
+        if r.random() < 0.2 and k:
+            pool.append(k[: r.randrange(len(k))])  # a proper prefix of another key
+    return pool
+
+
+def keypool_unitrie(r):
+    pool = []
+    for _ in range(r.randint(1, 5)):
+        account = b"\x00" + rand_bytes(r, 10) + rand_bytes(r, 20)
+        pool += [account, account + b"\x80", account + b"\x00"]
+        for _ in range(r.randint(0, 4)):
+            slot = rand_bytes(r, r.choice([1, 1, 2, 32])).lstrip(b"\x00") or b"\x00"
+            pool.append(account + b"\x00" + rand_bytes(r, 10) + slot)
+    return pool
+
+
+def decode_inputs(r):
+    fixed = [
+        "", "00", "02", "40", "c0", "80", "42", "41", "50", "5000", "5001", "500080", "500081",
+        "50ff00", "50ff0100", "50ff01ff", "50fffd0000", "501f" + "ff" * 4, "5020" + "ff" * 20,
+        "50fe" + "00000000", "48", "4801", "48" + "00" * 32, "48" + "00" * 32 + "00",
+        "44" + "11" * 32 + "05", "4c" + "11" * 32 + "22" * 32 + "fd0000", "4a0140", "4a014000",
+        "4a0000", "4a024001", "4b01400140" + "00", "49" + "11" * 32 + "0140" + "01",
+        "60" + "00" * 32 + "000000", "60" + "00" * 32 + "000021", "60" + "00" * 32 + "000021ab",
+        "60" + "00" * 31, "40" + "07" * 32, "40" + "07" * 33, "7f", "ff", "02" + "00" * 5,
+        "0200000000", "020000000100", "0200000001" + "ab", "020200000000" + "00" * 32,
+        "02000001000000" + "11" * 32, "0200000300080f" + "11" * 64 + "aa",
+    ]
+    out = list(fixed)
+    heads = [0x00, 0x02, 0x40, 0x41, 0x42, 0x48, 0x4A, 0x4C, 0x4F, 0x50, 0x58, 0x5C, 0x60, 0x70, 0x7F, 0xC0]
+    for _ in range(150):
+        out.append((bytes([r.choice(heads)]) + rand_bytes(r, r.randint(0, 70))).hex())
+    return out
+
+
+def main():
+    r = random.Random(0x7121E)
+    OUT.mkdir(exist_ok=True)
+    files = {}
+    files["random"] = [l for i in range(300) for l in history(r, f"random-{i}", keypool_random(r), r.randint(1, 30))]
+    files["unitrie"] = [l for i in range(100) for l in history(r, f"unitrie-{i}", keypool_unitrie(r), r.randint(1, 40))]
+    dec = ["case decode"] + [f"decode {x or '-'}" for x in decode_inputs(r)] + ["end"]
+    files["decode"] = dec
+    km = ["case keymap"]
+    for _ in range(40):
+        addr = rand_bytes(r, 20)
+        slot = bytes(32 - (n := r.choice([0, 1, 1, 2, 5, 31, 32]))) + rand_bytes(r, n)
+        km += [f"keymap-account {addr.hex()}", f"keymap-code {addr.hex()}", f"keymap-storage {addr.hex()} {slot.hex()}"]
+    files["keymap"] = km + ["end"]
+    for name, lines in files.items():
+        (OUT / f"{name}.cases").write_text(f"# generated by gen_cases.py (seed 0x7121E)\n" + "\n".join(lines) + "\n")
+        print(name, sum(l.startswith("case ") for l in lines), "cases")
+
+
+if __name__ == "__main__":
+    main()

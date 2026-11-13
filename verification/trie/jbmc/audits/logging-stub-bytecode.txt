@@ -1,0 +1,28 @@
+Read-only bytecode evidence from the original b6 snapshot.
+Reference: ../evidence-b6-reference/reference-manifest.json
+No whitelist or recorded stub verdict changed.
+
+SLF4J jar: slf4j-api-1.7.36.jar
+SHA256: d3ef575e3e4979678dc01bf1dcce51021493b4d11fb7f1be8ad982877c16a1c0
+LoggerFactory.class SHA256: 41e00f233169438c11f1aa020ba325d01d43bef1120dcb4eb0748563d29198b9
+
+javap -c -classpath <recorded SLF4J jar> org.slf4j.helpers.NOPLogger
+Relevant final method, other methods omitted:
+public final boolean isTraceEnabled();
+    Code:
+       0: iconst_0
+       1: ireturn
+
+javap -c <recorded models>/org/slf4j/LoggerFactory.class
+Compiled from "LoggerFactory.java"
+public final class org.slf4j.LoggerFactory {
+  public static org.slf4j.Logger getLogger(java.lang.Class<?>);
+    Code:
+       0: getstatic     #7                  // Field org/slf4j/helpers/NOPLogger.NOP_LOGGER:Lorg/slf4j/helpers/NOPLogger;
+       3: areturn
+
+  public static org.slf4j.Logger getLogger(java.lang.String);
+    Code:
+       0: getstatic     #7                  // Field org/slf4j/helpers/NOPLogger.NOP_LOGGER:Lorg/slf4j/helpers/NOPLogger;
+       3: areturn
+}

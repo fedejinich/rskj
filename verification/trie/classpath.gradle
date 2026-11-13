@@ -1,0 +1,13 @@
+// Gradle init script: prints rskj-core's compiled main classes + runtime jars, so the
+// JBMC and differential harnesses run against the real, unmodified rskj classes.
+// Usage: ./gradlew -q --init-script verification/trie/classpath.gradle :rskj-core:printTrieVerifyClasspath
+allprojects {
+    afterEvaluate { p ->
+        if (p.name == 'rskj-core') {
+            p.tasks.register('printTrieVerifyClasspath') {
+                dependsOn 'classes'
+                doLast { println p.sourceSets.main.runtimeClasspath.asPath }
+            }
+        }
+    }
+}

@@ -1,0 +1,85 @@
+{
+ "classpath": [
+  {
+   "entry": "/private/tmp/claude-501/-Users-void-rsk--treehouse-firstmate-ff549e-6-firstmate-projects-rskj-fork/b18f2fae-ba71-45bd-9fcd-00346db4b08f/scratchpad/b2x/verification/trie/jbmc/build/harness",
+   "sha256": "5efa47c4bc6ea22d9d12565b3e564771d2c8aacab45b4901985d5b37b6c14b72"
+  },
+  {
+   "entry": "/private/tmp/claude-501/-Users-void-rsk--treehouse-firstmate-ff549e-6-firstmate-projects-rskj-fork/b18f2fae-ba71-45bd-9fcd-00346db4b08f/scratchpad/b2x/verification/trie/jbmc/build/models",
+   "sha256": "95c6e7c7eb681287845fe664e6a14b45d10361c2fc4bef84547901d4035dd405"
+  },
+  {
+   "entry": "/private/tmp/claude-501/-Users-void-rsk--treehouse-firstmate-ff549e-6-firstmate-projects-rskj-fork/b18f2fae-ba71-45bd-9fcd-00346db4b08f/scratchpad/b2x/verification/trie/.tools/cbmc/jbmc/lib/java-models-library/target/core-models.jar",
+   "sha256": "1592a008c6e780ecafef61249c00eb006bcc49bb5e5afd74b5c39c3ff8f12276"
+  },
+  {
+   "entry": "/private/tmp/claude-501/-Users-void-rsk--treehouse-firstmate-ff549e-6-firstmate-projects-rskj-fork/b18f2fae-ba71-45bd-9fcd-00346db4b08f/scratchpad/b2x/verification/trie/.tools/cbmc/jbmc/lib/java-models-library/target/cprover-api.jar",
+   "sha256": "3c8c92f6a91f9ccf5b4d09df1615a3a8d3547d31a39bc3f9f249aa2bec6b199d"
+  },
+  {
+   "entry": "/private/tmp/claude-501/-Users-void-rsk--treehouse-firstmate-ff549e-6-firstmate-projects-rskj-fork/b18f2fae-ba71-45bd-9fcd-00346db4b08f/scratchpad/b2x/verification/trie/jbmc/build/jdk17/java.base",
+   "sha256": "958592da6d10d2f6fefc6465e85a6cb54649c1de3bfc0b009d9cd71eafcd18ee"
+  },
+  {
+   "entry": "/private/tmp/claude-501/-Users-void-rsk--treehouse-firstmate-ff549e-6-firstmate-projects-rskj-fork/b18f2fae-ba71-45bd-9fcd-00346db4b08f/scratchpad/b2x/verification/trie/.tools/deps/rskj1",
+   "sha256": "6f3e3ce87e43cda414fe8ee7870c44a46dd569205bff1c3df42d47b2178e2187"
+  },
+  {
+   "entry": "/private/tmp/claude-501/-Users-void-rsk--treehouse-firstmate-ff549e-6-firstmate-projects-rskj-fork/b18f2fae-ba71-45bd-9fcd-00346db4b08f/scratchpad/b2x/verification/trie/.tools/deps/jars/slf4j-api-1.7.36.jar",
+   "sha256": "d3ef575e3e4979678dc01bf1dcce51021493b4d11fb7f1be8ad982877c16a1c0"
+  },
+  {
+   "entry": "/private/tmp/claude-501/-Users-void-rsk--treehouse-firstmate-ff549e-6-firstmate-projects-rskj-fork/b18f2fae-ba71-45bd-9fcd-00346db4b08f/scratchpad/b2x/verification/trie/.tools/deps/jars/bitcoinj-thin-0.14.4-rsk-18.jar",
+   "sha256": "d0adf8892013a2edb812ff6715a6767db72fec67a656acd6069fd1251a5918a8"
+  },
+  {
+   "entry": "/private/tmp/claude-501/-Users-void-rsk--treehouse-firstmate-ff549e-6-firstmate-projects-rskj-fork/b18f2fae-ba71-45bd-9fcd-00346db4b08f/scratchpad/b2x/verification/trie/.tools/deps/jars/guava-18.0.jar",
+   "sha256": "d664fbfc03d2e5ce9cab2a44fb01f1d0bf9dfebeccc1a473b1f9ea31f79f6f99"
+  },
+  {
+   "entry": "/private/tmp/claude-501/-Users-void-rsk--treehouse-firstmate-ff549e-6-firstmate-projects-rskj-fork/b18f2fae-ba71-45bd-9fcd-00346db4b08f/scratchpad/b2x/verification/trie/.tools/deps/jars/commons-lang3-3.12.0.jar",
+   "sha256": "d919d904486c037f8d193412da0c92e22a9fa24230b9d67a57855c5c31c7e94e"
+  },
+  {
+   "entry": "/private/tmp/claude-501/-Users-void-rsk--treehouse-firstmate-ff549e-6-firstmate-projects-rskj-fork/b18f2fae-ba71-45bd-9fcd-00346db4b08f/scratchpad/b2x/verification/trie/.tools/deps/jars/bclcrypto-jdk15on-1.59.jar",
+   "sha256": "7d03ba37df4d0ddc4ea40d56554324c6f18062a930edadb0a1b3acbbbea28efc"
+  }
+ ],
+ "sources": {
+  "harness/DtoHarness.java": "8f1487e170dc8869f5adfe6c9cbe46afe55ae70f8c0052f35d9eda037d3127b9",
+  "harness/HashHarness.java": "a818c254bb0b6f2935c1cecb71594c74ab4f920f354b7155fd27466ca94e86db",
+  "harness/KeyHarness.java": "9eccbdfc95cc04540d2312e6d644fa3568b42e500e2a9ef911a1878402dd7adb",
+  "harness/ModelSanityHarness.java": "5d2a1085df29aa09939d066366685b66152075d7672fe311181b848aec19f07c",
+  "harness/NodeHarness.java": "d0f7a09fa2ee18a1a9c6d1991c622f03fc27d86e19337f510f67a88249ddbf1a",
+  "harness/Nondet.java": "3dc9ee92b1c71622430f168f38f4f35776b6753fc23b1ab2fccd22f3bb8041e1",
+  "harness/OpsExtraHarness.java": "ed9fc47613ca906986b9debfa8212f11cda0451a1e90007d90fe18c199a33921",
+  "harness/OrchidHarness.java": "c35094aedac0c1e7861e72219c2663d0281ca42710ef5c8dd7765f8c9f6094c1",
+  "harness/ParserHarness.java": "58875b6ccb4bb7d31c1869712644d0bc1d52f07e37c78e3df46f2f3b63ef0fac",
+  "harness/PathEncoderHarness.java": "98cea2ae449866c36cec2de656aa11ba6f380eb60679c3933316cc1738356117",
+  "harness/PathHarness.java": "2cad36b63ac67e5319b2b49a3a285074d4a796694d444318780b458a80afaa4d",
+  "harness/SharedPathSerializerHarness.java": "f38d187ff101e8cf68a16d7718d7980f69cc7f377dda51c9375fc4b85eaeb682",
+  "harness/SplitHarness.java": "98105646455d6b1aaea824b081c09909e5c579d60d42bfd7957abf6af5119646",
+  "harness/StoreHarness.java": "ee48730086a2b7b1392cff11a97ea54c10a4614cdc23fc50298e944253f85adf",
+  "harness/TrieKeySliceHarness.java": "0466165079cf0959a2f7dcfe64fbaee0bb32c21725aa4d5d82e0ec9fe4e21335",
+  "harness/TrieOpsHarness.java": "851a897086ce24ce33c50945ba3453cd2d7c12de5b9c421f86c773d2b04c0382",
+  "harness/TrieSerializationHarness.java": "9d476c1292cf5f11a029b0e8344a80df6ee92afd281bea03bcd7cc31ff6480be",
+  "harness/VarIntHarness.java": "212f41d18ab2c5b314c19049b106de7a80cd2187b139be534376b658a25687a8",
+  "models/README.md": "ecfab19faf044b622f9ddd15fd734d607f938c31721c1ef7f671165035eb120d",
+  "models/benign-stubs.json": "5ea766c7312531dfad295e03582f6c6ae49bdb06ccc1792984e08da9776c5ee8",
+  "models/static-values.json": "53feac8a032dd17e11147a126c519d364a8967abec09a2f0037484719bdda417",
+  "models/src/java/lang/Integer.java": "391f3946fdf1d562c6290567f413c5e97d83620fa826fd0c631b895bd732033a",
+  "models/src/java/lang/JbmcCanonicalClasses.java": "0d9589cb694d3f15eff1c6a47a01e1bd9bd79de76cfeb97d9dcab41106005900",
+  "models/src/java/lang/Math.java": "b2e5fd05b31da554f345cb3df3e800ec107238d352f60cac73631a0ca22bed3b",
+  "models/src/java/lang/Object.java": "34b02bf4b394a0c4a805f9863dd46c0785f1840179972e2e07796b095e2ab86a",
+  "models/src/java/lang/System.java": "77af973b8a3ba04bf1090444a193a4fc7c90f3838969b755e56a87cfa8a94d24",
+  "models/src/java/nio/ByteBuffer.java": "de44a4cf97af3ce6e0f893a4c56cddc6d77c2e45d8548dd5f320d2d934c27e7b",
+  "models/src/jbmcenv/MemoryKeyValueDataSource.java": "38f450aebcaac51379abe913e9df7ec3c56cd67fbd37801e48cfd9646dfd869f",
+  "models/src/jbmcenv/Observe.java": "6baba101f5d9f7446cd5423af6be54047e7cc0d9a00afebf855ffef38341dcee",
+  "models/src/jdk/internal/util/ArraysSupport.java": "61b19af585c497cc5a319f365cae237a3a240d45edc5e9f00ce52799e8bbe5fb",
+  "models/src/org/ethereum/crypto/Keccak256Helper.java": "759567ba3cf1d3faf36e2d038d061ac2a3a3881c7bc3520821a1ca19d394afbd",
+  "models/src/org/slf4j/LoggerFactory.java": "396dfb2baba7ff791cd4233dcbd4b58ad12c5aee8da7a03157526a141eb5afa4",
+  "harnesses.json": "6453d1671200b3d548265dec1f7d78f2a67b4b3bec11b71a51b5ed24c68470f8",
+  "run-jbmc.sh": "bf6df6cabf27fef73608b7624509322c7b31a2fde4f9c27cae28eaabfaa6c267",
+  "heavy_run.py": "6e91439c03af5cfef84c40818b9b9e9b0e1b483897595dc24532fbf8d49f3347"
+ }
+}
